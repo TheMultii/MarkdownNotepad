@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "pl.mganczarczyk" "\0"
-            VALUE "FileDescription", "mdn" "\0"
+            VALUE "FileDescription", "Multiplatform Markdown Noetpad with extended syntax" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "mdn" "\0"
+            VALUE "InternalName", "markdownnotepad" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 Marcel Gańczarczyk. All rights reserved." "\0"
-            VALUE "OriginalFilename", "mdn.exe" "\0"
-            VALUE "ProductName", "mdn" "\0"
+            VALUE "OriginalFilename", "MarkdownNotepad.exe" "\0"
+            VALUE "ProductName", "Markdown Notepad" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
