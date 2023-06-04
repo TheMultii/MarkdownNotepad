@@ -228,9 +228,14 @@ class DrawerListTile extends StatelessWidget {
 }
 
 class DrawerListDivider extends StatelessWidget {
-  const DrawerListDivider({super.key, required this.title});
+  const DrawerListDivider({
+    super.key,
+    required this.title,
+    this.titleColor = const Color(0xFFF2F3F5),
+  });
 
   final String title;
+  final Color titleColor;
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +249,8 @@ class DrawerListDivider extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
+            color: titleColor,
             fontWeight: FontWeight.bold,
           ),
         ),
