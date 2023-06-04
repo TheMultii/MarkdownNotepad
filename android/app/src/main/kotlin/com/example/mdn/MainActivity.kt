@@ -1,4 +1,4 @@
-package com.example.markdownnotepad
+package com.example.mdn
 
 import io.flutter.embedding.android.FlutterActivity
 
