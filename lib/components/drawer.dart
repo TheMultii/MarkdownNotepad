@@ -94,7 +94,10 @@ class MDNDrawer extends StatelessWidget {
           ),
 
           //user profile
-          const BottomDrawerProfile(),
+          const BottomDrawerProfile(
+            loggedInUserColorStatus: Color(0xFF1CD43A),
+            loggedInUserName: "TheMultii",
+          ),
         ],
       ),
     );
@@ -104,7 +107,12 @@ class MDNDrawer extends StatelessWidget {
 class BottomDrawerProfile extends StatelessWidget {
   const BottomDrawerProfile({
     super.key,
+    required this.loggedInUserColorStatus,
+    required this.loggedInUserName,
   });
+
+  final Color loggedInUserColorStatus;
+  final String loggedInUserName;
 
   @override
   Widget build(BuildContext context) {
@@ -124,17 +132,35 @@ class BottomDrawerProfile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(999),
-                child: Image.network(
-                  "https://api.mganczarczyk.pl/user/TheMultii/profile",
-                  width: 40,
-                  height: 40,
+              CircleAvatar(
+                radius: 20,
+                backgroundImage: NetworkImage(
+                    "https://api.mganczarczyk.pl/user/$loggedInUserName/profile"),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 25,
+                    left: 25,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.inverseSurface,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(2),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: loggedInUserColorStatus,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 15),
               Text(
-                "TheMultii",
+                loggedInUserName,
                 style: GoogleFonts.getFont(
                   'Source Sans Pro',
                   textStyle: const TextStyle(
