@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mdn/components/drawer.dart';
 
-class MainScreen extends StatelessWidget {
-  MainScreen({super.key});
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   final String currentSelected = "Dashboard";
+
   final List<Map<String, dynamic>> drawerNotesTiles = [
     {
       "name": "Lorem ipsum",
@@ -19,6 +26,7 @@ class MainScreen extends StatelessWidget {
       "icon": Icons.description_outlined,
     }
   ];
+
   final List<Map<String, dynamic>> drawerFolderTiles = [
     {
       "name": "Folder 1",
@@ -29,6 +37,36 @@ class MainScreen extends StatelessWidget {
       "icon": Icons.folder_outlined,
     }
   ];
+
+  String imageurl = "https://api.mganczarczyk.pl/tairiku/random/streetmoe";
+
+  bool _onKeyPressed(KeyEvent event) {
+    final key = event.logicalKey.keyLabel;
+
+    if (event is KeyDownEvent) {
+      if (key != "F5") return false;
+
+      setState(() {
+        imageurl =
+            "https://api.mganczarczyk.pl/tairiku/random/streetmoe?safety=true&id=${DateTime.now().millisecondsSinceEpoch}";
+      });
+      debugPrint("Refreshing image -> $imageurl");
+    }
+
+    return false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ServicesBinding.instance.keyboard.addHandler(_onKeyPressed);
+  }
+
+  @override
+  void dispose() {
+    ServicesBinding.instance.keyboard.removeHandler(_onKeyPressed);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +89,18 @@ class MainScreen extends StatelessWidget {
             flex: 7,
             child: Container(
               color: Theme.of(context).colorScheme.background,
-              child: const Align(
+              child: Align(
                 alignment: Alignment.center,
-                child: Row(
+                child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: []),
+                    children: [
+                      Image.network(
+                        imageurl,
+                        height: MediaQuery.of(context).size.height * 0.9,
+                      ),
+                      Text(imageurl),
+                    ]),
               ),
             ),
           ),
