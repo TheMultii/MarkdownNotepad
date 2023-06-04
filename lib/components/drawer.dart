@@ -56,6 +56,7 @@ class MDNDrawer extends StatelessWidget {
                   DrawerListTile(
                     title: "Dashboard",
                     selected: currentSelected == "Dashboard",
+                    textOpacity: currentSelected == "Dashboard" ? 1.0 : 0.6,
                     icon: Icons.dashboard_outlined,
                     onTap: () {},
                   ),
@@ -66,6 +67,7 @@ class MDNDrawer extends StatelessWidget {
                       icon: note["icon"],
                       onTap: () {},
                       selected: currentSelected == note["name"],
+                      textOpacity: currentSelected == note["name"] ? 1.0 : 0.6,
                     ),
                   const DrawerListDivider(title: "Foldery"),
                   for (var folder in drawerFolderTiles)
@@ -74,18 +76,22 @@ class MDNDrawer extends StatelessWidget {
                       icon: folder["icon"],
                       onTap: () {},
                       selected: currentSelected == folder["name"],
+                      textOpacity:
+                          currentSelected == folder["name"] ? 1.0 : 0.6,
                     ),
                   const DrawerListDivider(title: "Miscellaneous"),
                   DrawerListTile(
                     title: "Konto",
                     icon: Icons.person_outline,
                     selected: currentSelected == "Konto",
+                    textOpacity: currentSelected == "Konto" ? 1.0 : 0.6,
                     onTap: () {},
                   ),
                   DrawerListTile(
                     title: "Rozszerzenia",
                     icon: Icons.extension_outlined,
                     selected: currentSelected == "Rozszerzenia",
+                    textOpacity: currentSelected == "Rozszerzenia" ? 1.0 : 0.6,
                     onTap: () {},
                   ),
                 ],
@@ -163,8 +169,11 @@ class BottomDrawerProfile extends StatelessWidget {
                 loggedInUserName,
                 style: GoogleFonts.getFont(
                   'Source Sans Pro',
+                  color: Colors.white.withOpacity(0.6),
                   textStyle: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.w600),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
@@ -181,6 +190,7 @@ class DrawerListTile extends StatelessWidget {
     required this.title,
     required this.icon,
     required this.onTap,
+    this.textOpacity = 1.0,
     this.isItalic = false,
     this.selected = false,
   });
@@ -189,6 +199,7 @@ class DrawerListTile extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
   final bool isItalic, selected;
+  final double textOpacity;
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +208,7 @@ class DrawerListTile extends StatelessWidget {
           selected ? Theme.of(context).colorScheme.primary : Colors.transparent,
       leading: Icon(
         icon,
-        color: Colors.white54,
+        color: Colors.white.withOpacity(textOpacity),
         size: 22,
       ),
       title: Text(
@@ -205,6 +216,7 @@ class DrawerListTile extends StatelessWidget {
         style: GoogleFonts.getFont(
           'Source Sans Pro',
           textStyle: TextStyle(
+            color: Colors.white.withOpacity(textOpacity),
             fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
             fontSize: 13,
           ),
