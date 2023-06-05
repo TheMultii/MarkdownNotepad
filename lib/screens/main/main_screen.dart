@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mdn/components/drawer.dart';
@@ -66,6 +67,8 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
   }
 
+  String selectedHeaderText = "Ostatnio wyświetlane";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,24 +88,98 @@ class _MainScreenState extends State<MainScreen> {
           Expanded(
             flex: 7,
             child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 36).copyWith(top: 75),
               color: Theme.of(context).colorScheme.background,
-              child: Align(
-                alignment: Alignment.center,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.network(
-                        imageurl,
-                        height: MediaQuery.of(context).size.height * 0.9,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "👋 Cześć, Marcel",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w600,
                       ),
-                      Text(imageurl),
-                    ]),
-              ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 37),
+                      child: Row(
+                        children: [
+                          HeaderMenuButton(
+                            onTap: onHeaderMenuButtonTap,
+                            text: "Ostatnio wyświetlane",
+                            isSelected:
+                                selectedHeaderText == "Ostatnio wyświetlane",
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          HeaderMenuButton(
+                            onTap: onHeaderMenuButtonTap,
+                            text: "Dodane do ulubionych",
+                            isSelected:
+                                selectedHeaderText == "Dodane do ulubionych",
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(imageurl),
+                  ]),
             ),
           ),
         ],
       )),
+    );
+  }
+
+  onHeaderMenuButtonTap(String currentlySelected) {
+    setState(() {
+      selectedHeaderText = currentlySelected;
+    });
+  }
+}
+
+class HeaderMenuButton extends StatelessWidget {
+  const HeaderMenuButton({
+    super.key,
+    required this.text,
+    this.isSelected = false,
+    this.onTap,
+  });
+
+  final String text;
+  final bool isSelected;
+  final Function? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(
+        bottom: 1,
+      ),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Colors.transparent,
+            width: 1.5,
+          ),
+        ),
+      ),
+      child: RichText(
+        text: TextSpan(
+          //operator kaskadowy (..)
+          recognizer: TapGestureRecognizer()..onTap = () => onTap!(text),
+          text: text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
     );
   }
 }
