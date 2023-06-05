@@ -1,7 +1,7 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mdn/components/drawer.dart';
+import 'package:mdn/components/drawer/drawer.dart';
+import 'package:mdn/components/home_screen/home_screen_header_menu_button.dart';
+import 'package:mdn/components/home_screen/home_screen_last_viewed_cards.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -37,24 +37,7 @@ class _MainScreenState extends State<MainScreen> {
     }
   ];
 
-  String imageurl = "https://api.mganczarczyk.pl/tairiku/random/streetmoe";
   String selectedHeaderText = "Ostatnio wyświetlane";
-
-  bool _onKeyPressed(KeyEvent event) {
-    final key = event.logicalKey.keyLabel;
-
-    if (event is KeyDownEvent) {
-      if (key != "F5") return false;
-
-      setState(() {
-        imageurl =
-            "https://api.mganczarczyk.pl/tairiku/random/streetmoe?safety=true&id=${DateTime.now().millisecondsSinceEpoch}";
-      });
-      debugPrint("Refreshing image -> $imageurl");
-    }
-
-    return false;
-  }
 
   void onHeaderMenuButtonTap(String currentlySelected) =>
       setState(() => selectedHeaderText = currentlySelected);
@@ -62,12 +45,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    ServicesBinding.instance.keyboard.addHandler(_onKeyPressed);
   }
 
   @override
   void dispose() {
-    ServicesBinding.instance.keyboard.removeHandler(_onKeyPressed);
     super.dispose();
   }
 
@@ -91,91 +72,52 @@ class _MainScreenState extends State<MainScreen> {
             flex: 7,
             child: Container(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 36).copyWith(top: 75),
+                  const EdgeInsets.symmetric(horizontal: 36).copyWith(top: 60),
               color: Theme.of(context).colorScheme.background,
               child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "👋 Cześć, Marcel",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.w600,
-                      ),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "👋 Cześć, Marcel",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 37),
-                      child: Row(
-                        children: [
-                          HeaderMenuButton(
-                            onTap: onHeaderMenuButtonTap,
-                            text: "Ostatnio wyświetlane",
-                            isSelected:
-                                selectedHeaderText == "Ostatnio wyświetlane",
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          HeaderMenuButton(
-                            onTap: onHeaderMenuButtonTap,
-                            text: "Dodane do ulubionych",
-                            isSelected:
-                                selectedHeaderText == "Dodane do ulubionych",
-                          ),
-                        ],
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 37),
+                    child: Row(
+                      children: [
+                        HeaderMenuButton(
+                          onTap: onHeaderMenuButtonTap,
+                          text: "Ostatnio wyświetlane",
+                          isSelected:
+                              selectedHeaderText == "Ostatnio wyświetlane",
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        HeaderMenuButton(
+                          onTap: onHeaderMenuButtonTap,
+                          text: "Dodane do ulubionych",
+                          isSelected:
+                              selectedHeaderText == "Dodane do ulubionych",
+                        ),
+                      ],
                     ),
-                    Text(imageurl),
-                  ]),
+                  ),
+                  selectedHeaderText == "Ostatnio wyświetlane"
+                      ? HomeScreenLastView(
+                          minWidth: (MediaQuery.of(context).size.width / 9) * 7,
+                        )
+                      : const Text("Dodane do ulubionych"),
+                ],
+              ),
             ),
           ),
         ],
       )),
-    );
-  }
-}
-
-class HeaderMenuButton extends StatelessWidget {
-  const HeaderMenuButton({
-    super.key,
-    required this.text,
-    this.isSelected = false,
-    this.onTap,
-  });
-
-  final String text;
-  final bool isSelected;
-  final Function? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(
-        bottom: 1,
-      ),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : Colors.transparent,
-            width: 1.5,
-          ),
-        ),
-      ),
-      child: RichText(
-        text: TextSpan(
-          //operator kaskadowy (..)
-          recognizer: TapGestureRecognizer()..onTap = () => onTap!(text),
-          text: text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
     );
   }
 }
