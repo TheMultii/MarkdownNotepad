@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MDNDrawer extends StatelessWidget {
+class MDNDrawer extends StatefulWidget {
   const MDNDrawer({
     super.key,
-    required this.currentSelected,
+    this.currentSelected = "Dashboard",
     required this.drawerNotesTiles,
     required this.drawerFolderTiles,
   });
@@ -12,6 +12,19 @@ class MDNDrawer extends StatelessWidget {
   final String currentSelected;
   final List<Map<String, dynamic>> drawerNotesTiles;
   final List<Map<String, dynamic>> drawerFolderTiles;
+
+  @override
+  State<MDNDrawer> createState() => _MDNDrawerState();
+}
+
+class _MDNDrawerState extends State<MDNDrawer> {
+  String currentSelected = "Dashboard";
+
+  @override
+  void initState() {
+    super.initState();
+    currentSelected = widget.currentSelected;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,30 +66,35 @@ class MDNDrawer extends StatelessWidget {
                   ),
                   //create new note button
                   const DrawerCreateNewNoteButton(),
-
                   //scrollable menu list
                   DrawerListTile(
                     title: "Dashboard",
                     selected: currentSelected == "Dashboard",
                     textOpacity: currentSelected == "Dashboard" ? 1.0 : 0.6,
                     icon: Icons.dashboard_rounded,
-                    onTap: () {},
+                    onTap: () {
+                      handleDrawerItemClick("Dashboard");
+                    },
                   ),
                   const DrawerListDivider(title: "Ostatnie notatki"),
-                  for (var note in drawerNotesTiles)
+                  for (var note in widget.drawerNotesTiles)
                     DrawerListTile(
                       title: note["name"],
                       icon: note["icon"],
-                      onTap: () {},
+                      onTap: () {
+                        handleDrawerItemClick(note["name"]);
+                      },
                       selected: currentSelected == note["name"],
                       textOpacity: currentSelected == note["name"] ? 1.0 : 0.6,
                     ),
                   const DrawerListDivider(title: "Foldery"),
-                  for (var folder in drawerFolderTiles)
+                  for (var folder in widget.drawerFolderTiles)
                     DrawerListTile(
                       title: folder["name"],
                       icon: folder["icon"],
-                      onTap: () {},
+                      onTap: () {
+                        handleDrawerItemClick(folder["name"]);
+                      },
                       selected: currentSelected == folder["name"],
                       textOpacity:
                           currentSelected == folder["name"] ? 1.0 : 0.6,
@@ -87,14 +105,18 @@ class MDNDrawer extends StatelessWidget {
                     icon: Icons.account_circle_outlined,
                     selected: currentSelected == "Konto",
                     textOpacity: currentSelected == "Konto" ? 1.0 : 0.6,
-                    onTap: () {},
+                    onTap: () {
+                      handleDrawerItemClick("Konto");
+                    },
                   ),
                   DrawerListTile(
                     title: "Rozszerzenia",
                     icon: Icons.extension_outlined,
                     selected: currentSelected == "Rozszerzenia",
                     textOpacity: currentSelected == "Rozszerzenia" ? 1.0 : 0.6,
-                    onTap: () {},
+                    onTap: () {
+                      handleDrawerItemClick("Rozszerzenia");
+                    },
                   ),
                 ],
               ),
@@ -109,6 +131,12 @@ class MDNDrawer extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void handleDrawerItemClick(drawer_item_name) {
+    setState(() {
+      currentSelected = drawer_item_name;
+    });
   }
 }
 

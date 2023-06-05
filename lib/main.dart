@@ -21,7 +21,7 @@ class MarkdownNotepadApp extends StatelessWidget {
             primary: const Color(0xEE8F00FF)),
         useMaterial3: true,
       ),
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }

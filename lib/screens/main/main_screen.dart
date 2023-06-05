@@ -10,8 +10,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final String currentSelected = "Dashboard";
-
   final List<Map<String, dynamic>> drawerNotesTiles = [
     {
       "name": "Lorem ipsum",
@@ -80,7 +78,6 @@ class _MainScreenState extends State<MainScreen> {
             child: Ink(
               color: Theme.of(context).colorScheme.inverseSurface,
               child: MDNDrawer(
-                  currentSelected: currentSelected,
                   drawerNotesTiles: drawerNotesTiles,
                   drawerFolderTiles: drawerFolderTiles),
             ),
