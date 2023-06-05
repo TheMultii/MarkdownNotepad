@@ -38,6 +38,7 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   String imageurl = "https://api.mganczarczyk.pl/tairiku/random/streetmoe";
+  String selectedHeaderText = "Ostatnio wyświetlane";
 
   bool _onKeyPressed(KeyEvent event) {
     final key = event.logicalKey.keyLabel;
@@ -55,6 +56,9 @@ class _MainScreenState extends State<MainScreen> {
     return false;
   }
 
+  void onHeaderMenuButtonTap(String currentlySelected) =>
+      setState(() => selectedHeaderText = currentlySelected);
+
   @override
   void initState() {
     super.initState();
@@ -66,8 +70,6 @@ class _MainScreenState extends State<MainScreen> {
     ServicesBinding.instance.keyboard.removeHandler(_onKeyPressed);
     super.dispose();
   }
-
-  String selectedHeaderText = "Ostatnio wyświetlane";
 
   @override
   Widget build(BuildContext context) {
@@ -131,12 +133,6 @@ class _MainScreenState extends State<MainScreen> {
         ],
       )),
     );
-  }
-
-  onHeaderMenuButtonTap(String currentlySelected) {
-    setState(() {
-      selectedHeaderText = currentlySelected;
-    });
   }
 }
 
