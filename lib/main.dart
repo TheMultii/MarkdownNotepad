@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'screens/main/main_screen.dart';
+import 'package:mdn/config/router.dart';
 
 void main() {
   runApp(const MarkdownNotepadApp());
@@ -12,7 +11,7 @@ class MarkdownNotepadApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Markdown Notepad',
       theme: ThemeData.dark().copyWith(
@@ -27,7 +26,7 @@ class MarkdownNotepadApp extends StatelessWidget {
             primary: const Color(0xEE8F00FF)),
         useMaterial3: true,
       ),
-      home: const MainScreen(),
+      routerConfig: router,
     );
   }
 }
