@@ -122,6 +122,15 @@ class _MDNDrawerState extends State<MDNDrawer> {
                       handleDrawerItemClick("Rozszerzenia");
                     },
                   ),
+                  DrawerListTile(
+                    title: "Ustawienia",
+                    icon: Icons.settings_outlined,
+                    selected: currentSelected == "Ustawienia",
+                    textOpacity: currentSelected == "Ustawienia" ? 1.0 : 0.6,
+                    onTap: () {
+                      handleDrawerItemClick("Ustawienia");
+                    },
+                  ),
                 ],
               ),
             ),
