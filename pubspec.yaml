@@ -39,6 +39,8 @@ dependencies:
   window_manager: ^0.3.4
   go_router: ^8.0.5
   flutter_native_splash: ^2.3.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +52,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  hive_generator: ^2.0.0
+  build_runner: ^2.4.5
 
 flutter_native_splash:
   color: "#1C1C1C"
