@@ -65,9 +65,11 @@ class _HomeScreenLastViewState extends State<HomeScreenLastView>
   }
 
   void calculateCardWidth(int? useWidth) {
-    double mw = ((useWidth ?? MediaQuery.of(context).size.width) / 9) * 7;
+    double mw =
+        ((useWidth ?? MediaQuery.of(context).size.width) / 9) * (7 - 0.12);
     if (mw == 0) return;
     mw -= 72 + 20 * (homeScreenCardsCount - 1);
+    if (mw < 700) mw = 700;
     setState(() {
       calculatedWidth = (mw / homeScreenCardsCount).floor();
     });

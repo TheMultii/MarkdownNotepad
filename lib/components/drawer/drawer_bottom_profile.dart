@@ -5,10 +5,11 @@ class BottomDrawerProfile extends StatelessWidget {
     super.key,
     required this.loggedInUserColorStatus,
     required this.loggedInUserName,
+    required this.loggedInUserThumbnail,
   });
 
   final Color loggedInUserColorStatus;
-  final String loggedInUserName;
+  final String loggedInUserName, loggedInUserThumbnail;
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +31,7 @@ class BottomDrawerProfile extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: NetworkImage(
-                    "https://api.mganczarczyk.pl/user/$loggedInUserName/profile"),
+                backgroundImage: NetworkImage(loggedInUserThumbnail),
                 child: Padding(
                   padding: const EdgeInsets.only(
                     top: 25,

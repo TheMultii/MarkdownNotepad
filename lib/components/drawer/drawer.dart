@@ -1,21 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mdn/components/drawer/drawer_bottom_profile.dart';
 import 'package:mdn/components/drawer/drawer_create_new_note_button.dart';
 import 'package:mdn/components/drawer/drawer_list_divider.dart';
 import 'package:mdn/components/drawer/drawer_list_tile.dart';
+import 'package:mdn/config/router.dart';
+import 'package:mdn/providers/data_drawer_provider.dart';
+import 'package:mdn/providers/fetch_user_data_drawer_provider.dart';
+import 'package:provider/provider.dart';
 
 class MDNDrawer extends StatefulWidget {
-  const MDNDrawer({
-    super.key,
-    this.currentSelected = "Dashboard",
-    required this.drawerNotesTiles,
-    required this.drawerFolderTiles,
-  });
+  const MDNDrawer({super.key, this.currentSelected = ""});
 
   final String currentSelected;
-  final List<Map<String, dynamic>> drawerNotesTiles;
-  final List<Map<String, dynamic>> drawerFolderTiles;
 
   @override
   State<MDNDrawer> createState() => _MDNDrawerState();
@@ -23,15 +22,35 @@ class MDNDrawer extends StatefulWidget {
 
 class _MDNDrawerState extends State<MDNDrawer> {
   String currentSelected = "Dashboard";
+  Timer? _scrollEndTimer;
 
   @override
   void initState() {
     super.initState();
-    currentSelected = widget.currentSelected;
+    currentSelected = widget.currentSelected == ""
+        ? getRouteName(router.location)
+        : widget.currentSelected;
   }
 
   @override
+  void dispose() {
+    _scrollController?.dispose();
+    _scrollEndTimer?.cancel();
+    super.dispose();
+  }
+
+  ScrollController? _scrollController;
+
+  @override
   Widget build(BuildContext context) {
+    final fetchDataDrawerProvider =
+        Provider.of<FetchUserDataDrawerProvider>(context);
+    final dataDrawerProvider = Provider.of<DataDrawerProvider>(context);
+
+    double scrollPosition = dataDrawerProvider.scrollPosition;
+    _scrollController = ScrollController(initialScrollOffset: scrollPosition);
+    _scrollController?.addListener(_onScroll);
+
     return Drawer(
       elevation: 0,
       child: Column(
@@ -40,6 +59,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
             child: Material(
               color: Colors.transparent,
               child: ListView(
+                controller: _scrollController,
                 children: [
                   //app logo
                   Padding(
@@ -77,11 +97,12 @@ class _MDNDrawerState extends State<MDNDrawer> {
                     textOpacity: currentSelected == "Dashboard" ? 1.0 : 0.6,
                     icon: Icons.dashboard_rounded,
                     onTap: () {
-                      handleDrawerItemClick("Dashboard");
+                      // handleDrawerItemClick("Dashboard");
+                      router.replace("/");
                     },
                   ),
                   const DrawerListDivider(title: "Ostatnie notatki"),
-                  for (var note in widget.drawerNotesTiles)
+                  for (var note in dataDrawerProvider.drawerNotesTiles)
                     DrawerListTile(
                       title: note["name"],
                       icon: note["icon"],
@@ -92,7 +113,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                       textOpacity: currentSelected == note["name"] ? 1.0 : 0.6,
                     ),
                   const DrawerListDivider(title: "Foldery"),
-                  for (var folder in widget.drawerFolderTiles)
+                  for (var folder in dataDrawerProvider.drawerFolderTiles)
                     DrawerListTile(
                       title: folder["name"],
                       icon: folder["icon"],
@@ -129,6 +150,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                     textOpacity: currentSelected == "Ustawienia" ? 1.0 : 0.6,
                     onTap: () {
                       handleDrawerItemClick("Ustawienia");
+                      router.replace("/settings");
                     },
                   ),
                 ],
@@ -137,9 +159,10 @@ class _MDNDrawerState extends State<MDNDrawer> {
           ),
 
           //user profile
-          const BottomDrawerProfile(
-            loggedInUserColorStatus: Color(0xFF1CD43A),
-            loggedInUserName: "TheMultii",
+          BottomDrawerProfile(
+            loggedInUserColorStatus: const Color(0xFF1CD43A),
+            loggedInUserName: fetchDataDrawerProvider.userName,
+            loggedInUserThumbnail: fetchDataDrawerProvider.thumbnailAvatar,
           ),
         ],
       ),
@@ -150,5 +173,20 @@ class _MDNDrawerState extends State<MDNDrawer> {
     setState(() {
       currentSelected = drawerItemName;
     });
+  }
+
+  void _onScroll() {
+    if (_scrollEndTimer != null && _scrollEndTimer!.isActive) {
+      _scrollEndTimer!.cancel();
+    }
+    _scrollEndTimer =
+        Timer(const Duration(milliseconds: 200), _handleScrollEnd);
+  }
+
+  void _handleScrollEnd() {
+    if (_scrollController == null) return;
+    final dataDrawerProvider =
+        Provider.of<DataDrawerProvider>(context, listen: false);
+    dataDrawerProvider.setScrollPosition(_scrollController!.position.pixels);
   }
 }
