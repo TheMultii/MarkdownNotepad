@@ -97,7 +97,6 @@ class _MDNDrawerState extends State<MDNDrawer> {
                     textOpacity: currentSelected == "Dashboard" ? 1.0 : 0.6,
                     icon: Icons.dashboard_rounded,
                     onTap: () {
-                      // handleDrawerItemClick("Dashboard");
                       router.replace("/");
                     },
                   ),
@@ -131,7 +130,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                     selected: currentSelected == "Konto",
                     textOpacity: currentSelected == "Konto" ? 1.0 : 0.6,
                     onTap: () {
-                      handleDrawerItemClick("Konto");
+                      router.replace("/account");
                     },
                   ),
                   DrawerListTile(
@@ -140,7 +139,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                     selected: currentSelected == "Rozszerzenia",
                     textOpacity: currentSelected == "Rozszerzenia" ? 1.0 : 0.6,
                     onTap: () {
-                      handleDrawerItemClick("Rozszerzenia");
+                      router.replace("/extensions");
                     },
                   ),
                   DrawerListTile(
@@ -149,7 +148,6 @@ class _MDNDrawerState extends State<MDNDrawer> {
                     selected: currentSelected == "Ustawienia",
                     textOpacity: currentSelected == "Ustawienia" ? 1.0 : 0.6,
                     onTap: () {
-                      handleDrawerItemClick("Ustawienia");
                       router.replace("/settings");
                     },
                   ),

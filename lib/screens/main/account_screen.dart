@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:mdn/components/drawer/drawer.dart';
 import 'package:mdn/responsive.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<AccountScreen> createState() => _AccountScreenState();
 }
 
 final GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktop(context);
@@ -40,7 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.network(
-                  "https://source.unsplash.com/collection/11649432/1280x720",
+                  "https://source.unsplash.com/collection/9663343/1280x720",
                   isAntiAlias: true,
                   width: isDesktop
                       ? ((MediaQuery.of(context).size.width / 9) * 7)
