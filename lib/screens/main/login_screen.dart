@@ -48,6 +48,7 @@ class LoginScreen extends StatelessWidget {
                         'Zaloguj się',
                         style: GoogleFonts.getFont(
                           'Poppins',
+                          color: Colors.white.withOpacity(.6),
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
                         ),
