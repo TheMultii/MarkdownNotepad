@@ -125,6 +125,15 @@ class _MDNDrawerState extends State<MDNDrawer> {
                     ),
                   const DrawerListDivider(title: "Miscellaneous"),
                   DrawerListTile(
+                    title: "[TEMP] Zaloguj",
+                    icon: Icons.login_outlined,
+                    selected: false,
+                    textOpacity: 0.6,
+                    onTap: () {
+                      router.replace("/login");
+                    },
+                  ),
+                  DrawerListTile(
                     title: "Konto",
                     icon: Icons.account_circle_outlined,
                     selected: currentSelected == "Konto",

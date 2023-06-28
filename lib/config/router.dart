@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mdn/screens/main/account_screen.dart';
 import 'package:mdn/screens/main/extensions_screen.dart';
+import 'package:mdn/screens/main/login_screen.dart';
 import 'package:mdn/screens/main/main_screen.dart';
+import 'package:mdn/screens/main/register_screen.dart';
 import 'package:mdn/screens/main/settings_screen.dart';
 
 final GoRouter router = GoRouter(
@@ -12,6 +14,18 @@ final GoRouter router = GoRouter(
       name: 'main-screen',
       builder: (BuildContext context, GoRouterState state) =>
           const MainScreen(),
+    ),
+    GoRoute(
+      path: '/login',
+      name: 'login-screen',
+      builder: (BuildContext context, GoRouterState state) =>
+          const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      name: 'register-screen',
+      builder: (BuildContext context, GoRouterState state) =>
+          const RegisterScreen(),
     ),
     GoRoute(
       path: '/settings',
