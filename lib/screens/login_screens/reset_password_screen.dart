@@ -3,11 +3,15 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mdn/components/login/input_widget.dart';
 import 'package:mdn/components/mdn_cached_network_image.dart';
 import 'package:mdn/config/router.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  const ResetPasswordScreen({Key? key}) : super(key: key);
+  ResetPasswordScreen({Key? key}) : super(key: key);
+
+  final TextEditingController mailController = TextEditingController();
+  //TODO: add form validation
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,7 @@ class ResetPasswordScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Row(
-          children: [
+          children: <Widget>[
             Expanded(
               flex: 6,
               child: MDNCachedNetworkImage(
@@ -28,7 +32,7 @@ class ResetPasswordScreen extends StatelessWidget {
             Expanded(
               flex: 8,
               child: Padding(
-                padding: const EdgeInsets.only(top: 66),
+                padding: const EdgeInsets.only(left: 50, right: 50),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -52,46 +56,55 @@ class ResetPasswordScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    //login form
-                    //Buttons
+                    //reset password form
                     Padding(
-                      padding: const EdgeInsets.only(top: 91),
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all<Size>(
-                              const Size(300, 50)),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            Theme.of(context).colorScheme.primary,
+                      padding: const EdgeInsets.all(100.0),
+                      child: Column(
+                        children: <Widget>[
+                          MDNInputWidget(
+                            inputController: mailController,
+                            labelText: 'Adres e-mail',
                           ),
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                            Colors.white,
-                          ),
-                          overlayColor: MaterialStateProperty.all<Color>(
-                            Colors.white.withOpacity(.075),
-                          ),
-                        ),
-                        child: Text(
-                          'Zresetuj hasło',
-                          style: GoogleFonts.getFont(
-                            'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        onPressed: () {
-                          print('Zresetuj hasło');
-                        },
-                        onLongPress: () {
-                          router.replace("/");
-                        },
+                        ],
                       ),
+                    ),
+                    //Buttons
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all<Size>(
+                            const Size(300, 50)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).colorScheme.primary,
+                        ),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white,
+                        ),
+                        overlayColor: MaterialStateProperty.all<Color>(
+                          Colors.white.withOpacity(.075),
+                        ),
+                      ),
+                      child: Text(
+                        'Zresetuj hasło',
+                        style: GoogleFonts.getFont(
+                          'Poppins',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onPressed: () {
+                        print('Zresetuj hasło');
+                        print(mailController.text);
+                      },
+                      onLongPress: () {
+                        router.replace("/");
+                      },
                     ),
                     // zaloguj się
                     Padding(
                       padding: const EdgeInsets.only(top: 14.0, bottom: 5.0),
                       child: Wrap(
                         spacing: 8.0,
-                        children: [
+                        children: <Widget>[
                           const Text('Jeśli pamiętasz hasło, '),
                           RichText(
                             text: TextSpan(

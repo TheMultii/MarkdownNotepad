@@ -30,7 +30,7 @@ final GoRouter router = GoRouter(
       path: '/reset-password',
       name: 'reset-password-screen',
       builder: (BuildContext context, GoRouterState state) =>
-          const ResetPasswordScreen(),
+          ResetPasswordScreen(),
     ),
     GoRoute(
       path: '/settings',

@@ -15,6 +15,7 @@ class RegisterScreen extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
+  //TODO: add form validation
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class RegisterScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Row(
-          children: [
+          children: <Widget>[
             Expanded(
               flex: 6,
               child: MDNCachedNetworkImage(
@@ -137,7 +138,7 @@ class RegisterScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 14.0),
                       child: Wrap(
                         spacing: 8.0,
-                        children: [
+                        children: <Widget>[
                           const Text('Masz już konto?'),
                           RichText(
                             text: TextSpan(

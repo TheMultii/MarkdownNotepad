@@ -23,7 +23,7 @@ class LoginScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Row(
-          children: [
+          children: <Widget>[
             Expanded(
               flex: 6,
               child: MDNCachedNetworkImage(
@@ -141,7 +141,7 @@ class LoginScreen extends StatelessWidget {
                     // zarejestruj się
                     Wrap(
                       spacing: 8.0,
-                      children: [
+                      children: <Widget>[
                         const Text(
                           'Nie masz konta?',
                           style: TextStyle(
