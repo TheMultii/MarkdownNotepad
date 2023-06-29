@@ -24,11 +24,29 @@ void main() async {
   await Hive.openBox('mdn');
 
   HttpOverrides.global = MDNHttpOverrides();
+
+  DiscordRPC.initialize();
+  DiscordRPC rpc = DiscordRPC(
+    applicationId: '1123939840669519903',
+  );
+
+  rpc.start(autoRegister: true);
+  rpc.updatePresence(
+    DiscordPresence(
+      state: 'Idle',
+      startTimeStamp: DateTime.now().millisecondsSinceEpoch,
+      largeImageKey: 'large_icon',
+      largeImageText: 'Markdown Notepad',
+    ),
+  );
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FetchUserDataDrawerProvider()),
         ChangeNotifierProvider(create: (_) => DataDrawerProvider()),
+        ChangeNotifierProvider(
+            create: (_) => DiscordRPCProvider.fromDiscordRPC(rpc)),
       ],
       child: const MarkdownNotepadApp(),
     ),
