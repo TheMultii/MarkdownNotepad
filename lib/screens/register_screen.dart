@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mdn/components/mdn_cached_network_image.dart';
 import 'package:mdn/config/router.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -23,12 +24,9 @@ class RegisterScreen extends StatelessWidget {
           children: [
             Expanded(
               flex: 6,
-              child: Image.network(
-                "https://pbs.twimg.com/media/$randomImage?format=jpg",
-                height: double.infinity,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+              child: MDNCachedNetworkImage(
+                  imageURL:
+                      "https://pbs.twimg.com/media/$randomImage?format=jpg"),
             ),
             Expanded(
               flex: 8,

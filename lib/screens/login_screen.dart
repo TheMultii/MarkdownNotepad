@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mdn/components/mdn_cached_network_image.dart';
 import 'package:mdn/config/router.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -20,12 +21,9 @@ class LoginScreen extends StatelessWidget {
           children: [
             Expanded(
               flex: 6,
-              child: Image.network(
-                "https://api.mganczarczyk.pl/tairiku/display/$randomImage",
-                height: double.infinity,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+              child: MDNCachedNetworkImage(
+                  imageURL:
+                      "https://api.mganczarczyk.pl/tairiku/display/$randomImage"),
             ),
             Expanded(
               flex: 8,
