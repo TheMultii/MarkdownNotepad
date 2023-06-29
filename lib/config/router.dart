@@ -20,7 +20,7 @@ final GoRouter router = GoRouter(
       path: '/login',
       name: 'login-screen',
       builder: (BuildContext context, GoRouterState state) =>
-          const LoginScreen(),
+          LoginScreen(),
     ),
     GoRoute(
       path: '/register',

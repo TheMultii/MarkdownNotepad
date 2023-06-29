@@ -3,11 +3,16 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mdn/components/login/input_widget.dart';
 import 'package:mdn/components/mdn_cached_network_image.dart';
 import 'package:mdn/config/router.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
+
+  final mailController = TextEditingController();
+  final passwordController = TextEditingController();
+  //TODO: add form validation
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +33,7 @@ class LoginScreen extends StatelessWidget {
             Expanded(
               flex: 8,
               child: Padding(
-                padding: const EdgeInsets.only(top: 66),
+                padding: const EdgeInsets.only(left: 50, right: 50),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -53,45 +58,73 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     //login form
-                    //Buttons
                     Padding(
-                      padding: const EdgeInsets.only(top: 91),
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all<Size>(
-                              const Size(300, 50)),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            Theme.of(context).colorScheme.primary,
-                          ),
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                            Colors.white,
-                          ),
-                          overlayColor: MaterialStateProperty.all<Color>(
-                            Colors.white.withOpacity(.075),
-                          ),
-                        ),
-                        child: Text(
-                          'Zaloguj się',
-                          style: GoogleFonts.getFont(
-                            'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        onPressed: () {
-                          print('Zaloguj się');
-                        },
-                        onLongPress: () {
-                          router.replace("/");
-                        },
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 60,
+                        vertical: 60,
                       ),
+                      child: Column(
+                        children: [
+                          MDNInputWidget(
+                            inputController: mailController,
+                            labelText: 'Adres e-mail',
+                          ),
+                          const SizedBox(
+                            width: double.infinity,
+                            height: 22,
+                          ),
+                          MDNInputWidget(
+                            inputController: passwordController,
+                            labelText: 'Hasło',
+                            obscureText: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    //Buttons
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all<Size>(
+                            const Size(300, 50)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).colorScheme.primary,
+                        ),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white,
+                        ),
+                        overlayColor: MaterialStateProperty.all<Color>(
+                          Colors.white.withOpacity(.075),
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        'Zaloguj się',
+                        style: GoogleFonts.getFont(
+                          'Poppins',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onPressed: () {
+                        print('Zaloguj się');
+                        print(
+                            "${mailController.text}|${passwordController.text}");
+                      },
+                      onLongPress: () {
+                        router.replace("/");
+                      },
                     ),
                     // zapomniałeś hasło?
                     Padding(
                       padding: const EdgeInsets.only(top: 14.0, bottom: 5.0),
                       child: Wrap(
                         spacing: 8.0,
-                        children: [
+                        children: <Widget>[
                           const Text('Zapomniałeś hasło?'),
                           RichText(
                             text: TextSpan(
