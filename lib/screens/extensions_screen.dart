@@ -1,3 +1,4 @@
+import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
 import 'package:mdn/components/drawer/drawer.dart';
 import 'package:mdn/responsive.dart';
@@ -12,6 +13,8 @@ class ExtensionsScreen extends StatefulWidget {
 final GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
 
 class _ExtensionsScreenState extends State<ExtensionsScreen> {
+  final controller = FleatherController(ParchmentDocument());
+
   @override
   Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktop(context);
@@ -35,16 +38,11 @@ class _ExtensionsScreenState extends State<ExtensionsScreen> {
               : Container(),
           Expanded(
             flex: 7,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Column(
               children: [
-                Image.network(
-                  "https://source.unsplash.com/collection/256524/1280x720",
-                  isAntiAlias: true,
-                  width: isDesktop
-                      ? ((MediaQuery.of(context).size.width / 9) * 7)
-                      : MediaQuery.of(context).size.width,
+                FleatherToolbar.basic(controller: controller),
+                Expanded(
+                  child: FleatherEditor(controller: controller),
                 ),
               ],
             ),

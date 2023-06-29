@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mdn/config/router.dart';
 import 'package:mdn/providers/data_drawer_provider.dart';
+import 'package:mdn/providers/discord_rpc_provider.dart';
 import 'package:mdn/providers/fetch_user_data_drawer_provider.dart';
 import 'package:provider/provider.dart';
 
