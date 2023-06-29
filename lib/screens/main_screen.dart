@@ -108,7 +108,9 @@ class _MainScreenState extends State<MainScreen> {
                                     listen: false);
                             fetchDataDrawer.updateRandomName();
 
-                            _drawerKey.currentState?.openDrawer();
+                            if (!isDesktop) {
+                              _drawerKey.currentState?.openDrawer();
+                            }
                           },
                           child: const Text("Zmień użytkownika"),
                         ),

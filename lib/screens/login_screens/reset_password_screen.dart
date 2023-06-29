@@ -6,16 +6,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mdn/components/mdn_cached_network_image.dart';
 import 'package:mdn/config/router.dart';
 
-class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+class ResetPasswordScreen extends StatelessWidget {
+  const ResetPasswordScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final randomImage = [
-      "FrFRTDwaMAAF-aq",
-      "Fo1tbQ4aUAAn_Fy",
-      "FomXyNIaYAA_GZD"
-    ][Random().nextInt(3)];
+    final randomImage =
+        ["1123720313524033980", "1123719621581527065"][Random().nextInt(2)];
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -26,7 +23,7 @@ class RegisterScreen extends StatelessWidget {
               flex: 6,
               child: MDNCachedNetworkImage(
                   imageURL:
-                      "https://pbs.twimg.com/media/$randomImage?format=jpg"),
+                      "https://api.mganczarczyk.pl/tairiku/display/$randomImage"),
             ),
             Expanded(
               flex: 8,
@@ -36,7 +33,7 @@ class RegisterScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      '👋 Miło Cię poznać',
+                      '🤔 Nie pamiętasz hasła?',
                       style: GoogleFonts.getFont(
                         'Poppins',
                         fontSize: 35,
@@ -46,7 +43,7 @@ class RegisterScreen extends StatelessWidget {
                     Container(
                       transform: Matrix4.translationValues(0.0, -8.0, 0.0),
                       child: Text(
-                        'Zarejestruj się',
+                        'Zresetuj je',
                         style: GoogleFonts.getFont(
                           'Poppins',
                           color: Colors.white.withOpacity(.6),
@@ -74,7 +71,7 @@ class RegisterScreen extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          'Zarejestruj się',
+                          'Zresetuj hasło',
                           style: GoogleFonts.getFont(
                             'Poppins',
                             fontSize: 18,
@@ -82,7 +79,7 @@ class RegisterScreen extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          print('Zarejestruj się');
+                          print('Zresetuj hasło');
                         },
                         onLongPress: () {
                           router.replace("/");
@@ -91,18 +88,18 @@ class RegisterScreen extends StatelessWidget {
                     ),
                     // zaloguj się
                     Padding(
-                      padding: const EdgeInsets.only(top: 14.0),
+                      padding: const EdgeInsets.only(top: 14.0, bottom: 5.0),
                       child: Wrap(
                         spacing: 8.0,
                         children: [
-                          const Text('Masz już konto?'),
+                          const Text('Jeśli pamiętasz hasło, '),
                           RichText(
                             text: TextSpan(
+                              text: 'Zaloguj się',
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
                                   router.replace('/login');
                                 },
-                              text: 'Zaloguj się',
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary,
                               ),
@@ -110,7 +107,7 @@ class RegisterScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

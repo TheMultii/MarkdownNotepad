@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mdn/screens/account_screen.dart';
 import 'package:mdn/screens/extensions_screen.dart';
-import 'package:mdn/screens/login_screen.dart';
 import 'package:mdn/screens/main_screen.dart';
-import 'package:mdn/screens/register_screen.dart';
 import 'package:mdn/screens/settings_screen.dart';
+import 'package:mdn/screens/login_screens/login_screen.dart';
+import 'package:mdn/screens/login_screens/register_screen.dart';
+import 'package:mdn/screens/login_screens/reset_password_screen.dart';
 
 final GoRouter router = GoRouter(
   routes: <GoRoute>[
@@ -26,6 +27,12 @@ final GoRouter router = GoRouter(
       name: 'register-screen',
       builder: (BuildContext context, GoRouterState state) =>
           const RegisterScreen(),
+    ),
+    GoRoute(
+      path: '/reset-password',
+      name: 'reset-password-screen',
+      builder: (BuildContext context, GoRouterState state) =>
+          const ResetPasswordScreen(),
     ),
     GoRoute(
       path: '/settings',
@@ -64,6 +71,18 @@ final List<Map<String, String>> namedRoutes = [
   {
     'name': 'Konto',
     'path': '/account',
+  },
+  {
+    'name': 'Zaloguj się',
+    'path': '/login',
+  },
+  {
+    'name': 'Zarejestruj się',
+    'path': '/register',
+  },
+  {
+    'name': 'Zresetuj hasło',
+    'path': '/reset-password',
   },
 ];
 

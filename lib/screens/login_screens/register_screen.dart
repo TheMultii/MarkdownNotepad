@@ -6,13 +6,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mdn/components/mdn_cached_network_image.dart';
 import 'package:mdn/config/router.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatelessWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final randomImage =
-        ["1123720313524033980", "1123719621581527065"][Random().nextInt(2)];
+    final randomImage = [
+      "FrFRTDwaMAAF-aq",
+      "Fo1tbQ4aUAAn_Fy",
+      "FomXyNIaYAA_GZD"
+    ][Random().nextInt(3)];
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -23,7 +26,7 @@ class LoginScreen extends StatelessWidget {
               flex: 6,
               child: MDNCachedNetworkImage(
                   imageURL:
-                      "https://api.mganczarczyk.pl/tairiku/display/$randomImage"),
+                      "https://pbs.twimg.com/media/$randomImage?format=jpg"),
             ),
             Expanded(
               flex: 8,
@@ -33,7 +36,7 @@ class LoginScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      '👋 Miło Cię znowu widzieć',
+                      '👋 Miło Cię poznać',
                       style: GoogleFonts.getFont(
                         'Poppins',
                         fontSize: 35,
@@ -43,7 +46,7 @@ class LoginScreen extends StatelessWidget {
                     Container(
                       transform: Matrix4.translationValues(0.0, -8.0, 0.0),
                       child: Text(
-                        'Zaloguj się',
+                        'Zarejestruj się',
                         style: GoogleFonts.getFont(
                           'Poppins',
                           color: Colors.white.withOpacity(.6),
@@ -71,7 +74,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          'Zaloguj się',
+                          'Zarejestruj się',
                           style: GoogleFonts.getFont(
                             'Poppins',
                             fontSize: 18,
@@ -79,27 +82,27 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          print('Zaloguj się');
+                          print('Zarejestruj się');
                         },
                         onLongPress: () {
                           router.replace("/");
                         },
                       ),
                     ),
-                    // zapomniałeś hasło?
+                    // zaloguj się
                     Padding(
-                      padding: const EdgeInsets.only(top: 14.0, bottom: 5.0),
+                      padding: const EdgeInsets.only(top: 14.0),
                       child: Wrap(
                         spacing: 8.0,
                         children: [
-                          const Text('Zapomniałeś hasło?'),
+                          const Text('Masz już konto?'),
                           RichText(
                             text: TextSpan(
+                              text: 'Zaloguj się',
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  print('Zresetuj hasło');
+                                  router.replace('/login');
                                 },
-                              text: 'Zresetuj je',
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary,
                               ),
@@ -107,32 +110,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                    // zarejestruj się
-                    Wrap(
-                      spacing: 8.0,
-                      children: [
-                        const Text(
-                          'Nie masz konta?',
-                          style: TextStyle(
-                            fontSize: 13,
-                          ),
-                        ),
-                        RichText(
-                          text: TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                router.replace('/register');
-                              },
-                            text: 'Zarejestruj się',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    )
                   ],
                 ),
               ),
