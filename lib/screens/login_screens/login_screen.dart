@@ -10,8 +10,8 @@ import 'package:mdn/config/router.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
-  final mailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final TextEditingController mailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   //TODO: add form validation
 
   @override
@@ -59,12 +59,9 @@ class LoginScreen extends StatelessWidget {
                     ),
                     //login form
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 60,
-                        vertical: 60,
-                      ),
+                      padding: const EdgeInsets.all(60.0),
                       child: Column(
-                        children: [
+                        children: <Widget>[
                           MDNInputWidget(
                             inputController: mailController,
                             labelText: 'Adres e-mail',

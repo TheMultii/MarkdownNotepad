@@ -3,11 +3,18 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mdn/components/login/input_widget.dart';
 import 'package:mdn/components/mdn_cached_network_image.dart';
 import 'package:mdn/config/router.dart';
 
 class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  RegisterScreen({Key? key}) : super(key: key);
+
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController mailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +38,7 @@ class RegisterScreen extends StatelessWidget {
             Expanded(
               flex: 8,
               child: Padding(
-                padding: const EdgeInsets.only(top: 66),
+                padding: const EdgeInsets.only(left: 50, right: 50),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -55,39 +62,75 @@ class RegisterScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    //login form
-                    //Buttons
+                    //register form
                     Padding(
-                      padding: const EdgeInsets.only(top: 91),
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all<Size>(
-                              const Size(300, 50)),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            Theme.of(context).colorScheme.primary,
+                      padding: const EdgeInsets.all(45.0),
+                      child: Column(
+                        children: <Widget>[
+                          MDNInputWidget(
+                            inputController: usernameController,
+                            labelText: 'Nazwa użytkownika',
                           ),
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                            Colors.white,
+                          const SizedBox(
+                            width: double.infinity,
+                            height: 22,
                           ),
-                          overlayColor: MaterialStateProperty.all<Color>(
-                            Colors.white.withOpacity(.075),
+                          MDNInputWidget(
+                            inputController: mailController,
+                            labelText: 'Adres e-mail',
                           ),
-                        ),
-                        child: Text(
-                          'Zarejestruj się',
-                          style: GoogleFonts.getFont(
-                            'Poppins',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
+                          const SizedBox(
+                            width: double.infinity,
+                            height: 22,
                           ),
-                        ),
-                        onPressed: () {
-                          print('Zarejestruj się');
-                        },
-                        onLongPress: () {
-                          router.replace("/");
-                        },
+                          MDNInputWidget(
+                            inputController: passwordController,
+                            labelText: 'Hasło',
+                            obscureText: true,
+                          ),
+                          const SizedBox(
+                            width: double.infinity,
+                            height: 22,
+                          ),
+                          MDNInputWidget(
+                            inputController: confirmPasswordController,
+                            labelText: 'Powtórz hasło',
+                            obscureText: true,
+                          ),
+                        ],
                       ),
+                    ),
+                    //Buttons
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all<Size>(
+                            const Size(300, 50)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).colorScheme.primary,
+                        ),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white,
+                        ),
+                        overlayColor: MaterialStateProperty.all<Color>(
+                          Colors.white.withOpacity(.075),
+                        ),
+                      ),
+                      child: Text(
+                        'Zarejestruj się',
+                        style: GoogleFonts.getFont(
+                          'Poppins',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onPressed: () {
+                        print('Zarejestruj się');
+                        print(
+                            "${usernameController.text}|${mailController.text}|${passwordController.text}|${confirmPasswordController.text}");
+                      },
+                      onLongPress: () {
+                        router.replace("/");
+                      },
                     ),
                     // zaloguj się
                     Padding(

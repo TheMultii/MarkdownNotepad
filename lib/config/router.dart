@@ -19,14 +19,12 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/login',
       name: 'login-screen',
-      builder: (BuildContext context, GoRouterState state) =>
-          LoginScreen(),
+      builder: (BuildContext context, GoRouterState state) => LoginScreen(),
     ),
     GoRoute(
       path: '/register',
       name: 'register-screen',
-      builder: (BuildContext context, GoRouterState state) =>
-          const RegisterScreen(),
+      builder: (BuildContext context, GoRouterState state) => RegisterScreen(),
     ),
     GoRoute(
       path: '/reset-password',
