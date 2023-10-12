@@ -39,6 +39,7 @@ dependencies:
     back_button_interceptor: ^7.0.0
     fluttertoast: ^8.2.2
     cron: ^0.5.1
+    windows_taskbar: ^1.1.2
 
 dev_dependencies:
     flutter_test:
