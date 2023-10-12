@@ -1,86 +1,71 @@
-import 'dart:io';
-
-import 'package:dart_discord_rpc/dart_discord_rpc.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:mdn/config/router.dart';
-import 'package:mdn/providers/data_drawer_provider.dart';
-import 'package:mdn/providers/discord_rpc_provider.dart';
-import 'package:mdn/providers/fetch_user_data_drawer_provider.dart';
-import 'package:provider/provider.dart';
-
-class MDNHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
-}
+import 'package:markdownnotepad/core/app_theme.dart';
 
 void main() async {
   await Hive.initFlutter();
-  await Hive.openBox('mdn');
-
-  HttpOverrides.global = MDNHttpOverrides();
-
-  DiscordRPC.initialize();
-  DiscordRPC rpc = DiscordRPC(
-    applicationId: '1123939840669519903',
-  );
-
-  rpc.start(autoRegister: true);
-  rpc.updatePresence(
-    DiscordPresence(
-      state: 'Idle',
-      startTimeStamp: DateTime.now().millisecondsSinceEpoch,
-      largeImageKey: 'large_icon',
-      largeImageText: 'Markdown Notepad',
-    ),
-  );
-
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => FetchUserDataDrawerProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => DataDrawerProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => DiscordRPCProvider.fromDiscordRPC(rpc),
-        ),
-      ],
-      child: const MarkdownNotepadApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
-class MarkdownNotepadApp extends StatelessWidget {
-  const MarkdownNotepadApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
+    return MaterialApp(
       title: 'Markdown Notepad',
-      theme: ThemeData.dark().copyWith(
-        textTheme: GoogleFonts.sourceSansProTextTheme(
-          Theme.of(context).textTheme.apply(
-                bodyColor: Colors.white,
-                displayColor: Colors.white,
-              ),
-        ),
-        colorScheme: const ColorScheme.dark().copyWith(
-          background: const Color(0xFF1C1C1C),
-          inverseSurface: const Color(0xFF181818),
-          primary: const Color(0xEE8F00FF),
-        ),
-        useMaterial3: true,
+      debugShowCheckedModeBanner: false,
+      theme: true
+          ? themeDataDark(context, 0xFF1AB69D)
+          : themeDataLight(context, 0xFF1AB69D),
+      home: const MyHomePage(title: 'Markdown Notepad'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
       ),
-      routerConfig: router,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
