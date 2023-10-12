@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/core/app_theme.dart';
+import 'package:markdownnotepad/core/discord_rpc.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -33,6 +34,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  late MDNDiscordRPC mdnDiscordRPC;
+
+  @override
+  void initState() {
+    super.initState();
+
+    mdnDiscordRPC = MDNDiscordRPC();
+    mdnDiscordRPC.clearPresence();
+  }
 
   void _incrementCounter() {
     setState(() {
