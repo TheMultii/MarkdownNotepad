@@ -45,6 +45,7 @@ dependencies:
     flutter_code_editor: ^0.2.9
     flutter_localizations:
         sdk: flutter
+    highlight: ^0.7.0
 
 dev_dependencies:
     flutter_test:
