@@ -7,7 +7,7 @@ ThemeData themeDataDark(BuildContext context, int primaryColor) {
     colorScheme: ColorScheme.fromSeed(
       seedColor: Color(primaryColor),
       primary: Color(primaryColor),
-      background: const Color.fromARGB(255, 18, 18, 18),
+      background: const Color.fromARGB(255, 21, 21, 21),
       brightness: Brightness.dark,
     ),
     textTheme: GoogleFonts.manropeTextTheme(
