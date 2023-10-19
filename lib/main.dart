@@ -102,13 +102,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: MDNLayout(
           child: GestureDetector(
             onTap: () => fNode.previousFocus(),
-            child: Container(
+            child: SizedBox(
               height: double.infinity,
               width: double.infinity,
-              color: a11yDarkTheme['root']!.backgroundColor,
               child: SingleChildScrollView(
                 child: CodeTheme(
-                  data: CodeThemeData(styles: a11yDarkTheme),
+                  data: CodeThemeData(
+                    styles: {
+                      ...a11yDarkTheme,
+                      'root': TextStyle(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.background,
+                          color: const Color(0xfff8f8f2)),
+                    },
+                  ),
                   child: CodeField(
                     controller: controller,
                     focusNode: fNode,
