@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
+import 'package:flutter/foundation.dart';
 
 // singleton of DiscordRPC
 class MDNDiscordRPC {
@@ -24,6 +27,8 @@ class MDNDiscordRPC {
   static DiscordRPC get discordRPCInstance => _discordRPCInstance!;
 
   void updatePresence({required DiscordPresence presence}) {
+    if (kIsWeb) return;
+    if (!Platform.isLinux && !Platform.isWindows) return;
     _discordRPCInstance?.start(autoRegister: true);
     _discordRPCInstance?.updatePresence(presence);
   }
@@ -34,6 +39,8 @@ class MDNDiscordRPC {
     int? startTimeStamp,
     int? endTimeStamp,
   }) {
+    if (kIsWeb) return;
+    if (!Platform.isLinux && !Platform.isWindows) return;
     _discordRPCInstance?.start(autoRegister: true);
     _discordRPCInstance?.updatePresence(
       DiscordPresence(
@@ -46,5 +53,9 @@ class MDNDiscordRPC {
     );
   }
 
-  void clearPresence() => setPresence(state: 'Idle');
+  void clearPresence() {
+    if (kIsWeb) return;
+    if (!Platform.isLinux && !Platform.isWindows) return;
+    setPresence(state: 'Idle');
+  }
 }
