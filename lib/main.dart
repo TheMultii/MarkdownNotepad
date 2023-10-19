@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:markdownnotepad/components/drawer.dart';
+import 'package:markdownnotepad/components/drawer/drawer.dart';
 import 'package:markdownnotepad/components/layout.dart';
 import 'package:markdownnotepad/core/app_theme.dart';
 import 'package:markdownnotepad/core/discord_rpc.dart';

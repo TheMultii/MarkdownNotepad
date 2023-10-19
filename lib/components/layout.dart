@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:markdownnotepad/components/drawer.dart';
+import 'package:markdownnotepad/components/drawer/drawer.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 
 class MDNLayout extends StatelessWidget {
