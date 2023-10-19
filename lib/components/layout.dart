@@ -34,11 +34,7 @@ class MDNLayout extends StatelessWidget {
                 : Container(),
             Expanded(
               flex: 7,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 36)
-                    .copyWith(top: 60),
-                child: child,
-              ),
+              child: child,
             ),
           ],
         ),
