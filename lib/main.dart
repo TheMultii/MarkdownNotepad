@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/components/drawer.dart';
+import 'package:markdownnotepad/components/layout.dart';
 import 'package:markdownnotepad/core/app_theme.dart';
 import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
@@ -96,15 +97,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       key: drawerKey,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
       drawer: const MDNDrawer(),
-
-      body: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        return SafeArea(
+      body: SafeArea(
+        child: MDNLayout(
           child: GestureDetector(
             onTap: () => fNode.previousFocus(),
             child: Container(
