@@ -5,7 +5,17 @@ import 'package:markdownnotepad/core/discord_rpc.dart';
 
 void main() async {
   await Hive.initFlutter();
-  runApp(const MyApp());
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => DataDrawerProvider(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
