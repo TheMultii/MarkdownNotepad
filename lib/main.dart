@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/components/drawer/drawer.dart';
 import 'package:markdownnotepad/components/layout.dart';
 import 'package:markdownnotepad/core/app_theme.dart';
+import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
 import 'package:provider/provider.dart';
@@ -35,8 +36,8 @@ class MyApp extends StatelessWidget {
       title: 'Markdown Notepad',
       debugShowCheckedModeBanner: false,
       theme: true
-          ? themeDataDark(context, 0xFF1AB69D)
-          : themeDataLight(context, 0xFF1AB69D),
+          ? themeDataDark(context, 0xFF8F00FF)
+          : themeDataLight(context, 0xFF8F00FF),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -100,20 +101,29 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: const MDNDrawer(),
       body: SafeArea(
         child: MDNLayout(
-          child: GestureDetector(
-            onTap: () => fNode.previousFocus(),
-            child: SizedBox(
-              height: double.infinity,
-              width: double.infinity,
+          child: SizedBox(
+            height: double.infinity,
+            width: double.infinity,
+            child: GestureDetector(
+              onTap: () {
+                fNode.requestFocus();
+              },
               child: SingleChildScrollView(
                 child: CodeTheme(
                   data: CodeThemeData(
                     styles: {
                       ...a11yDarkTheme,
                       'root': TextStyle(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.background,
-                          color: const Color(0xfff8f8f2)),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.background,
+                        color: const Color(0xfff8f8f2),
+                      ),
+                      'title': TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      'section': TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     },
                   ),
                   child: CodeField(
