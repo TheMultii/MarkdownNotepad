@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_highlight/themes/agate.dart';
-import 'package:flutter_highlight/themes/an-old-hope.dart';
-import 'package:flutter_highlight/themes/androidstudio.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/components/drawer.dart';
 import 'package:markdownnotepad/core/app_theme.dart';
@@ -125,8 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-        );
-      }),
+        ),
+      ),
     );
   }
 }
