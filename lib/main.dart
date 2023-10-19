@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_highlight/themes/agate.dart';
+import 'package:flutter_highlight/themes/an-old-hope.dart';
+import 'package:flutter_highlight/themes/androidstudio.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:markdownnotepad/components/drawer.dart';
 import 'package:markdownnotepad/core/app_theme.dart';
 import 'package:markdownnotepad/core/discord_rpc.dart';
+import 'package:markdownnotepad/providers/data_drawer_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_code_editor/flutter_code_editor.dart';
+import 'package:flutter_highlight/themes/a11y-dark.dart';
+import 'package:highlight/languages/markdown.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -29,6 +39,16 @@ class MyApp extends StatelessWidget {
       theme: true
           ? themeDataDark(context, 0xFF1AB69D)
           : themeDataLight(context, 0xFF1AB69D),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('pl'),
+        Locale('en'),
+      ],
+      locale: const Locale('pl'),
       home: const MyHomePage(title: 'Markdown Notepad'),
     );
   }
@@ -46,46 +66,67 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   late MDNDiscordRPC mdnDiscordRPC;
 
+  final controller = CodeController(
+    text: '# test',
+    language: markdown,
+  );
+  final fNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
 
     mdnDiscordRPC = MDNDiscordRPC();
-    mdnDiscordRPC.clearPresence();
+    // mdnDiscordRPC.clearPresence();
+    mdnDiscordRPC.setPresence(state: "Editing a test file");
   }
 
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
+
+    mdnDiscordRPC.setPresence(
+      state: "Counter: $_counter",
+      endTimeStamp:
+          DateTime.now().add(const Duration(minutes: 1)).millisecondsSinceEpoch,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> drawerKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
+      key: drawerKey,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      drawer: const MDNDrawer(),
+
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        return SafeArea(
+          child: GestureDetector(
+            onTap: () => fNode.previousFocus(),
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              color: a11yDarkTheme['root']!.backgroundColor,
+              child: SingleChildScrollView(
+                child: CodeTheme(
+                  data: CodeThemeData(styles: a11yDarkTheme),
+                  child: CodeField(
+                    controller: controller,
+                    focusNode: fNode,
+                  ),
+                ),
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+          ),
+        );
+      }),
     );
   }
 }
