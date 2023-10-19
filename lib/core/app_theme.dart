@@ -10,7 +10,7 @@ ThemeData themeDataDark(BuildContext context, int primaryColor) {
       background: const Color.fromARGB(255, 21, 21, 21),
       brightness: Brightness.dark,
     ),
-    textTheme: GoogleFonts.manropeTextTheme(
+    textTheme: GoogleFonts.sourceSans3TextTheme(
       Theme.of(context).textTheme.apply(
             bodyColor: const Color.fromARGB(255, 248, 248, 248),
             displayColor: const Color.fromARGB(255, 248, 248, 248),
@@ -40,7 +40,7 @@ ThemeData themeDataLight(BuildContext context, int primaryColor) {
       background: const Color.fromARGB(255, 247, 247, 247),
       brightness: Brightness.light,
     ),
-    textTheme: GoogleFonts.manropeTextTheme(
+    textTheme: GoogleFonts.sourceSans3TextTheme(
       Theme.of(context).textTheme.apply(
             bodyColor: Colors.black,
             displayColor: Colors.black,
