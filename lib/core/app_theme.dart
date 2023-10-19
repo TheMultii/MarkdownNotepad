@@ -26,6 +26,7 @@ ThemeData themeDataDark(BuildContext context, int primaryColor) {
     extensions: <ThemeExtension<dynamic>>[
       const MarkdownNotepadTheme(
         text: Colors.white,
+        drawerBackground: Color(0xFF181818),
       ),
     ],
   );
@@ -55,6 +56,7 @@ ThemeData themeDataLight(BuildContext context, int primaryColor) {
     extensions: <ThemeExtension<dynamic>>[
       const MarkdownNotepadTheme(
         text: Colors.black,
+        drawerBackground: Color(0xFFFAFAFA),
       ),
     ],
   );
