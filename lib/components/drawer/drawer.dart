@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:markdownnotepad/components/drawer/drawer_footer.dart';
 import 'package:markdownnotepad/components/drawer/drawer_header.dart';
+import 'package:markdownnotepad/components/drawer/drawer_item.dart';
+import 'package:markdownnotepad/components/drawer/drawer_item_section.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +20,8 @@ class MDNDrawer extends StatefulWidget {
 class _MDNDrawerState extends State<MDNDrawer> {
   late ScrollController _scrollController;
   Timer? _scrollEndTimer;
+
+  int currentSelectedIndex = -1;
 
   @override
   void dispose() {
@@ -132,14 +136,31 @@ class _MDNDrawerState extends State<MDNDrawer> {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    MDNDrawerItem(
+                      icon: FeatherIcons.user,
+                      title: "Dashboard",
+                      isSelected: -1 == currentSelectedIndex,
+                      onPressed: () =>
+                          setState(() => currentSelectedIndex = -1),
+                    ),
+                    const MDNDrawerItemSection(title: "Ostatnie notatki"),
                     ...List.generate(
                       20,
                       (index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text((index + 1).toString()),
+                        return MDNDrawerItem(
+                          icon: FeatherIcons.folder,
+                          title: "Strona główna - ${index + 1}",
+                          isSelected: index == currentSelectedIndex,
+                          onPressed: () =>
+                              setState(() => currentSelectedIndex = index),
                         );
                       },
+                    ),
+                    const SizedBox(
+                      height: 10,
                     ),
                   ],
                 ),
