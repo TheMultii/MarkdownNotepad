@@ -1,0 +1,1 @@
+enum DashboardTabs { lastViewed, addedToFavourites }

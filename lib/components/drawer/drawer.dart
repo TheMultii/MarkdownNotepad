@@ -166,9 +166,6 @@ class _MDNDrawerState extends State<MDNDrawer> {
                         });
                         Modular.to.navigate(
                           destination,
-                          arguments: {
-                            "id": Random().nextInt(100000),
-                          },
                         );
                       },
                     ),
