@@ -233,6 +233,21 @@ class _MDNDrawerState extends State<MDNDrawer> {
                       },
                     ),
                     MDNDrawerItem(
+                      icon: FeatherIcons.logIn,
+                      title: "Zaloguj",
+                      isSelected: isTabSelected("/auth/login"),
+                      onPressed: () {
+                        const String destination = "/auth/login";
+
+                        setState(() {
+                          currentTab = destination;
+                        });
+                        Modular.to.navigate(
+                          destination,
+                        );
+                      },
+                    ),
+                    MDNDrawerItem(
                       icon: FeatherIcons.package,
                       title: "Rozszerzenia",
                       isSelected: isTabSelected("/miscellaneous/extensions"),
