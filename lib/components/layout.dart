@@ -4,10 +4,12 @@ import 'package:markdownnotepad/core/responsive_layout.dart';
 
 class MDNLayout extends StatelessWidget {
   final Widget child;
+  final bool displayDrawer;
 
   const MDNLayout({
     super.key,
     required this.child,
+    required this.displayDrawer,
   });
 
   @override
@@ -26,7 +28,7 @@ class MDNLayout extends StatelessWidget {
       body: SafeArea(
         child: Row(
           children: [
-            isDesktop
+            isDesktop && displayDrawer
                 ? const Expanded(
                     flex: 2,
                     child: MDNDrawer(),

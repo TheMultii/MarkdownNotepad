@@ -4,7 +4,13 @@ import 'package:markdownnotepad/components/drawer/drawer.dart';
 import 'package:markdownnotepad/components/layout.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final bool displayDrawer;
+
+  const HomePage({
+    super.key,
+    required this.displayDrawer,
+  });
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -25,10 +31,11 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       key: drawerKey,
-      drawer: const MDNDrawer(),
-      body: const SafeArea(
+      drawer: widget.displayDrawer ? const MDNDrawer() : null,
+      body: SafeArea(
         child: MDNLayout(
-          child: RouterOutlet(),
+          displayDrawer: widget.displayDrawer,
+          child: const RouterOutlet(),
         ),
       ),
     );
