@@ -27,6 +27,7 @@ ThemeData themeDataDark(BuildContext context, int primaryColor) {
       const MarkdownNotepadTheme(
         text: Colors.white,
         drawerBackground: Color(0xFF181818),
+        cardColor: Color(0xFF262626),
       ),
     ],
   );
@@ -57,6 +58,7 @@ ThemeData themeDataLight(BuildContext context, int primaryColor) {
       const MarkdownNotepadTheme(
         text: Colors.black,
         drawerBackground: Color(0xFFFAFAFA),
+        cardColor: Color(0xFFF5F5F5),
       ),
     ],
   );
