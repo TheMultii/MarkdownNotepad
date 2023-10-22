@@ -8,6 +8,7 @@ class DashboardCard extends StatelessWidget {
   final DateTime editDate;
   final bool isLocalImage;
   final String backgroundImage;
+  final Function onTap;
   final Alignment imageAlignment;
   final BoxFit imageFit;
 
@@ -18,6 +19,7 @@ class DashboardCard extends StatelessWidget {
     required this.editDate,
     required this.isLocalImage,
     required this.backgroundImage,
+    required this.onTap,
     this.imageAlignment = Alignment.topCenter,
     this.imageFit = BoxFit.cover,
   });
@@ -42,7 +44,7 @@ class DashboardCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(3.0),
           ),
           child: InkWell(
-            onTap: () {},
+            onTap: () => onTap(),
             customBorder: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(3),
             ),

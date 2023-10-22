@@ -46,6 +46,8 @@ class _DashboardLastViewedCardsState extends State<DashboardLastViewedCards> {
                         isLocalImage: itemCard['isLocalImage'],
                         backgroundImage: itemCard['backgroundImage'],
                         imageAlignment: itemCard['imageAlignment'],
+                        onTap: () =>
+                            debugPrint("Card ${itemCard['id']} tapped!"),
                       ),
                     )
                     .toList(),
