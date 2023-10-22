@@ -28,6 +28,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollEndTimer?.cancel();
+    _scrollController.dispose();
     super.dispose();
   }
 
