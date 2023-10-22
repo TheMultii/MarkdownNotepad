@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
+import 'package:provider/provider.dart';
 
 class AuthButton extends StatelessWidget {
   final String actionText;
@@ -41,9 +43,11 @@ class AuthButton extends StatelessWidget {
         ),
       ),
       onPressed: () => onPressed(),
-      // TODO:
+      // TODO: Do not remove this until after the authorization is implemented.
       onLongPress: () {
-        Modular.to.navigate("/dashboard");
+        const String destination = "/dashboard/";
+        context.read<DrawerCurrentTabProvider>().setCurrentTab(destination);
+        Modular.to.navigate(destination);
       },
     );
   }
