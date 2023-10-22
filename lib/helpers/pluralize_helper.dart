@@ -27,4 +27,10 @@ class Pluralize {
     if (seconds < 5) return "sekundy";
     return "sekund";
   }
+
+  static String pluralizeExtensions(int extensions) {
+    if (extensions == 1) return "rozszerzenie";
+    if (extensions < 5) return "rozszerzenia";
+    return "rozszerzeń";
+  }
 }
