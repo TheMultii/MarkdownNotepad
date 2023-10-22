@@ -193,7 +193,13 @@ class _MDNDrawerState extends State<MDNDrawer> {
                                   "/dashboard/directory/${index + 1}";
 
                               notifier.setCurrentTab(destination);
-                              Modular.to.navigate(destination);
+                              Modular.to.navigate(
+                                destination,
+                                arguments: {
+                                  "cardsCount":
+                                      index == 1 ? 0 : Random().nextInt(10) + 5
+                                },
+                              );
                             },
                           );
                         },
