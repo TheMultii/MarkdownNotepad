@@ -17,7 +17,7 @@ class DashboardLastViewedSection extends StatelessWidget {
         DashboardLastViewedCards(
           items: [
             {
-              "id": 1165670289145860186,
+              "id": "1165670289145860186",
               "title": "Lorem ipsum 1",
               "subtitle": "Lorem ipsum dolor sit amet",
               "editDate": DateTime.now(),
@@ -27,7 +27,7 @@ class DashboardLastViewedSection extends StatelessWidget {
               "imageAlignment": const Alignment(1, -.55),
             },
             {
-              "id": 1165670290727129243,
+              "id": "1165670290727129243",
               "title": "Lorem ipsum 1",
               "subtitle": "Lorem ipsum dolor sit amet",
               "editDate": DateTime.now().subtract(const Duration(days: 1)),
@@ -37,7 +37,7 @@ class DashboardLastViewedSection extends StatelessWidget {
               "imageAlignment": const Alignment(1, -.225),
             },
             {
-              "id": 1165670313858703512,
+              "id": "1165670313858703512",
               "title": "Lorem ipsum 1",
               "subtitle":
                   "Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet",
