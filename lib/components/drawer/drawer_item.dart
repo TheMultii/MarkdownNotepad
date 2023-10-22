@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:markdownnotepad/core/app_theme_extension.dart';
 
 class MDNDrawerItem extends StatefulWidget {
   final String title;
@@ -23,6 +24,8 @@ class _MDNDrawerItemState extends State<MDNDrawerItem> {
 
   @override
   Widget build(BuildContext context) {
+    final Color textColor =
+        Theme.of(context).extension<MarkdownNotepadTheme>()!.text!;
     return AnimatedContainer(
       color: widget.isSelected
           ? Theme.of(context).colorScheme.primary
@@ -49,8 +52,8 @@ class _MDNDrawerItemState extends State<MDNDrawerItem> {
                   widget.icon,
                   size: 18,
                   color: widget.isSelected || isHovered
-                      ? Colors.white
-                      : Colors.white70,
+                      ? textColor
+                      : textColor.withOpacity(.7),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -60,8 +63,8 @@ class _MDNDrawerItemState extends State<MDNDrawerItem> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: widget.isSelected || isHovered
-                          ? Colors.white
-                          : Colors.white70,
+                          ? textColor
+                          : textColor.withOpacity(.7),
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),

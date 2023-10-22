@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:markdownnotepad/core/app_theme_extension.dart';
 
 class MDNInputWidget extends StatelessWidget {
   final TextEditingController inputController;
@@ -23,19 +24,28 @@ class MDNInputWidget extends StatelessWidget {
         labelText: labelText,
         labelStyle: GoogleFonts.getFont(
           'Poppins',
-          color: Colors.white.withOpacity(.6),
+          color: Theme.of(context)
+              .extension<MarkdownNotepadTheme>()!
+              .text!
+              .withOpacity(.6),
           fontSize: 14,
           fontWeight: FontWeight.w400,
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.white.withOpacity(.5),
+            color: Theme.of(context)
+                .extension<MarkdownNotepadTheme>()!
+                .text!
+                .withOpacity(.5),
           ),
           borderRadius: BorderRadius.circular(8),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.white.withOpacity(.9),
+            color: Theme.of(context)
+                .extension<MarkdownNotepadTheme>()!
+                .text!
+                .withOpacity(.9),
           ),
           borderRadius: BorderRadius.circular(8),
         ),

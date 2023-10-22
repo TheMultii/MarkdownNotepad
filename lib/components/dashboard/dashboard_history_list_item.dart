@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:markdownnotepad/components/tag_chip/tag_chip_small.dart';
+import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/enums/dashboard_history_item_actions.dart';
 import 'package:markdownnotepad/helpers/add_zero.dart';
 import 'package:markdownnotepad/helpers/pluralize_helper.dart';
@@ -57,7 +59,10 @@ class DashboardHistoryListItem extends StatelessWidget {
 
   TextSpan getActionTextSpan(BuildContext context) {
     final TextStyle textStyle = TextStyle(
-      color: Colors.white.withOpacity(.4),
+      color: Theme.of(context)
+          .extension<MarkdownNotepadTheme>()
+          ?.text!
+          .withOpacity(.4),
     );
 
     switch (action) {
@@ -133,7 +138,9 @@ class DashboardHistoryListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: isLast ? EdgeInsets.zero : const EdgeInsets.only(bottom: 32.0),
+      padding: isLast
+          ? const EdgeInsets.all(0)
+          : const EdgeInsets.only(bottom: 32.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,7 +205,10 @@ class DashboardHistoryListItem extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Colors.white.withOpacity(.4),
+                  color: Theme.of(context)
+                      .extension<MarkdownNotepadTheme>()
+                      ?.text!
+                      .withOpacity(.4),
                   fontSize: 14,
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/helpers/add_zero.dart';
 
 class DashboardCard extends StatelessWidget {
@@ -28,7 +29,10 @@ class DashboardCard extends StatelessWidget {
       child: Container(
         width: 296,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Theme.of(context)
+              .extension<MarkdownNotepadTheme>()
+              ?.text!
+              .withOpacity(.1),
           borderRadius: const BorderRadius.all(Radius.circular(3)),
         ),
         child: Card(
@@ -93,7 +97,10 @@ class DashboardCard extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: Colors.white.withOpacity(.6),
+                                    color: Theme.of(context)
+                                        .extension<MarkdownNotepadTheme>()
+                                        ?.text!
+                                        .withOpacity(.6),
                                   ),
                                 ),
                               ),
@@ -102,7 +109,10 @@ class DashboardCard extends StatelessWidget {
                                 "${editDate.day}.${addZero(editDate.month)}.${editDate.year}",
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.white.withOpacity(.4),
+                                  color: Theme.of(context)
+                                      .extension<MarkdownNotepadTheme>()
+                                      ?.text!
+                                      .withOpacity(.4),
                                 ),
                               ),
                             ]),
