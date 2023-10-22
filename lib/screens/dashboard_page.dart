@@ -71,9 +71,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
               ),
-              selectedTab == DashboardTabs.lastViewed
-                  ? const DashboardLastViewedSection()
-                  : const DashboardFavouritesSection(),
+              if (selectedTab == DashboardTabs.lastViewed)
+                const DashboardLastViewedSection()
+              else if (selectedTab == DashboardTabs.addedToFavourites)
+                const DashboardFavouritesSection(),
             ],
           ),
         ),
