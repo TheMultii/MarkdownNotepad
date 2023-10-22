@@ -10,6 +10,7 @@ import 'package:markdownnotepad/components/drawer/drawer_item.dart';
 import 'package:markdownnotepad/components/drawer/drawer_item_section.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
+import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
 import 'package:provider/provider.dart';
 
 class MDNDrawer extends StatefulWidget {
@@ -20,20 +21,8 @@ class MDNDrawer extends StatefulWidget {
 }
 
 class _MDNDrawerState extends State<MDNDrawer> {
-  late String currentTab;
-
   late ScrollController _scrollController;
   Timer? _scrollEndTimer;
-
-  @override
-  void initState() {
-    super.initState();
-
-    currentTab = Modular.to.path;
-    if (currentTab == "/") {
-      currentTab = "/dashboard/";
-    }
-  }
 
   @override
   void dispose() {
@@ -86,9 +75,6 @@ class _MDNDrawerState extends State<MDNDrawer> {
     );
   }
 
-  bool isTabSelected(String tab) =>
-      currentTab.toLowerCase() == tab.toLowerCase();
-
   @override
   Widget build(BuildContext context) {
     final dataDrawerProvider = Provider.of<DataDrawerProvider>(context);
@@ -111,167 +97,160 @@ class _MDNDrawerState extends State<MDNDrawer> {
         child: Column(
           children: [
             const MDNDrawerHeader(),
-            Expanded(
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: ElevatedButton.icon(
-                        onPressed: () => onCreateNewNotePressed(context),
-                        icon: Icon(
-                          FeatherIcons.plus,
-                          size: 17,
-                          color: extendedTheme?.text,
-                        ),
-                        label: Text(
-                          "Nowa notatka",
-                          style: TextStyle(
-                            fontSize: 16,
+            Consumer<DrawerCurrentTabProvider>(
+                builder: (context, notifier, child) {
+              bool isTabSelected(String tab) =>
+                  notifier.currentTab.toLowerCase() == tab.toLowerCase();
+
+              return Expanded(
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: ElevatedButton.icon(
+                          onPressed: () => onCreateNewNotePressed(context),
+                          icon: Icon(
+                            FeatherIcons.plus,
+                            size: 17,
                             color: extendedTheme?.text,
                           ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          backgroundColor: Colors.grey.shade900,
-                          foregroundColor: extendedTheme?.drawerBackground,
-                          surfaceTintColor:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? Colors.grey.shade900
-                                  : Colors.grey.shade100,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(3),
+                          label: Text(
+                            "Nowa notatka",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: extendedTheme?.text,
+                            ),
                           ),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 15,
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.grey.shade900,
+                            foregroundColor: extendedTheme?.drawerBackground,
+                            surfaceTintColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.grey.shade900
+                                    : Colors.grey.shade100,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 15,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    MDNDrawerItem(
-                      icon: FeatherIcons.pocket,
-                      title: "Dashboard",
-                      isSelected: isTabSelected("/dashboard/"),
-                      onPressed: () {
-                        const String destination = "/dashboard/";
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      MDNDrawerItem(
+                        icon: FeatherIcons.pocket,
+                        title: "Dashboard",
+                        isSelected: isTabSelected("/dashboard/"),
+                        onPressed: () {
+                          const String destination = "/dashboard/";
 
-                        setState(() {
-                          currentTab = destination;
-                        });
-                        Modular.to.navigate(
-                          destination,
-                        );
-                      },
-                    ),
-                    const MDNDrawerItemSection(title: "Ostatnie notatki"),
-                    ...List.generate(
-                      3,
-                      (index) {
-                        return MDNDrawerItem(
-                          icon: FeatherIcons.file,
-                          title: "Przykładowa notatka - ${index + 1}",
-                          isSelected: isTabSelected("/editor/${index + 1}"),
-                          onPressed: () {
-                            final String destination = "/editor/${index + 1}";
-                            setState(() {
-                              currentTab = destination;
-                            });
-                            Modular.to.navigate(
-                              destination,
-                            );
-                          },
-                        );
-                      },
-                    ),
-                    const MDNDrawerItemSection(title: "Foldery"),
-                    ...List.generate(
-                      3,
-                      (index) {
-                        return MDNDrawerItem(
-                          icon: FeatherIcons.folder,
-                          title: "Folder ${index + 1}",
-                          isSelected: isTabSelected("/directory/${index + 1}"),
-                          onPressed: () {
-                            final String destination =
-                                "/directory/${index + 1}";
-                            setState(() {
-                              currentTab = destination;
-                            });
-                            Modular.to.navigate(
-                              "/dashboard/",
-                              arguments: {
-                                "id": Random().nextInt(100000) + index + 1,
-                              },
-                            );
-                          },
-                        );
-                      },
-                    ),
-                    const MDNDrawerItemSection(title: "Miscellaneous"),
-                    MDNDrawerItem(
-                      icon: FeatherIcons.user,
-                      title: "Konto",
-                      isSelected: isTabSelected("/miscellaneous/account"),
-                      onPressed: () {
-                        const String destination = "/miscellaneous/account";
+                          notifier.setCurrentTab(destination);
+                          Modular.to.navigate(
+                            destination,
+                          );
+                        },
+                      ),
+                      const MDNDrawerItemSection(title: "Ostatnie notatki"),
+                      ...List.generate(
+                        3,
+                        (index) {
+                          return MDNDrawerItem(
+                            icon: FeatherIcons.file,
+                            title: "Przykładowa notatka - ${index + 1}",
+                            isSelected: isTabSelected("/editor/${index + 1}"),
+                            onPressed: () {
+                              final String destination = "/editor/${index + 1}";
 
-                        setState(() {
-                          currentTab = destination;
-                        });
-                        Modular.to.navigate(
-                          destination,
-                          arguments: {
-                            "id": Random().nextInt(100000),
-                          },
-                        );
-                      },
-                    ),
-                    MDNDrawerItem(
-                      icon: FeatherIcons.logIn,
-                      title: "Zaloguj",
-                      isSelected: isTabSelected("/auth/login"),
-                      onPressed: () {
-                        const String destination = "/auth/login";
+                              notifier.setCurrentTab(destination);
+                              Modular.to.navigate(
+                                destination,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      const MDNDrawerItemSection(title: "Foldery"),
+                      ...List.generate(
+                        3,
+                        (index) {
+                          return MDNDrawerItem(
+                            icon: FeatherIcons.folder,
+                            title: "Folder ${index + 1}",
+                            isSelected: isTabSelected(
+                                "/dashboard/directory/${index + 1}"),
+                            onPressed: () {
+                              final String destination =
+                                  "/dashboard/directory/${index + 1}";
 
-                        setState(() {
-                          currentTab = destination;
-                        });
-                        Modular.to.navigate(
-                          destination,
-                        );
-                      },
-                    ),
-                    MDNDrawerItem(
-                      icon: FeatherIcons.package,
-                      title: "Rozszerzenia",
-                      isSelected: isTabSelected("/miscellaneous/extensions"),
-                      onPressed: () {
-                        const String destination = "/miscellaneous/extensions";
+                              notifier.setCurrentTab(destination);
+                              Modular.to.navigate(destination);
+                            },
+                          );
+                        },
+                      ),
+                      const MDNDrawerItemSection(title: "Miscellaneous"),
+                      MDNDrawerItem(
+                        icon: FeatherIcons.user,
+                        title: "Konto",
+                        isSelected: isTabSelected("/miscellaneous/account"),
+                        onPressed: () {
+                          const String destination = "/miscellaneous/account";
 
-                        setState(() {
-                          currentTab = destination;
-                        });
-                        Modular.to.navigate(
-                          destination,
-                          arguments: {
-                            "id": Random().nextInt(100000),
-                          },
-                        );
-                      },
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                  ],
+                          notifier.setCurrentTab(destination);
+                          Modular.to.navigate(
+                            destination,
+                            arguments: {
+                              "id": Random().nextInt(100000),
+                            },
+                          );
+                        },
+                      ),
+                      MDNDrawerItem(
+                        icon: FeatherIcons.logIn,
+                        title: "Zaloguj",
+                        isSelected: isTabSelected("/auth/login"),
+                        onPressed: () {
+                          const String destination = "/auth/login";
+
+                          notifier.setCurrentTab(destination);
+                          Modular.to.navigate(
+                            destination,
+                          );
+                        },
+                      ),
+                      MDNDrawerItem(
+                        icon: FeatherIcons.package,
+                        title: "Rozszerzenia",
+                        isSelected: isTabSelected("/miscellaneous/extensions"),
+                        onPressed: () {
+                          const String destination =
+                              "/miscellaneous/extensions";
+
+                          notifier.setCurrentTab(destination);
+                          Modular.to.navigate(
+                            destination,
+                            arguments: {
+                              "id": Random().nextInt(100000),
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
             const MDNDrawerFooter(
               avatarUrl: "https://api.mganczarczyk.pl/user/TheMultii/profile",
               username: "TheMultii",
