@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:markdownnotepad/components/drawer/drawer.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 
-class MDNLayout extends StatelessWidget {
+class MDNLayout extends StatefulWidget {
   final Widget child;
   final bool displayDrawer;
 
@@ -13,12 +13,16 @@ class MDNLayout extends StatelessWidget {
   });
 
   @override
+  State<MDNLayout> createState() => _MDNLayoutState();
+}
+
+class _MDNLayoutState extends State<MDNLayout> {
+  final GlobalKey<ScaffoldState> drawerKey = GlobalKey<ScaffoldState>();
+
+  @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> drawerKey = GlobalKey<ScaffoldState>();
-
-    final isDesktop = Responsive.isDesktop(context);
-
-    if (isDesktop && drawerKey.currentState?.isDrawerOpen == true) {
+    if (Responsive.isDesktop(context) &&
+        drawerKey.currentState?.isDrawerOpen == true) {
       Navigator.of(context).pop();
     }
 
@@ -28,7 +32,7 @@ class MDNLayout extends StatelessWidget {
       body: SafeArea(
         child: Row(
           children: [
-            isDesktop && displayDrawer
+            Responsive.isDesktop(context) && widget.displayDrawer
                 ? const Expanded(
                     flex: 2,
                     child: MDNDrawer(),
@@ -36,7 +40,7 @@ class MDNLayout extends StatelessWidget {
                 : Container(),
             Expanded(
               flex: 7,
-              child: child,
+              child: widget.child,
             ),
           ],
         ),
