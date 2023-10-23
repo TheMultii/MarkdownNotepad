@@ -6,10 +6,12 @@ import 'package:markdownnotepad/providers/data_drawer_provider.dart';
 import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
 import 'package:markdownnotepad/router_modules/app_module.dart';
 import 'package:provider/provider.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() async {
   await Hive.initFlutter();
 
+  setPathUrlStrategy();
   runApp(
     MultiProvider(
       providers: [
