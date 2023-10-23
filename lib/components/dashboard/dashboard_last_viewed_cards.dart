@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:markdownnotepad/components/dashboard/dashboard_card.dart';
 import 'package:markdownnotepad/helpers/scroll_pointer_signal.dart';
+import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
+import 'package:provider/provider.dart';
 
 class DashboardLastViewedCards extends StatefulWidget {
   final List<Map<String, dynamic>> items;
@@ -46,8 +49,14 @@ class _DashboardLastViewedCardsState extends State<DashboardLastViewedCards> {
                         isLocalImage: itemCard['isLocalImage'],
                         backgroundImage: itemCard['backgroundImage'],
                         imageAlignment: itemCard['imageAlignment'],
-                        onTap: () =>
-                            debugPrint("Card ${itemCard['id']} tapped!"),
+                        onTap: () {
+                          final String destination =
+                              "/editor/${itemCard['id']}";
+                          context
+                              .read<DrawerCurrentTabProvider>()
+                              .setCurrentTab(destination);
+                          Modular.to.navigate(destination);
+                        },
                       ),
                     )
                     .toList(),
