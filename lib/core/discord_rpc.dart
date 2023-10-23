@@ -25,12 +25,19 @@ class MDNDiscordRPC {
   }
 
   static DiscordRPC get discordRPCInstance => _discordRPCInstance!;
+  static DiscordPresence? currentPresence;
 
-  void updatePresence({required DiscordPresence presence}) {
+  void updatePresence({
+    required DiscordPresence presence,
+    bool forceUpdate = true,
+  }) {
     if (kIsWeb) return;
     if (!Platform.isLinux && !Platform.isWindows) return;
+    if (currentPresence?.state == presence.state && !forceUpdate) return;
+
     _discordRPCInstance?.start(autoRegister: true);
     _discordRPCInstance?.updatePresence(presence);
+    currentPresence = presence;
   }
 
   void setPresence({
@@ -38,19 +45,26 @@ class MDNDiscordRPC {
     String? details,
     int? startTimeStamp,
     int? endTimeStamp,
+    bool forceUpdate = true,
   }) {
     if (kIsWeb) return;
     if (!Platform.isLinux && !Platform.isWindows) return;
+    if (currentPresence?.state == state && !forceUpdate) return;
+
     _discordRPCInstance?.start(autoRegister: true);
-    _discordRPCInstance?.updatePresence(
-      DiscordPresence(
-        state: state,
-        startTimeStamp: startTimeStamp ?? DateTime.now().millisecondsSinceEpoch,
-        endTimeStamp: endTimeStamp,
-        largeImageKey: 'large_icon',
-        largeImageText: 'Markdown Notepad',
-      ),
+
+    DiscordPresence presence = DiscordPresence(
+      state: state,
+      startTimeStamp: startTimeStamp ?? DateTime.now().millisecondsSinceEpoch,
+      endTimeStamp: endTimeStamp,
+      largeImageKey: 'large_icon',
+      largeImageText: 'Markdown Notepad',
     );
+
+    _discordRPCInstance?.updatePresence(
+      presence,
+    );
+    currentPresence = presence;
   }
 
   void clearPresence() {
@@ -58,4 +72,6 @@ class MDNDiscordRPC {
     if (!Platform.isLinux && !Platform.isWindows) return;
     setPresence(state: 'Idle');
   }
+
+  DiscordPresence? getPresence() => currentPresence;
 }
