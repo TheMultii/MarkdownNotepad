@@ -96,7 +96,7 @@ class EditorTabEditor extends StatelessWidget {
 
                         return TextSpan(
                           children: [
-                            if (lineNumber % 7 != 0)
+                            if (lineNumber % 100 != 0)
                               WidgetSpan(
                                 alignment: PlaceholderAlignment.middle,
                                 child: Padding(
