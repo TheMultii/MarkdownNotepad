@@ -17,33 +17,29 @@ class AccountDetailsListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: padding,
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontSize: 14.0,
-              fontWeight: FontWeight.w600,
+              fontSize: 13.0,
               color: Theme.of(context)
                   .extension<MarkdownNotepadTheme>()
                   ?.text!
                   .withOpacity(.6),
             ),
           ),
-          const SizedBox(width: 10.0),
-          Expanded(
-            child: Text(
-              value,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.w600,
-              ),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],

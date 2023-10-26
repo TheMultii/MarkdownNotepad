@@ -32,41 +32,41 @@ class AccountDetailsSection extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 32,
+                    height: 16,
                   ),
                   AccountDetailsListItem(
                     title: "ID",
                     value: "1100116019864948858",
                     padding: EdgeInsets.only(
-                      bottom: 16.0,
+                      bottom: 4.0,
                     ),
                   ),
                   AccountDetailsListItem(
                     title: "Nick",
                     value: "TheMultii",
                     padding: EdgeInsets.only(
-                      bottom: 16.0,
-                    ),
-                  ),
-                  AccountDetailsListItem(
-                    title: "E-mail",
-                    value: "marcel@mganczarczyk.pl",
-                    padding: EdgeInsets.only(
-                      bottom: 16.0,
+                      bottom: 4.0,
                     ),
                   ),
                   AccountDetailsListItem(
                     title: "Imię",
                     value: "Marcel",
                     padding: EdgeInsets.only(
-                      bottom: 16.0,
+                      bottom: 4.0,
                     ),
                   ),
                   AccountDetailsListItem(
                     title: "Nazwisko",
                     value: "Gańczarczyk",
                     padding: EdgeInsets.only(
-                      bottom: 16.0,
+                      bottom: 4.0,
+                    ),
+                  ),
+                  AccountDetailsListItem(
+                    title: "E-mail",
+                    value: "marcel@mganczarczyk.pl",
+                    padding: EdgeInsets.only(
+                      bottom: 4.0,
                     ),
                   ),
                   AccountDetailsListItem(
