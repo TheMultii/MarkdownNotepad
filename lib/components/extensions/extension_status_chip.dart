@@ -13,13 +13,13 @@ class ExtensionStatusChip extends StatelessWidget {
   String extensionStatus() {
     switch (status) {
       case ExtensionStatus.active:
-        return "Aktywny";
+        return "Aktywne";
       case ExtensionStatus.inactive:
-        return "Nieaktywny";
+        return "Nieaktywne";
       case ExtensionStatus.invalid:
-        return "Nieprawidłowy";
+        return "Nieprawidłowe";
       default:
-        return "Nieznany";
+        return "Nieznane";
     }
   }
 
