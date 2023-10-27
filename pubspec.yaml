@@ -37,7 +37,6 @@ dependencies:
     touchable_opacity: ^1.2.0
     intl: ^0.18.1
     back_button_interceptor: ^7.0.0
-    fluttertoast: ^8.2.2
     cron: ^0.5.1
     windows_taskbar: ^1.1.2
     provider: ^6.0.5
