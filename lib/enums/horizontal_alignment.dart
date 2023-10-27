@@ -1,0 +1,1 @@
+enum HorizontalAlignment { left, right }
