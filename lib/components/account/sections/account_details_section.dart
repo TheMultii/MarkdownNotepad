@@ -49,15 +49,8 @@ class AccountDetailsSection extends StatelessWidget {
                     ),
                   ),
                   AccountDetailsListItem(
-                    title: "Imię",
-                    value: "Marcel",
-                    padding: EdgeInsets.only(
-                      bottom: 4.0,
-                    ),
-                  ),
-                  AccountDetailsListItem(
-                    title: "Nazwisko",
-                    value: "Gańczarczyk",
+                    title: "Imię i nazwisko",
+                    value: "Marcel Gańczarczyk",
                     padding: EdgeInsets.only(
                       bottom: 4.0,
                     ),
