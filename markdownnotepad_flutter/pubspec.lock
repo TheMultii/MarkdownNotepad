@@ -236,6 +236,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.2"
+  color_parser:
+    dependency: "direct main"
+    description:
+      name: color_parser
+      sha256: "39072f11dcf9b32809d34d4f6225313bf64f5b94565fca96cf1ab052185076e9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   convert:
     dependency: transitive
     description:
