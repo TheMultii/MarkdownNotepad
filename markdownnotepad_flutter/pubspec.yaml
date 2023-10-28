@@ -53,6 +53,7 @@ dependencies:
     flutter_markdown: ^0.6.18
     markdown: ^7.1.1
     flutter_math_fork: ^0.7.1
+    url_launcher: ^6.2.1
 
 dev_dependencies:
     flutter_test:
