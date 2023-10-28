@@ -1,6 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+  final String textToRender;
+
+  const EditorTabVisualPreview({
+    super.key,
+    required this.textToRender,
+  });
 
 class EditorTabVisualPreview extends StatelessWidget {
   const EditorTabVisualPreview({super.key});

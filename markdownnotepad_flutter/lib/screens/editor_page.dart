@@ -104,7 +104,9 @@ class _EditorPageState extends State<EditorPage> {
                         isLiveShareEnabled: isLiveShareEnabled,
                         toggleLiveShare: toggleLiveShare,
                       )
-                    : const EditorTabVisualPreview(),
+                    : EditorTabVisualPreview(
+                        textToRender: controller.fullText,
+                      ),
               ),
             ),
             if (!Responsive.isMobile(context))
