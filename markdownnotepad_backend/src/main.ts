@@ -35,6 +35,7 @@ async function bootstrap() {
     sortPropsAlphabetically: true,
     hideDownloadButton: false,
     hideHostname: false,
+    redocVersion: 'next',
     tagGroups: [
       {
         name: 'Authorization',
