@@ -2,7 +2,13 @@ import { User } from '@prisma/client';
 import { UserService } from './user.service';
 import { Controller, Get, Patch, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 
@@ -16,9 +22,10 @@ export class UserController {
   ) {}
 
   @Get('getAllUsers')
+  @ApiOperation({ summary: 'Get all users' })
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 200, description: 'Get all users.' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error.' })
+  @ApiResponse({ status: 200, description: 'Get all users' })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
   async getAllUsers(
     @Req() request: Request,
     @Res() response: Response,
@@ -34,10 +41,11 @@ export class UserController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get user by id' })
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 200, description: 'Get user by id.' })
-  @ApiResponse({ status: 404, description: 'User not found.' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error.' })
+  @ApiResponse({ status: 200, description: 'Get user by id' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
   @ApiParam({ name: 'id', type: String })
   async getUserById(
     @Req() request: Request,
@@ -62,8 +70,8 @@ export class UserController {
 
   @Patch()
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 200, description: 'Update user.' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error.' })
+  @ApiResponse({ status: 200, description: 'Update user' })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
   async updateUser(
     @Req() request: Request,
     @Res() response: Response,
