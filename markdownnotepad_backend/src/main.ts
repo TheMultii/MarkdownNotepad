@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { RedocModule, RedocOptions } from '@juicyllama/nestjs-redoc';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: false });
@@ -22,6 +23,29 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
+
+  const redocOptions: RedocOptions = {
+    title: 'Markdown Notepad API',
+    logo: {
+      url: 'http://localhost:3000/public/icon.png',
+      backgroundColor: '#F0F0F0',
+      altText: 'Markdown Notepad API',
+    },
+    sortPropsAlphabetically: true,
+    hideDownloadButton: false,
+    hideHostname: false,
+    tagGroups: [
+      {
+        name: 'Authorization',
+        tags: ['auth'],
+      },
+      {
+        name: 'User',
+        tags: ['user'],
+      },
+    ],
+  };
+  await RedocModule.setup('/redoc', app, document, redocOptions);
 
   await app.listen(3000);
 }
