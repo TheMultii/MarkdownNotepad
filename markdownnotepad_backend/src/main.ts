@@ -31,6 +31,7 @@ async function bootstrap() {
       backgroundColor: '#F0F0F0',
       altText: 'Markdown Notepad API',
     },
+    favicon: 'http://localhost:3000/public/icon.png',
     sortPropsAlphabetically: true,
     hideDownloadButton: false,
     hideHostname: false,
