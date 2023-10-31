@@ -17,6 +17,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Markdown Notepad API')
     .setVersion('1.0')
+    .setDescription('API documentation for Markdown Notepad')
     .addTag('user')
     .addTag('auth')
     .addBearerAuth()
