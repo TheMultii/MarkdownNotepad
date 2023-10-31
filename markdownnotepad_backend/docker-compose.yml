@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=markdownnotepad 
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+    container_name: markdownnotepad-db
+volumes:
+  db:
+    driver: local
