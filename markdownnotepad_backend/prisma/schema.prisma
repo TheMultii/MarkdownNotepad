@@ -21,6 +21,7 @@ model User {
   updatedAt DateTime  @updatedAt
   posts     Note[]
   tags      NoteTag[]
+  catalog   Catalog[]
 }
 
 model Note {
@@ -28,10 +29,12 @@ model Note {
   title     String
   content   String
   tags      NoteTag[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
+  folder    Catalog?  @relation(fields: [folderId], references: [id])
+  folderId  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model NoteTag {
@@ -40,9 +43,19 @@ model NoteTag {
   title     String
   color     String
   notes     Note[]
+  ownerId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Catalog {
+  id        String   @id @default(uuid())
+  title     String
+  notes     Note[]
+  owner     User     @relation(fields: [ownerId], references: [id])
   ownerId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model EventLogs {
@@ -52,6 +65,7 @@ model EventLogs {
   userId    String?
   noteId    String?
   tagId     String?
+  catalogId String?
   ip        String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
