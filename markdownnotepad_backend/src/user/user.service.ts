@@ -28,6 +28,18 @@ export class UserService {
     });
   }
 
+  async getUserByUsername(username: string): Promise<User> {
+    return await this.prisma.user.findUnique({
+      where: {
+        username,
+      },
+      include: {
+        posts: true,
+        tags: true,
+      },
+    });
+  }
+
   async createUser(user: UserModel): Promise<User> {
     const { username, email } = user;
 
