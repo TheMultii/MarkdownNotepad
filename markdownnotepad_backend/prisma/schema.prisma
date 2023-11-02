@@ -33,6 +33,7 @@ model Note {
   authorId  String
   folder    Catalog?  @relation(fields: [folderId], references: [id])
   folderId  String?
+  shared    Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
