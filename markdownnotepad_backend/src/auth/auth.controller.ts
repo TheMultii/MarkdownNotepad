@@ -1,10 +1,17 @@
 import { Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-user.dto';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { RegisterDto } from './dto/register-user.dto';
 import { validate } from '@nestjs/class-validator';
+import { Error400 } from 'src/http_response_models/error400.model';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -15,7 +22,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Login a user' })
   @ApiBody({ type: LoginDto })
   @ApiResponse({ status: 200, description: 'User successfully logged in' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
   async login(
     @Req() request: Request,
     @Res() response: Response,
@@ -41,7 +48,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Create a new user' })
   @ApiBody({ type: RegisterDto })
   @ApiResponse({ status: 201, description: 'User successfully registered' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
   async register(
     @Req() request: Request,
     @Res() response: Response,

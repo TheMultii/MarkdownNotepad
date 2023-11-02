@@ -13,7 +13,12 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -21,10 +26,17 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { NoteInclude, Note as NoteModel } from './notes.model';
+import {
+  Note as NoteResponse,
+  NoteInclude,
+  Note as NoteModel,
+} from './notes.model';
 import { UserService } from 'src/user/user.service';
 import { NoteDto } from './dto/note.dto';
 import { validate } from 'class-validator';
+import { Error500 } from 'src/http_response_models/error500.model';
+import { Error400 } from 'src/http_response_models/error400.model';
+import { Error404 } from 'src/http_response_models/error404.model';
 
 @Controller('notes')
 @ApiBearerAuth()
@@ -40,7 +52,10 @@ export class NotesController {
   @ApiOperation({ summary: "Get all user's notes" })
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: "Get all user's notes" })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
   async getNotes(
     @Req() request: Request,
     @Res() response: Response,
@@ -64,9 +79,12 @@ export class NotesController {
   @ApiOperation({ summary: 'Get note by id' })
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Get note by id' })
-  @ApiResponse({ status: 403, description: 'Missing permissions' })
-  @ApiResponse({ status: 404, description: 'Note not found' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiForbiddenResponse({ description: 'Missing permissions', type: Error400 })
+  @ApiNotFoundResponse({ description: 'Not found', type: Error404 })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
   @ApiParam({ name: 'id', type: String })
   async getNoteById(
     @Req() request: Request,
@@ -102,8 +120,11 @@ export class NotesController {
   @ApiOperation({ summary: 'Create a note' })
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 201, description: 'Create a note' })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
   async createNote(
     @Req() request: Request,
     @Res() response: Response,
@@ -166,8 +187,11 @@ export class NotesController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update a note' })
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 200, description: 'Update a note' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiOkResponse({ description: 'Update a note', type: NoteResponse })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
   @ApiParam({ name: 'id', type: String })
   async updateNote(
     @Req() request: Request,
@@ -245,7 +269,10 @@ export class NotesController {
   @ApiOperation({ summary: 'Delete a note' })
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Delete a note' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
   @ApiParam({ name: 'id', type: String })
   async deleteUser(
     @Req() request: Request,

@@ -12,6 +12,8 @@ import {
 import { Request, Response } from 'express';
 import {
   ApiBearerAuth,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -19,6 +21,8 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { Error500 } from 'src/http_response_models/error500.model';
+import { Error404 } from 'src/http_response_models/error404.model';
 
 @Controller('users')
 @ApiBearerAuth()
@@ -33,7 +37,10 @@ export class UserController {
   // @ApiOperation({ summary: 'Get all users' })
   // @UseGuards(JwtAuthGuard)
   // @ApiResponse({ status: 200, description: 'Get all users' })
-  // @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  // @ApiInternalServerErrorResponse({
+  //   description: 'Internal Server Error',
+  //   type: Error500,
+  // })
   // async getAllUsers(
   //   @Req() request: Request,
   //   @Res() response: Response,
@@ -47,13 +54,15 @@ export class UserController {
   //       .json({ message: 'Internal Server Error', error: error.message });
   //   }
   // }
-
   @Get(':id')
   @ApiOperation({ summary: 'Get user by id' })
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Get user by id' })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiNotFoundResponse({ description: 'User not found', type: Error404 })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
   @ApiParam({ name: 'id', type: String })
   async getUserById(
     @Req() request: Request,
@@ -80,7 +89,10 @@ export class UserController {
   @ApiOperation({ summary: 'Update user' })
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Update user' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
   async updateUser(
     @Req() request: Request,
     @Res() response: Response,
@@ -100,7 +112,10 @@ export class UserController {
   @ApiOperation({ summary: 'Delete a user' })
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Delete a user' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
   async deleteUser(
     @Req() request: Request,
     @Res() response: Response,
