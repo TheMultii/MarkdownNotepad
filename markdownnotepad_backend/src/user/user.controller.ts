@@ -29,24 +29,24 @@ export class UserController {
     private readonly jwtService: JwtService,
   ) {}
 
-  @Get('getAllUsers')
-  @ApiOperation({ summary: 'Get all users' })
-  @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 200, description: 'Get all users' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  async getAllUsers(
-    @Req() request: Request,
-    @Res() response: Response,
-  ): Promise<any> {
-    try {
-      const result: User[] = await this.userService.getAllUsers();
-      return response.status(200).json(result);
-    } catch (error) {
-      return response
-        .status(500)
-        .json({ message: 'Internal Server Error', error: error.message });
-    }
-  }
+  // @Get('getAllUsers')
+  // @ApiOperation({ summary: 'Get all users' })
+  // @UseGuards(JwtAuthGuard)
+  // @ApiResponse({ status: 200, description: 'Get all users' })
+  // @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  // async getAllUsers(
+  //   @Req() request: Request,
+  //   @Res() response: Response,
+  // ): Promise<any> {
+  //   try {
+  //     const result: User[] = await this.userService.getAllUsers();
+  //     return response.status(200).json(result);
+  //   } catch (error) {
+  //     return response
+  //       .status(500)
+  //       .json({ message: 'Internal Server Error', error: error.message });
+  //   }
+  // }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get user by id' })
