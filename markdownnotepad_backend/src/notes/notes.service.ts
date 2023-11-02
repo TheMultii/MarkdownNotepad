@@ -7,8 +7,13 @@ import { Note as NoteModel, NoteInclude } from './notes.model';
 export class NotesService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllNotes(): Promise<NoteInclude[]> {
+  async getUsersNotes(username: string): Promise<NoteInclude[]> {
     return await this.prisma.note.findMany({
+      where: {
+        author: {
+          username,
+        },
+      },
       include: {
         author: {
           select: {

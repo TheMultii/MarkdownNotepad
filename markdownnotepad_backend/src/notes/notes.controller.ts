@@ -36,17 +36,22 @@ export class NotesController {
     private readonly jwtService: JwtService,
   ) {}
 
-  @Get('getAllNotes')
+  @Get('getNotes')
   @ApiOperation({ summary: "Get all user's notes" })
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: "Get all user's notes" })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  async getAllNotes(
+  async getNotes(
     @Req() request: Request,
     @Res() response: Response,
   ): Promise<any> {
     try {
-      const result: Note[] = await this.notesService.getAllNotes();
+      const token = request.headers.authorization.split(' ')[1];
+      const username: any = this.jwtService.decode(token);
+
+      const result: Note[] = await this.notesService.getUsersNotes(
+        username.username,
+      );
       return response.status(200).json(result);
     } catch (error) {
       return response
