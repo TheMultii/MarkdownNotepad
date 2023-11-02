@@ -20,6 +20,7 @@ async function bootstrap() {
     .setVersion('1.1.0')
     .addTag('user')
     .addTag('auth')
+    .addTag('notes')
     .addTag('notetags')
     .addTag('catalogs')
     .addBearerAuth()
@@ -50,7 +51,7 @@ async function bootstrap() {
       },
       {
         name: 'Notes',
-        tags: ['notetags'],
+        tags: ['notes', 'notetags'],
       },
       {
         name: 'Catalogs',
