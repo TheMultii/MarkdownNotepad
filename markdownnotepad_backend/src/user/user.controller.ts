@@ -77,6 +77,7 @@ export class UserController {
   }
 
   @Patch()
+  @ApiOperation({ summary: 'Update user' })
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Update user' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
