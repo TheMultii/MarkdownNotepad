@@ -20,6 +20,7 @@ async function bootstrap() {
     .setVersion('1.1.0')
     .addTag('user')
     .addTag('auth')
+    .addTag('catalogs')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -45,6 +46,10 @@ async function bootstrap() {
       {
         name: 'User',
         tags: ['user'],
+      },
+      {
+        name: 'Catalogs',
+        tags: ['catalogs'],
       },
     ],
   };
