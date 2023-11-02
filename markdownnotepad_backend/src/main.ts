@@ -28,7 +28,7 @@ async function bootstrap() {
   const redocOptions: RedocOptions = {
     title: 'Markdown Notepad API',
     logo: {
-      url: 'http://localhost:3000/public/icon.png',
+      url: 'http://localhost:3000/public/redoc_logo.png',
       backgroundColor: '#F0F0F0',
       altText: 'Markdown Notepad API',
     },
