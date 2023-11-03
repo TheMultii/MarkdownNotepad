@@ -71,10 +71,25 @@ export class NoteTagsService {
       },
     });
 
-    for (const note of notes) {
-      await this.prisma.note.update({
+    if (notes.length > 0) {
+      for (const note of notes) {
+        await this.prisma.note.update({
+          where: {
+            id: note.id,
+          },
+          data: {
+            tags: {
+              disconnect: {
+                id,
+              },
+            },
+          },
+        });
+      }
+
+      await this.prisma.user.update({
         where: {
-          id: note.id,
+          id: notes[0].authorId,
         },
         data: {
           tags: {
