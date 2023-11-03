@@ -23,6 +23,7 @@ async function bootstrap() {
     .addTag('notes')
     .addTag('notetags')
     .addTag('catalogs')
+    .addTag('eventlogs')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -56,6 +57,10 @@ async function bootstrap() {
       {
         name: 'Catalogs',
         tags: ['catalogs'],
+      },
+      {
+        name: 'Event logs',
+        tags: ['eventlogs'],
       },
     ],
   };

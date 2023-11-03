@@ -6,6 +6,7 @@ import { NotesModule } from './notes/notes.module';
 import { NoteTagsModule } from './notetags/notetags.module';
 import { CatalogsModule } from './catalogs/catalogs.module';
 import { AuthModule } from './auth/auth.module';
+import { EventLogsModule } from './eventlogs/eventlogs.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AuthModule } from './auth/auth.module';
     NotesModule,
     NoteTagsModule,
     CatalogsModule,
+    EventLogsModule,
     AuthModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
