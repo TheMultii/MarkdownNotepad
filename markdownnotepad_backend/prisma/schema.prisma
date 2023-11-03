@@ -19,7 +19,7 @@ model User {
   password  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  posts     Note[]
+  notes     Note[]
   tags      NoteTag[]
   catalog   Catalog[]
 }
