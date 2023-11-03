@@ -60,7 +60,7 @@ model Catalog {
 }
 
 model EventLogs {
-  id        String   @id
+  id        String   @id @default(uuid())
   type      String
   message   String
   userId    String?
