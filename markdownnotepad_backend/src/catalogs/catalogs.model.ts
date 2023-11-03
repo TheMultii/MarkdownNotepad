@@ -1,4 +1,4 @@
-import { Prisma, User, NoteTag as NoteTagPrisma, Note } from '@prisma/client';
+import { Prisma, User, Catalog as CatalogPrisma, Note } from '@prisma/client';
 
 export class Catalog implements Prisma.CatalogCreateInput {
   id?: string;
@@ -9,7 +9,7 @@ export class Catalog implements Prisma.CatalogCreateInput {
   owner: Prisma.UserCreateNestedOneWithoutCatalogInput;
 }
 
-export interface CatalogInclude extends NoteTagPrisma {
+export interface CatalogInclude extends CatalogPrisma {
   notes: Note[];
   owner: Pick<User, 'id' | 'username' | 'email'>;
 }
