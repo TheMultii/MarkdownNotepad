@@ -10,7 +10,7 @@ export class UserService {
   async getAllUsers(): Promise<User[]> {
     return await this.prisma.user.findMany({
       include: {
-        posts: true,
+        notes: true,
         tags: true,
       },
     });
@@ -22,7 +22,7 @@ export class UserService {
         id,
       },
       include: {
-        posts: true,
+        notes: true,
         tags: true,
       },
     });
@@ -34,7 +34,7 @@ export class UserService {
         username,
       },
       include: {
-        posts: true,
+        notes: true,
         tags: true,
       },
     });

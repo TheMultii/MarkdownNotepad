@@ -17,7 +17,7 @@ export class User implements Prisma.UserCreateInput {
   createdAt?: string | Date;
   @ApiProperty({ example: '2023-11-02T00:00:00.000Z' })
   updatedAt?: string | Date;
-  posts?: Prisma.NoteCreateNestedManyWithoutAuthorInput;
+  notes?: Prisma.NoteCreateNestedManyWithoutAuthorInput;
   tags?: Prisma.NoteTagCreateNestedManyWithoutOwnerInput;
 }
 
@@ -33,6 +33,6 @@ export class UserShort implements Prisma.UserCreateInput {
   password: string;
   createdAt?: string | Date;
   updatedAt?: string | Date;
-  posts?: Prisma.NoteCreateNestedManyWithoutAuthorInput;
+  notes?: Prisma.NoteCreateNestedManyWithoutAuthorInput;
   tags?: Prisma.NoteTagCreateNestedManyWithoutOwnerInput;
 }

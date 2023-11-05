@@ -24,7 +24,7 @@ export class Note implements Prisma.NoteCreateInput {
   @ApiProperty({ required: false })
   tags?: Prisma.NoteTagCreateNestedManyWithoutNotesInput;
   @ApiProperty({ type: UserShortResponse })
-  author: Prisma.UserCreateNestedOneWithoutPostsInput;
+  author: Prisma.UserCreateNestedOneWithoutNotesInput;
   @ApiProperty({ required: false })
   folder?: Prisma.CatalogCreateNestedOneWithoutNotesInput | undefined;
 }

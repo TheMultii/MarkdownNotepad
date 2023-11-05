@@ -19,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         username: payload.username,
       },
       include: {
-        posts: true,
+        notes: true,
         tags: true,
       },
     });
