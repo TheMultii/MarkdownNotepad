@@ -153,4 +153,40 @@ export class AvatarController {
       root: './',
     });
   }
+
+  @Delete()
+  @ApiOperation({ summary: 'Delete avatar' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: 'Delete avatar' })
+  @ApiBadRequestResponse({ description: 'Bad request', type: Error400 })
+  @ApiNotFoundResponse({ description: 'User not found', type: Error404 })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
+  async deleteAvatar(
+    @Req() request: Request,
+    @Res() response: Response,
+  ): Promise<any> {
+    const token = request.headers.authorization;
+    const jwtPayload: JwtPayload = decodeJwt(this.jwtService, token);
+
+    const user: User = await this.userService.getUserByUsername(
+      jwtPayload.username,
+    );
+
+    if (!user) {
+      return response.status(404).json({ error: 'User not found' });
+    }
+
+    const avatarPath = `public/avatars/${user.id}.jpg`;
+    if (!fs.existsSync(avatarPath)) {
+      return response.status(404).json({ error: 'Avatar not found' });
+    }
+
+    fs.unlinkSync(avatarPath);
+
+    return response.status(200).json({ message: 'Avatar deleted' });
+  }
 }
