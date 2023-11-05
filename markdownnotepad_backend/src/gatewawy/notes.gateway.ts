@@ -249,6 +249,8 @@ export class NotesGateway
     noteID: string,
     user: UserBasic,
   ): void => {
+    if (!this.connectedUsers.get(noteID)?.size) return;
+
     const message = {
       noteID,
       connectedUsers: [...this.connectedUsers.get(noteID)],
