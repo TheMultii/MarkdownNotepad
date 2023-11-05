@@ -96,6 +96,11 @@ export class NotesGateway
       return;
     }
 
+    if (this.connectedUsers.get(uuidDto.id).has(user)) {
+      this.sendErrorToClient(client, 'User already connected');
+      return;
+    }
+
     client.join(`notes-${uuidDto.id}`);
     this.connectedUsers.get(uuidDto.id).add(user);
 
