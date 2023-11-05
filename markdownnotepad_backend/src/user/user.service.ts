@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { User as UserModel } from './user.model';
+import { UserBasic, User as UserModel } from './user.model';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -24,6 +24,18 @@ export class UserService {
       include: {
         notes: true,
         tags: true,
+      },
+    });
+  }
+
+  async getUserByUsernameBasic(username: string): Promise<UserBasic> {
+    return await this.prisma.user.findUnique({
+      where: {
+        username,
+      },
+      select: {
+        id: true,
+        username: true,
       },
     });
   }
