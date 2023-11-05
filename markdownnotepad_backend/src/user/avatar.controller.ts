@@ -109,4 +109,48 @@ export class AvatarController {
         return response.status(200).json({ message: 'Avatar changed' });
       });
   }
+
+  @Get(':id')
+  @ApiOperation({ summary: "Get user's avatar" })
+  @ApiOkResponse({ description: "Change user's avatar" })
+  @ApiBadRequestResponse({ description: 'Bad request', type: Error400 })
+  @ApiNotFoundResponse({ description: 'User not found', type: Error404 })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
+  @ApiParam({ name: 'id', type: String })
+  async getAvatar(
+    @Res() response: Response,
+    @Param('id') id: string,
+  ): Promise<any> {
+    const uuidDto = new UUIDDto();
+    uuidDto.id = id;
+    const errors = await validate(uuidDto);
+    if (errors.length > 0) {
+      return response.status(400).json({ error: 'Bad request' });
+    }
+
+    const user: User = await this.userService.getUserById(id);
+
+    if (!user) {
+      return response.status(404).json({ error: 'User not found' });
+    }
+
+    const avatarPath = `public/avatars/${user.id}.jpg`;
+    if (!fs.existsSync(avatarPath)) {
+      const defaultAvatarPath = `public/default_avatar.jpg`;
+
+      if (!fs.existsSync(defaultAvatarPath))
+        return response.status(500).json({ error: 'Avatar not found' });
+
+      return response.sendFile(`public/default_avatar.jpg`, {
+        root: './',
+      });
+    }
+
+    return response.sendFile(avatarPath, {
+      root: './',
+    });
+  }
 }
