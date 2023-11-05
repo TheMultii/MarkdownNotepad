@@ -238,6 +238,9 @@ export class NotesGateway
         const note = new NoteModel();
         note.shared = false;
         await this.notesService.updateNoteById(noteID, note);
+        this.logger.debug(
+          `Author of note /notes/${noteID} disconnected. Note set to private.`,
+        );
         return;
       }
 
