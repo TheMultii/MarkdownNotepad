@@ -4,8 +4,9 @@ import { LoginDto } from './dto/login-user.dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
@@ -21,7 +22,7 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'Login a user' })
   @ApiBody({ type: LoginDto })
-  @ApiResponse({ status: 200, description: 'User successfully logged in' })
+  @ApiOkResponse({ description: 'User successfully logged in' })
   @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
   async login(
     @Req() request: Request,
@@ -47,7 +48,7 @@ export class AuthController {
   @Post('register')
   @ApiOperation({ summary: 'Create a new user' })
   @ApiBody({ type: RegisterDto })
-  @ApiResponse({ status: 201, description: 'User successfully registered' })
+  @ApiCreatedResponse({ description: 'User successfully registered' })
   @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
   async register(
     @Req() request: Request,
