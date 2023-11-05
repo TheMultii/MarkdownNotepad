@@ -211,11 +211,11 @@ export class NotesGateway
 
       this.removeUserFromConnectedUsers(noteID, user);
 
-      this.logger.debug(
-        `Client disconnected from /notes/${noteID}. Total connected clients for /notes/${noteID}: ${
-          this.connectedUsers.get(noteID).size
-        }`,
-      );
+      const newSize = this.connectedUsers.get(noteID)?.size;
+      if (newSize > 0)
+        this.logger.debug(
+          `Client disconnected from /notes/${noteID}. Total connected clients for /notes/${noteID}: ${newSize}`,
+        );
 
       const note: NoteInclude = await this.notesService.getNoteById(noteID);
       if (!note) {
