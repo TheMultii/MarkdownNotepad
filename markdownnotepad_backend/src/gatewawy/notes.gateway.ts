@@ -81,6 +81,10 @@ export class NotesGateway
     if (note.author.username !== decodedJWT.username && !note.shared) {
       this.sendErrorToClient(client, 'Missing permissions');
       return;
+    } else if (note.author.username === decodedJWT.username) {
+      const note = new NoteModel();
+      note.shared = true;
+      await this.notesService.updateNoteById(uuidDto.id, note);
     }
 
     if (!this.connectedUsers.has(uuidDto.id)) {
