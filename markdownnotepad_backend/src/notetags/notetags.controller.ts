@@ -39,6 +39,7 @@ import {
 } from 'src/http_response_models';
 
 @Controller('notetags')
+@ApiBearerAuth()
 @ApiTags('notetags')
 export class NoteTagsController {
   constructor(
@@ -49,7 +50,6 @@ export class NoteTagsController {
 
   @Get('getNoteTags')
   @ApiOperation({ summary: "Get all user's notetags" })
-  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: "Get all user's notetags" })
   @ApiInternalServerErrorResponse({
