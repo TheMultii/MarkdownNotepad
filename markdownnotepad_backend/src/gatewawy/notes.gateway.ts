@@ -96,7 +96,7 @@ export class NotesGateway
       return;
     }
 
-    if (this.connectedUsers.get(uuidDto.id).has(user)) {
+    if (this.checkIfUserIsConnected(uuidDto.id, user)) {
       this.sendErrorToClient(client, 'User already connected');
       return;
     }
@@ -209,7 +209,7 @@ export class NotesGateway
         return;
       }
 
-      this.connectedUsers.get(noteID).delete(user);
+      this.removeUserFromConnectedUsers(noteID, user);
 
       this.logger.debug(
         `Client disconnected from /notes/${noteID}. Total connected clients for /notes/${noteID}: ${
@@ -272,5 +272,23 @@ export class NotesGateway
   sendErrorToClient = (client: Socket, error: string): void => {
     client.emit('message', `{"error": "${error}"}`);
     client.disconnect();
+  };
+
+  removeUserFromConnectedUsers = (noteID: string, user: UserBasic): void => {
+    this.connectedUsers.get(noteID)?.forEach((u) => {
+      if (u.username === user.username) {
+        this.connectedUsers.get(noteID).delete(u);
+      }
+    });
+  };
+
+  checkIfUserIsConnected = (noteID: string, user: UserBasic): boolean => {
+    let alreadyConnected = false;
+    this.connectedUsers.get(noteID)?.forEach((u) => {
+      if (u.username === user.username) {
+        alreadyConnected = true;
+      }
+    });
+    return alreadyConnected;
   };
 }
