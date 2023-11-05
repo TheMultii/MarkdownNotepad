@@ -18,12 +18,12 @@ async function bootstrap() {
     .setTitle('Markdown Notepad API')
     .setDescription('API documentation for the Markdown Notepad app.')
     .setVersion('1.1.0')
-    .addTag('user')
-    .addTag('auth')
-    .addTag('notes')
-    .addTag('notetags')
-    .addTag('catalogs')
-    .addTag('eventlogs')
+    .addTag('user', 'User information')
+    .addTag('auth', 'Authorization')
+    .addTag('notes', 'Notes')
+    .addTag('notetags', 'Note tags')
+    .addTag('catalogs', 'Catalogs')
+    .addTag('eventlogs', 'Event logs')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
