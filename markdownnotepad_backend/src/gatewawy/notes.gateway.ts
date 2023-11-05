@@ -270,7 +270,7 @@ export class NotesGateway
   };
 
   sendErrorToClient = (client: Socket, error: string): void => {
-    client.emit('message', `{"error": "${error}"}`);
+    client.emit('error', `{"error": "${error}"}`);
     client.disconnect();
   };
 
