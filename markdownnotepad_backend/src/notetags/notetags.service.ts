@@ -27,8 +27,8 @@ export class NoteTagsService {
     });
   }
 
-  async getNoteTagById(id: string): Promise<NoteTagInclude[]> {
-    return await this.prisma.noteTag.findMany({
+  async getNoteTagById(id: string): Promise<NoteTagInclude> {
+    return await this.prisma.noteTag.findUnique({
       where: {
         id,
       },
