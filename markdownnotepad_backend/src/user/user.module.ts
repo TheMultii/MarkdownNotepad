@@ -3,9 +3,10 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { PrismaService } from 'src/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
+import { AvatarController } from './avatar.controller';
 
 @Module({
-  controllers: [UserController],
+  controllers: [UserController, AvatarController],
   providers: [UserService, PrismaService],
   imports: [
     JwtModule.register({
