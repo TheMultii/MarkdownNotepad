@@ -233,6 +233,7 @@ export class NotesGateway
           .emit('message', JSON.stringify({ noteID, disconnect: true }));
         this.connectedUsers.get(noteID).clear();
         this.connectedUsers.delete(noteID);
+        this.server.to(`notes-${noteID}`).emit('error', 'Author disconnected');
         this.server.to(`notes-${noteID}`).disconnectSockets(true);
 
         const note = new NoteModel();
