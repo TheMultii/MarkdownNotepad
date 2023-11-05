@@ -19,6 +19,7 @@ async function bootstrap() {
     .setDescription('API documentation for the Markdown Notepad app.')
     .setVersion('1.1.0')
     .addTag('user', 'User information')
+    .addTag('avatar', 'User avatars')
     .addTag('auth', 'Authorization')
     .addTag('notes', 'Notes')
     .addTag('notetags', 'Note tags')
@@ -48,7 +49,7 @@ async function bootstrap() {
       },
       {
         name: 'User',
-        tags: ['user'],
+        tags: ['user', 'avatar'],
       },
       {
         name: 'Notes',
