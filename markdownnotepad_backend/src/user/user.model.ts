@@ -36,3 +36,10 @@ export class UserShort implements Prisma.UserCreateInput {
   notes?: Prisma.NoteCreateNestedManyWithoutAuthorInput;
   tags?: Prisma.NoteTagCreateNestedManyWithoutOwnerInput;
 }
+
+export class UserBasic {
+  @ApiProperty()
+  id?: string;
+  @ApiProperty({ example: 'username' })
+  username: string;
+}
