@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsString, Length, IsOptional } from 'class-validator';
 
-export class NoteDto {
+export class NoteDtoOptional {
   @ApiProperty()
   @IsString()
   @IsOptional()
