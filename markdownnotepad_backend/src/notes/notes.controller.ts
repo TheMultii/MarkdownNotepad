@@ -15,6 +15,7 @@ import { Request, Response } from 'express';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
@@ -34,9 +35,7 @@ import {
 import { UserService } from 'src/user/user.service';
 import { NoteDto } from './dto/note.dto';
 import { validate } from 'class-validator';
-import { Error500 } from 'src/http_response_models/error500.model';
-import { Error400 } from 'src/http_response_models/error400.model';
-import { Error404 } from 'src/http_response_models/error404.model';
+import { Error400, Error404, Error500 } from 'src/http_response_models';
 
 @Controller('notes')
 @ApiBearerAuth()
@@ -85,7 +84,7 @@ export class NotesController {
     description: 'Internal Server Error',
     type: Error500,
   })
-  @ApiParam({ name: 'id', type: String })
+  @ApiParam({ name: 'id', type: String, description: 'Note uuid' })
   async getNoteById(
     @Req() request: Request,
     @Res() response: Response,
@@ -119,7 +118,7 @@ export class NotesController {
   @Post()
   @ApiOperation({ summary: 'Create a note' })
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 201, description: 'Create a note' })
+  @ApiCreatedResponse({ status: 201, description: 'Create a note' })
   @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error',
