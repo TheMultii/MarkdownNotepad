@@ -21,8 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { Error500 } from 'src/http_response_models/error500.model';
-import { Error404 } from 'src/http_response_models/error404.model';
+import { Error404, Error500 } from 'src/http_response_models';
 
 @Controller('users')
 @ApiBearerAuth()
@@ -33,27 +32,6 @@ export class UserController {
     private readonly jwtService: JwtService,
   ) {}
 
-  // @Get('getAllUsers')
-  // @ApiOperation({ summary: 'Get all users' })
-  // @UseGuards(JwtAuthGuard)
-  // @ApiResponse({ status: 200, description: 'Get all users' })
-  // @ApiInternalServerErrorResponse({
-  //   description: 'Internal Server Error',
-  //   type: Error500,
-  // })
-  // async getAllUsers(
-  //   @Req() request: Request,
-  //   @Res() response: Response,
-  // ): Promise<any> {
-  //   try {
-  //     const result: User[] = await this.userService.getAllUsers();
-  //     return response.status(200).json(result);
-  //   } catch (error) {
-  //     return response
-  //       .status(500)
-  //       .json({ message: 'Internal Server Error', error: error.message });
-  //   }
-  // }
   @Get(':id')
   @ApiOperation({ summary: 'Get user by id' })
   @UseGuards(JwtAuthGuard)
@@ -109,9 +87,9 @@ export class UserController {
   }
 
   @Delete()
-  @ApiOperation({ summary: 'Delete a user' })
+  @ApiOperation({ summary: 'Delete account' })
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 200, description: 'Delete a user' })
+  @ApiResponse({ status: 200, description: 'Delete account' })
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error',
     type: Error500,
