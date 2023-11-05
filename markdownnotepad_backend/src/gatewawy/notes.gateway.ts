@@ -88,6 +88,13 @@ export class NotesGateway
     }
 
     if (!this.connectedUsers.has(uuidDto.id)) {
+      if (note.shared && note.author.username !== decodedJWT.username) {
+        const note = new NoteModel();
+        note.shared = false;
+        await this.notesService.updateNoteById(uuidDto.id, note);
+        this.sendErrorToClient(client, 'Note author is not connected.');
+        return;
+      }
       this.connectedUsers.set(uuidDto.id, new Set());
     }
 
