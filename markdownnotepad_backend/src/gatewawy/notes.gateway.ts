@@ -145,12 +145,21 @@ export class NotesGateway
     const uuidDto = new UUIDDto();
     uuidDto.id = client.handshake.query?.id as string;
 
-    const errors = await validate(uuidDto);
+    let errors = await validate(uuidDto);
     if (errors.length > 0) {
       this.sendErrorToClient(client, 'Invalid ID');
       return;
     }
 
+    if (typeof data !== 'object') {
+      data = JSON.parse(data);
+    }
+    data = data as NoteDtoOptional;
+    errors = await validate(data);
+    if (errors.length > 0) {
+      this.sendErrorToClient(client, 'Invalid data');
+      return;
+    }
     if (!data.title && !data.content) {
       this.sendErrorToClient(client, 'Missing title or content');
       return;
@@ -177,12 +186,8 @@ export class NotesGateway
     }
 
     const noteModel = new NoteModel();
-    if (data.title) {
-      note.title = data.title;
-    }
-    if (data.content) {
-      note.content = data.content;
-    }
+    if (data.title) note.title = data.title;
+    if (data.content) note.content = data.content;
 
     await this.notesService.updateNoteById(note.id, noteModel);
     this.notifyClientsAboutNoteChange(note, user);
