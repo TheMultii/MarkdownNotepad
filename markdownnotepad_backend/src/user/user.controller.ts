@@ -237,35 +237,19 @@ export class UserController {
         return response.status(404).json({ message: 'User not found' });
       }
 
-      this.prismaService.noteTag.deleteMany({
-        where: {
-          owner: {
-            username: decodedJWT.username,
-          },
-        },
-      });
+      if (user.username !== decodedJWT.username) {
+        return response
+          .status(403)
+          .json({ message: "You cannot remove someone else's account" });
+      }
 
-      this.prismaService.catalog.deleteMany({
-        where: {
-          owner: {
-            username: decodedJWT.username,
-          },
-        },
-      });
+      const del = this.userService.deleteUserByUsername(decodedJWT.username);
 
-      this.prismaService.note.deleteMany({
-        where: {
-          author: {
-            username: decodedJWT.username,
-          },
-        },
-      });
-
-      this.prismaService.user.delete({
-        where: {
-          username: decodedJWT.username,
-        },
-      });
+      if (!del) {
+        return response
+          .status(400)
+          .json({ message: 'Error while deleting the user' });
+      }
 
       return response.status(200).json({
         message: 'Account deleted successfully',
