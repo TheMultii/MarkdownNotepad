@@ -294,6 +294,12 @@ export class NotesController {
         };
       }
 
+      if (noteincludeCheck.author.username !== decodedJWT.username) {
+        return response.status(403).json({
+          message: 'You do not have permission to access this note',
+        });
+      }
+
       const noteCheck: Note = await this.notesService.updateNoteById(
         request.params.id,
         note,
