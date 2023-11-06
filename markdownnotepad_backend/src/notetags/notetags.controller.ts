@@ -86,7 +86,7 @@ export class NoteTagsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get notetag by id' })
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Get notetag by id' })
   @ApiNotFoundResponse({ description: 'Not found', type: Error404 })
   @ApiInternalServerErrorResponse({
