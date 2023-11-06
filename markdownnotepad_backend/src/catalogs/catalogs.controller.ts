@@ -384,6 +384,47 @@ export class CatalogsController {
     @Res() response: Response,
     @Param() params: UUIDDto,
   ): Promise<Response> {
-    throw new Error('Method not implemented.');
+    try {
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
+
+      const errors = await validate(params);
+      if (errors.length > 0) {
+        return response.status(400).send({
+          message: errors,
+        });
+      }
+
+      const catalogToRemove = await this.catalogsService.getCatalogById(
+        request.params.id,
+      );
+
+      if (!catalogToRemove) {
+        return response.status(404).json({ message: 'Catalog not found' });
+      }
+
+      if (catalogToRemove.owner.username !== decodedJWT.username) {
+        return response.status(403).json({
+          message: 'You do not have permission to access this catalog',
+        });
+      }
+
+      this.catalogsService.deleteCatalogById(request.params.id);
+
+      return response.status(200).json({
+        message: 'Catalog deleted successfully',
+      });
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
   }
 }
