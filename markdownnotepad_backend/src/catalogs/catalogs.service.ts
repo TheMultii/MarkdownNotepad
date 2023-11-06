@@ -60,6 +60,24 @@ export class CatalogsService {
     });
   }
 
+  async disconnectNoteFromCatalog(
+    catalogId: string,
+    noteId: string,
+  ): Promise<Catalog> {
+    return await this.prisma.catalog.update({
+      where: {
+        id: catalogId,
+      },
+      data: {
+        notes: {
+          disconnect: {
+            id: noteId,
+          },
+        },
+      },
+    });
+  }
+
   async deleteCatalogById(id: string): Promise<Catalog> {
     const catalog = await this.prisma.catalog.findUnique({
       where: { id },
