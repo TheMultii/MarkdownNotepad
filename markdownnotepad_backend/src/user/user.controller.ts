@@ -26,6 +26,8 @@ import { Error404, Error500 } from 'src/http_response_models';
 import { decodeJwt } from 'src/auth/jwt.decode';
 import { UUIDDto } from 'src/dto';
 import { validate } from 'class-validator';
+import { PrismaService } from 'src/prisma.service';
+import { UserBasic } from './user.model';
 
 @Controller('users')
 @ApiBearerAuth()
@@ -33,6 +35,7 @@ import { validate } from 'class-validator';
 export class UserController {
   constructor(
     private readonly userService: UserService,
+    private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -103,6 +106,7 @@ export class UserController {
   @ApiOperation({ summary: 'Delete account' })
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Delete account' })
+  @ApiNotFoundResponse({ description: 'User not found', type: Error404 })
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error',
     type: Error500,
@@ -117,8 +121,47 @@ export class UserController {
         request.headers.authorization,
       );
 
-      // TODO: complete the request
-      return response.status(200).json(decodedJWT);
+      const user: UserBasic = await this.userService.getUserByUsernameBasic(
+        decodedJWT.username,
+      );
+
+      if (!user) {
+        return response.status(404).json({ message: 'User not found' });
+      }
+
+      this.prismaService.noteTag.deleteMany({
+        where: {
+          owner: {
+            username: decodedJWT.username,
+          },
+        },
+      });
+
+      this.prismaService.catalog.deleteMany({
+        where: {
+          owner: {
+            username: decodedJWT.username,
+          },
+        },
+      });
+
+      this.prismaService.note.deleteMany({
+        where: {
+          author: {
+            username: decodedJWT.username,
+          },
+        },
+      });
+
+      this.prismaService.user.delete({
+        where: {
+          username: decodedJWT.username,
+        },
+      });
+
+      return response.status(200).json({
+        message: 'Account deleted successfully',
+      });
     } catch (error) {
       return response
         .status(500)
