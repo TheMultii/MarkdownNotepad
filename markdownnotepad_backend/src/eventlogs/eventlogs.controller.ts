@@ -14,7 +14,7 @@ import { Request, Response } from 'express';
 import { Error400, Error500 } from 'src/http_response_models';
 import { EventLogsDto } from './dto/eventlogs.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { decodeJwt } from 'src/auth/jwt.decode';
+import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
 
 @Controller('eventlogs')
 @ApiBearerAuth()
@@ -47,13 +47,18 @@ export class EventLogsController {
     @Param() page: EventLogsDto,
   ): Promise<Response> {
     try {
-      const decodedToken = decodeJwt(
-        this.jwtService,
-        request.headers.authorization,
-      );
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
 
       const result = await this.eventLogsService.getUsersEventLogs(
-        decodedToken.username,
+        decodedJWT.username,
         page.page,
       );
 

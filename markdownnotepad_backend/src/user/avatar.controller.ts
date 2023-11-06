@@ -83,11 +83,18 @@ export class AvatarController {
     )
     avatar: Express.Multer.File,
   ): Promise<any> {
-    const token = request.headers.authorization;
-    const jwtPayload: JwtPayload = decodeJwt(this.jwtService, token);
+    let decodedJWT: JwtPayload;
+    try {
+      decodedJWT = await decodeJwt(
+        this.jwtService,
+        request.headers.authorization,
+      );
+    } catch (error) {
+      return response.status(400).json({ error: 'Bad request' });
+    }
 
     const user: User = await this.userService.getUserByUsername(
-      jwtPayload.username,
+      decodedJWT.username,
     );
 
     if (!user) {
@@ -124,8 +131,7 @@ export class AvatarController {
     @Res() response: Response,
     @Param('id') id: string,
   ): Promise<any> {
-    const uuidDto = new UUIDDto();
-    uuidDto.id = id;
+    const uuidDto = new UUIDDto(id);
     const errors = await validate(uuidDto);
     if (errors.length > 0) {
       return response.status(400).json({ error: 'Bad request' });
@@ -169,11 +175,18 @@ export class AvatarController {
     @Req() request: Request,
     @Res() response: Response,
   ): Promise<any> {
-    const token = request.headers.authorization;
-    const jwtPayload: JwtPayload = decodeJwt(this.jwtService, token);
+    let decodedJWT: JwtPayload;
+    try {
+      decodedJWT = await decodeJwt(
+        this.jwtService,
+        request.headers.authorization,
+      );
+    } catch (error) {
+      return response.status(400).json({ error: 'Bad request' });
+    }
 
     const user: User = await this.userService.getUserByUsername(
-      jwtPayload.username,
+      decodedJWT.username,
     );
 
     if (!user) {

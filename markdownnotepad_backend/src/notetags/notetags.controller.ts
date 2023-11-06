@@ -37,6 +37,7 @@ import {
   Error404,
   Error500,
 } from 'src/http_response_models';
+import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
 
 @Controller('notetags')
 @ApiBearerAuth()
@@ -61,11 +62,18 @@ export class NoteTagsController {
     @Res() response: Response,
   ): Promise<Response> {
     try {
-      const token = request.headers.authorization.split(' ')[1];
-      const username: any = this.jwtService.decode(token);
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
 
       const result: NoteTag[] = await this.notetagsService.getUsersNoteTags(
-        username.username,
+        decodedJWT.username,
       );
       return response.status(200).json(result);
     } catch (error) {
@@ -128,11 +136,18 @@ export class NoteTagsController {
         });
       }
 
-      const token = request.headers.authorization.split(' ')[1];
-      const username: any = this.jwtService.decode(token);
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
 
       const user: User = await this.userService.getUserByUsername(
-        username.username,
+        decodedJWT.username,
       );
 
       const noteTag = new NoteTagModel();
@@ -195,10 +210,18 @@ export class NoteTagsController {
         return response.status(404).json({ message: 'Not found' });
       }
 
-      const token = request.headers.authorization.split(' ')[1];
-      const username: any = this.jwtService.decode(token);
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
+
       const user: User = await this.userService.getUserByUsername(
-        username.username,
+        decodedJWT.username,
       );
 
       if (nTag.owner.id !== user.id) {
@@ -244,10 +267,18 @@ export class NoteTagsController {
         return response.status(404).json({ message: 'Not found' });
       }
 
-      const token = request.headers.authorization.split(' ')[1];
-      const username: any = this.jwtService.decode(token);
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
+
       const user: User = await this.userService.getUserByUsername(
-        username.username,
+        decodedJWT.username,
       );
 
       if (nTag.owner.id !== user.id) {

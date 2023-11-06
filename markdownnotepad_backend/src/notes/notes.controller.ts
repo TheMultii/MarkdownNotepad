@@ -36,6 +36,7 @@ import { UserService } from 'src/user/user.service';
 import { NoteDto } from './dto/note.dto';
 import { validate } from 'class-validator';
 import { Error400, Error404, Error500 } from 'src/http_response_models';
+import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
 
 @Controller('notes')
 @ApiBearerAuth()
@@ -60,11 +61,18 @@ export class NotesController {
     @Res() response: Response,
   ): Promise<any> {
     try {
-      const token = request.headers.authorization.split(' ')[1];
-      const username: any = this.jwtService.decode(token);
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
 
       const result: Note[] = await this.notesService.getUsersNotes(
-        username.username,
+        decodedJWT.username,
       );
       return response.status(200).json(result);
     } catch (error) {
@@ -90,8 +98,15 @@ export class NotesController {
     @Res() response: Response,
   ): Promise<any> {
     try {
-      const token = request.headers.authorization.split(' ')[1];
-      const username: any = this.jwtService.decode(token);
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
 
       const result: NoteInclude = await this.notesService.getNoteById(
         request.params.id,
@@ -101,7 +116,7 @@ export class NotesController {
         return response.status(404).json({ message: 'Note not found' });
       }
 
-      if (!result.shared && result.author.username !== username.username) {
+      if (!result.shared && result.author.username !== decodedJWT.username) {
         return response
           .status(403)
           .json({ message: 'You do not have permission to access this note' });
@@ -130,8 +145,15 @@ export class NotesController {
     @Body() noteDto: NoteDto,
   ): Promise<any> {
     try {
-      const token = request.headers.authorization.split(' ')[1];
-      const username: any = this.jwtService.decode(token);
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
 
       const validationErrors = await validate(noteDto);
       if (validationErrors.length > 0) {
@@ -141,7 +163,7 @@ export class NotesController {
       }
 
       const user: User = await this.userService.getUserByUsername(
-        username.username,
+        decodedJWT.username,
       );
 
       if (!user) {
@@ -198,8 +220,15 @@ export class NotesController {
     @Body() noteDto: NoteDto,
   ): Promise<any> {
     try {
-      const token = request.headers.authorization.split(' ')[1];
-      const username: any = this.jwtService.decode(token);
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
 
       const validationErrors = await validate(noteDto);
       if (validationErrors.length > 0) {
@@ -209,7 +238,7 @@ export class NotesController {
       }
 
       const user: User = await this.userService.getUserByUsername(
-        username.username,
+        decodedJWT.username,
       );
 
       if (!user) {
@@ -278,9 +307,17 @@ export class NotesController {
     @Res() response: Response,
   ): Promise<any> {
     try {
-      const token = request.headers.authorization.split(' ')[1];
-      const username = this.jwtService.decode(token);
-      return response.status(200).json(username);
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
+      // TODO: complete the request
+      return response.status(200).json(decodedJWT);
     } catch (error) {
       return response
         .status(500)

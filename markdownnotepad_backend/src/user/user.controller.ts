@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Req,
   Res,
@@ -22,6 +23,9 @@ import {
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { Error404, Error500 } from 'src/http_response_models';
+import { decodeJwt } from 'src/auth/jwt.decode';
+import { UUIDDto } from 'src/dto';
+import { validate } from 'class-validator';
 
 @Controller('users')
 @ApiBearerAuth()
@@ -45,11 +49,16 @@ export class UserController {
   async getUserById(
     @Req() request: Request,
     @Res() response: Response,
+    @Param('id') id: string,
   ): Promise<any> {
     try {
-      const result: User = await this.userService.getUserById(
-        request.params.id,
-      );
+      const uuidDTO = new UUIDDto(id);
+      const errors = await validate(uuidDTO);
+      if (errors.length > 0) {
+        return response.status(400).json({ message: 'Bad Request' });
+      }
+
+      const result: User = await this.userService.getUserById(uuidDTO.id);
 
       if (!result) {
         return response.status(404).json({ message: 'User not found' });
@@ -76,9 +85,13 @@ export class UserController {
     @Res() response: Response,
   ): Promise<any> {
     try {
-      const token = request.headers.authorization.split(' ')[1];
-      const username = this.jwtService.decode(token);
-      return response.status(200).json(username);
+      const decodedJWT = await decodeJwt(
+        this.jwtService,
+        request.headers.authorization,
+      );
+
+      // TODO: complete the request
+      return response.status(200).json(decodedJWT);
     } catch (error) {
       return response
         .status(500)
@@ -99,9 +112,13 @@ export class UserController {
     @Res() response: Response,
   ): Promise<any> {
     try {
-      const token = request.headers.authorization.split(' ')[1];
-      const username = this.jwtService.decode(token);
-      return response.status(200).json(username);
+      const decodedJWT = await decodeJwt(
+        this.jwtService,
+        request.headers.authorization,
+      );
+
+      // TODO: complete the request
+      return response.status(200).json(decodedJWT);
     } catch (error) {
       return response
         .status(500)

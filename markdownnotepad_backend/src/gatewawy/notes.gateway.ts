@@ -15,7 +15,7 @@ import { Logger, Injectable } from '@nestjs/common';
 import { UUIDDto } from 'src/dto';
 import { validate } from 'class-validator';
 import { Note as NoteModel, NoteInclude } from 'src/notes/notes.model';
-import { JwtPayload } from 'src/auth/jwt.decode';
+import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
 import { UserService } from 'src/user/user.service';
 import { UserBasic } from 'src/user/user.model';
 import { NoteDtoOptional } from 'src/notes/dto/note.optional.dto';
@@ -48,9 +48,10 @@ export class NotesGateway
       return;
     }
 
-    let decodedJWT: JwtPayload | null;
+    let decodedJWT: JwtPayload;
     try {
-      decodedJWT = await this.jwtService.verifyAsync(
+      decodedJWT = await decodeJwt(
+        this.jwtService,
         client.handshake.headers.authorization,
       );
     } catch (error) {
@@ -63,8 +64,7 @@ export class NotesGateway
       return;
     }
 
-    const uuidDto = new UUIDDto();
-    uuidDto.id = client.handshake.query?.id as string;
+    const uuidDto = new UUIDDto(client.handshake.query?.id as string);
 
     const errors = await validate(uuidDto);
     if (errors.length > 0) {
@@ -138,9 +138,10 @@ export class NotesGateway
       return;
     }
 
-    let decodedJWT: JwtPayload | null;
+    let decodedJWT: JwtPayload;
     try {
-      decodedJWT = await this.jwtService.verifyAsync(
+      decodedJWT = await decodeJwt(
+        this.jwtService,
         client.handshake.headers.authorization,
       );
     } catch (error) {
@@ -153,8 +154,7 @@ export class NotesGateway
       return;
     }
 
-    const uuidDto = new UUIDDto();
-    uuidDto.id = client.handshake.query?.id as string;
+    const uuidDto = new UUIDDto(client.handshake.query?.id as string);
 
     let errors = await validate(uuidDto);
     if (errors.length > 0) {
@@ -209,10 +209,10 @@ export class NotesGateway
 
     if (noteID) {
       const authToken: string | null = client.handshake.headers.authorization;
-      let decodedJWT: JwtPayload | null;
+      let decodedJWT: JwtPayload;
 
       try {
-        decodedJWT = this.jwtService.verify(authToken);
+        decodedJWT = await decodeJwt(this.jwtService, authToken);
       } catch (error) {
         return;
       }
