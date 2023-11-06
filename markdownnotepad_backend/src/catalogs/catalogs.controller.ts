@@ -33,6 +33,7 @@ import {
   Error500,
 } from 'src/http_response_models';
 import { UUIDDto } from 'src/dto';
+import { UserService } from 'src/user/user.service';
 
 @Controller('catalogs')
 @ApiBearerAuth()
@@ -40,6 +41,7 @@ import { UUIDDto } from 'src/dto';
 export class CatalogsController {
   constructor(
     private readonly catalogsService: CatalogsService,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
