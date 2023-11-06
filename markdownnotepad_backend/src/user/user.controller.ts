@@ -41,6 +41,46 @@ export class UserController {
     private readonly jwtService: JwtService,
   ) {}
 
+  @Get('me')
+  @ApiOperation({ summary: 'Get user by token' })
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Get user by token',
+    type: UserPasswordless,
+  })
+  @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
+  @ApiNotFoundResponse({ description: 'User not found', type: Error404 })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
+  async getUserByToken(
+    @Req() request: Request,
+    @Res() response: Response,
+  ): Promise<any> {
+    try {
+      const decodedJWT = await decodeJwt(
+        this.jwtService,
+        request.headers.authorization,
+      );
+
+      const result: UserPasswordless = await this.userService.getUserByUsername(
+        decodedJWT.username,
+      );
+
+      if (!result) {
+        return response.status(404).json({ message: 'User not found' });
+      }
+
+      return response.status(200).json(result);
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get user by id' })
   @UseGuards(JwtAuthGuard)
