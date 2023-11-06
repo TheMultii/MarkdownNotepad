@@ -70,22 +70,6 @@ export class CatalogsService {
       throw new Error(`Catalog with ID ${id} not found`);
     }
 
-    for (const note of catalog.notes) {
-      await this.prisma.note.update({
-        where: { id: note.id },
-        data: {
-          folder: { disconnect: true },
-        },
-      });
-    }
-
-    await this.prisma.user.update({
-      where: { id: catalog.owner.id },
-      data: {
-        catalogs: { disconnect: { id: catalog.id } },
-      },
-    });
-
     return await this.prisma.catalog.delete({
       where: {
         id,
