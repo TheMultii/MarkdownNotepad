@@ -5,6 +5,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Req,
@@ -35,11 +36,17 @@ import {
 import { UserService } from 'src/user/user.service';
 import { NoteDto } from './dto/note.dto';
 import { validate } from 'class-validator';
-import { Error400, Error404, Error500 } from 'src/http_response_models';
+import {
+  Error400,
+  Error403,
+  Error404,
+  Error500,
+} from 'src/http_response_models';
 import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
 import { UserPasswordless } from 'src/user/user.model';
 import { PrismaService } from 'src/prisma.service';
 import { NoteDtoOptional } from './dto/note.optional.dto';
+import { UUIDDto } from 'src/dto';
 
 @Controller('notes')
 @ApiBearerAuth()
@@ -323,6 +330,9 @@ export class NotesController {
   @ApiOperation({ summary: 'Delete a note' })
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Delete a note' })
+  @ApiBadRequestResponse({ description: 'Bad request', type: Error400 })
+  @ApiForbiddenResponse({ description: 'Missing permissions', type: Error403 })
+  @ApiNotFoundResponse({ description: 'Not found', type: Error404 })
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error',
     type: Error500,
@@ -331,6 +341,7 @@ export class NotesController {
   async deleteUser(
     @Req() request: Request,
     @Res() response: Response,
+    @Param() params: UUIDDto,
   ): Promise<any> {
     try {
       let decodedJWT: JwtPayload;
@@ -343,13 +354,32 @@ export class NotesController {
         return response.status(400).json({ error: 'Bad request' });
       }
 
-      this.prismaService.note.delete({
-        where: {
-          id: request.params.id,
-        },
-      });
+      const errors = await validate(params);
+      if (errors.length > 0) {
+        return response.status(400).send({
+          message: errors,
+        });
+      }
 
-      return response.status(200).json(decodedJWT);
+      const noteToRemove: NoteInclude = await this.notesService.getNoteById(
+        params.id,
+      );
+
+      if (!noteToRemove) {
+        return response.status(404).json({ message: 'Note not found' });
+      }
+
+      if (noteToRemove.author.username !== decodedJWT.username) {
+        return response
+          .status(403)
+          .json({ message: 'You do not have permission to delete this note' });
+      }
+
+      this.notesService.deleteNoteById(params.id);
+
+      return response.status(200).json({
+        message: 'Note deleted successfully',
+      });
     } catch (error) {
       return response
         .status(500)
