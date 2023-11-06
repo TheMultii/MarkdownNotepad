@@ -289,7 +289,10 @@ export class CatalogsController {
   @Patch(':id/disconnect/:noteId')
   @ApiOperation({ summary: 'Remove a note from catalog' })
   @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ description: 'Remove a note from catalog', type: Catalog })
+  @ApiOkResponse({
+    description: 'Remove a note from catalog',
+    type: CatalogInclude,
+  })
   @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
   @ApiForbiddenResponse({ description: 'Forbidden', type: Error403 })
   @ApiNotFoundResponse({ description: 'Not found', type: Error404 })
@@ -302,7 +305,68 @@ export class CatalogsController {
     @Res() response: Response,
     @Param() params: DisconnectNoteUUIDDto,
   ): Promise<Response> {
-    throw new Error('Method not implemented.');
+    try {
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
+
+      const user: UserPasswordless = await this.userService.getUserByUsername(
+        decodedJWT.username,
+      );
+
+      if (!user) {
+        return response.status(500).json({ message: 'User not found' });
+      }
+
+      const catalogIncludeCheck: CatalogInclude =
+        await this.catalogsService.getCatalogById(request.params.id);
+
+      if (!catalogIncludeCheck) {
+        return response.status(404).json({ message: 'Catalog not found' });
+      }
+
+      const noteInclude: NoteInclude = await this.notesService.getNoteById(
+        params.noteId,
+      );
+
+      if (!noteInclude) {
+        return response.status(404).json({ message: 'Note not found' });
+      }
+
+      if (catalogIncludeCheck.owner.username !== decodedJWT.username) {
+        return response.status(403).json({
+          message: 'You do not have permission to access this catalog',
+        });
+      }
+
+      const catalogCheck: Catalog =
+        await this.catalogsService.disconnectNoteFromCatalog(
+          params.id,
+          params.noteId,
+        );
+
+      if (!catalogCheck) {
+        return response.status(500).json({ message: 'Catalog not updated' });
+      }
+
+      const result: CatalogInclude = await this.catalogsService.getCatalogById(
+        catalogCheck.id,
+      );
+
+      return response
+        .status(200)
+        .json({ message: 'Catalog updated', catalog: result });
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
   }
 
   @Delete(':id')
