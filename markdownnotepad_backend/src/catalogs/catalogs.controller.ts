@@ -206,7 +206,7 @@ export class CatalogsController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update catalog by id' })
   @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ description: 'Update catalog by id', type: Catalog })
+  @ApiOkResponse({ description: 'Update catalog by id', type: CatalogInclude })
   @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
   @ApiForbiddenResponse({ description: 'Forbidden', type: Error403 })
   @ApiNotFoundResponse({ description: 'Not found', type: Error404 })
@@ -217,10 +217,73 @@ export class CatalogsController {
   async updateCatalogById(
     @Req() request: Request,
     @Res() response: Response,
-    @Body() catalog: CatalogDtoOptional,
+    @Body() catalogDto: CatalogDtoOptional,
     @Param() params: UUIDDto,
   ): Promise<Response> {
-    throw new Error('Method not implemented.');
+    try {
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
+
+      const validationErrors = await validate(catalogDto);
+      if (validationErrors.length > 0) {
+        return response.status(400).send({
+          message: validationErrors,
+        });
+      }
+
+      const user: UserPasswordless = await this.userService.getUserByUsername(
+        decodedJWT.username,
+      );
+
+      if (!user) {
+        return response.status(500).json({ message: 'User not found' });
+      }
+
+      const catalogIncludeCheck: CatalogInclude =
+        await this.catalogsService.getCatalogById(request.params.id);
+
+      if (!catalogIncludeCheck) {
+        return response.status(404).json({ message: 'Catalog not found' });
+      }
+
+      const catalog = new CatalogModel();
+      if (catalogDto.title) catalog.title = catalogDto.title;
+      else {
+        return response.status(400).json({ message: 'Bad request' });
+      }
+
+      if (catalogIncludeCheck.owner.username !== decodedJWT.username) {
+        return response.status(403).json({
+          message: 'You do not have permission to access this catalog',
+        });
+      }
+
+      const catalogCheck: Catalog =
+        await this.catalogsService.updateCatalogById(params.id, catalog);
+
+      if (!catalogCheck) {
+        return response.status(500).json({ message: 'Catalog not updated' });
+      }
+
+      const result: CatalogInclude = await this.catalogsService.getCatalogById(
+        catalogCheck.id,
+      );
+
+      return response
+        .status(200)
+        .json({ message: 'Catalog updated', catalog: result });
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
   }
 
   @Patch(':id/disconnect/:noteId')
