@@ -16,7 +16,19 @@ export class Catalog implements Prisma.CatalogCreateInput {
   owner: Prisma.UserCreateNestedOneWithoutCatalogsInput;
 }
 
-export interface CatalogInclude extends CatalogPrisma {
+export class CatalogInclude implements CatalogPrisma {
+  @ApiProperty()
+  id: string;
+  @ApiProperty()
+  title: string;
+  @ApiProperty()
+  ownerId: string;
+  @ApiProperty()
+  createdAt: Date;
+  @ApiProperty()
+  updatedAt: Date;
+  @ApiProperty()
   notes: Note[];
+  @ApiProperty()
   owner: Pick<User, 'id' | 'username' | 'email'>;
 }
