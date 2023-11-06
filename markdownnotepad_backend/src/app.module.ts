@@ -8,6 +8,7 @@ import { CatalogsModule } from './catalogs/catalogs.module';
 import { AuthModule } from './auth/auth.module';
 import { EventLogsModule } from './eventlogs/eventlogs.module';
 import { GatewayModule } from './gatewawy/gateway.module';
+import { MiscModule } from './misc/misc.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { GatewayModule } from './gatewawy/gateway.module';
     CatalogsModule,
     EventLogsModule,
     GatewayModule,
+    MiscModule,
     AuthModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
