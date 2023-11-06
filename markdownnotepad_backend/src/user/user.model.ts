@@ -47,14 +47,24 @@ export class UserBasic {
 }
 
 export class UserPasswordless {
+  @ApiProperty()
   id: string;
+  @ApiProperty({ example: 'username' })
   username: string;
+  @ApiProperty({ example: 'mail@mail.com' })
   email: string;
+  @ApiProperty()
   name?: string;
+  @ApiProperty()
   surname?: string;
+  @ApiProperty()
   createdAt: string | Date;
+  @ApiProperty()
   updatedAt: string | Date;
+  @ApiProperty()
   notes: Pick<Note, 'id' | 'title' | 'createdAt' | 'updatedAt' | 'shared'>[];
+  @ApiProperty()
   tags: NoteTag[];
+  @ApiProperty()
   catalogs: Catalog[];
 }
