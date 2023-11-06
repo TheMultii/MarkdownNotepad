@@ -30,13 +30,13 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { Error400, Error404, Error500 } from 'src/http_response_models';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { User } from '@prisma/client';
 import { validate } from 'class-validator';
 import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
 import { UUIDDto } from 'src/dto';
 import { Request, Response } from 'express';
 import * as fs from 'fs';
 import * as sharp from 'sharp';
+import { UserPasswordless } from './user.model';
 
 @Controller('avatar')
 @ApiTags('avatar')
@@ -93,7 +93,7 @@ export class AvatarController {
       return response.status(400).json({ error: 'Bad request' });
     }
 
-    const user: User = await this.userService.getUserByUsername(
+    const user: UserPasswordless = await this.userService.getUserByUsername(
       decodedJWT.username,
     );
 
@@ -137,7 +137,7 @@ export class AvatarController {
       return response.status(400).json({ error: 'Bad request' });
     }
 
-    const user: User = await this.userService.getUserById(id);
+    const user: UserPasswordless = await this.userService.getUserById(id);
 
     if (!user) {
       return response.status(404).json({ error: 'User not found' });
@@ -185,7 +185,7 @@ export class AvatarController {
       return response.status(400).json({ error: 'Bad request' });
     }
 
-    const user: User = await this.userService.getUserByUsername(
+    const user: UserPasswordless = await this.userService.getUserByUsername(
       decodedJWT.username,
     );
 

@@ -24,7 +24,7 @@ import { Request, Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { NoteTagsService } from './notetags.service';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { NoteTag, User } from '@prisma/client';
+import { NoteTag } from '@prisma/client';
 import { NoteTagInclude } from './notetags.model';
 import { NoteTagDto } from './dto/notetag.dto';
 import { NoteTag as NoteTagModel } from './notetags.model';
@@ -38,6 +38,7 @@ import {
   Error500,
 } from 'src/http_response_models';
 import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
+import { UserPasswordless } from 'src/user/user.model';
 
 @Controller('notetags')
 @ApiBearerAuth()
@@ -146,7 +147,7 @@ export class NoteTagsController {
         return response.status(400).json({ error: 'Bad request' });
       }
 
-      const user: User = await this.userService.getUserByUsername(
+      const user: UserPasswordless = await this.userService.getUserByUsername(
         decodedJWT.username,
       );
 
@@ -220,7 +221,7 @@ export class NoteTagsController {
         return response.status(400).json({ error: 'Bad request' });
       }
 
-      const user: User = await this.userService.getUserByUsername(
+      const user: UserPasswordless = await this.userService.getUserByUsername(
         decodedJWT.username,
       );
 
@@ -277,7 +278,7 @@ export class NoteTagsController {
         return response.status(400).json({ error: 'Bad request' });
       }
 
-      const user: User = await this.userService.getUserByUsername(
+      const user: UserPasswordless = await this.userService.getUserByUsername(
         decodedJWT.username,
       );
 

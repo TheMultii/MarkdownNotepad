@@ -1,4 +1,4 @@
-import { Note, User } from '@prisma/client';
+import { Note } from '@prisma/client';
 import { NotesService } from './notes.service';
 import {
   Body,
@@ -37,6 +37,7 @@ import { NoteDto } from './dto/note.dto';
 import { validate } from 'class-validator';
 import { Error400, Error404, Error500 } from 'src/http_response_models';
 import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
+import { UserPasswordless } from 'src/user/user.model';
 
 @Controller('notes')
 @ApiBearerAuth()
@@ -162,7 +163,7 @@ export class NotesController {
         });
       }
 
-      const user: User = await this.userService.getUserByUsername(
+      const user: UserPasswordless = await this.userService.getUserByUsername(
         decodedJWT.username,
       );
 
@@ -237,7 +238,7 @@ export class NotesController {
         });
       }
 
-      const user: User = await this.userService.getUserByUsername(
+      const user: UserPasswordless = await this.userService.getUserByUsername(
         decodedJWT.username,
       );
 

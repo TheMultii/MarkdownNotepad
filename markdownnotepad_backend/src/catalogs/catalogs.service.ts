@@ -82,7 +82,7 @@ export class CatalogsService {
     await this.prisma.user.update({
       where: { id: catalog.owner.id },
       data: {
-        catalog: { disconnect: { id: catalog.id } },
+        catalogs: { disconnect: { id: catalog.id } },
       },
     });
 
