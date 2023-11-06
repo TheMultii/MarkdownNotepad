@@ -14,14 +14,14 @@ model User {
   id        String    @id @default(uuid())
   username  String    @unique
   email     String    @unique
-  name      String?
-  surname   String?
+  name      String?   @default("")
+  surname   String?   @default("")
   password  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   notes     Note[]
   tags      NoteTag[]
-  catalog   Catalog[]
+  catalogs  Catalog[]
 }
 
 model Note {
