@@ -32,7 +32,7 @@ import {
   Error404,
   Error500,
 } from 'src/http_response_models';
-import { UUIDDto } from 'src/dto';
+import { DisconnectNoteUUIDDto, UUIDDto } from 'src/dto';
 import { UserService } from 'src/user/user.service';
 import { Catalog } from './catalogs.model';
 import { CatalogDto } from './dto/catalogs.dto';
@@ -110,6 +110,25 @@ export class CatalogsController {
     @Res() response: Response,
     @Body() catalog: CatalogDtoOptional,
     @Param() params: UUIDDto,
+  ): Promise<Response> {
+    throw new Error('Method not implemented.');
+  }
+
+  @Patch(':id/disconnect/:noteId')
+  @ApiOperation({ summary: 'Remove a note from catalog' })
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ description: 'Remove a note from catalog', type: Catalog })
+  @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: Error403 })
+  @ApiNotFoundResponse({ description: 'Not found', type: Error404 })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+    type: Error500,
+  })
+  async removeNoteFromCatalog(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Param() params: DisconnectNoteUUIDDto,
   ): Promise<Response> {
     throw new Error('Method not implemented.');
   }
