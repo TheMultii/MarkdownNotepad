@@ -90,8 +90,9 @@ export class CatalogsController {
   @Get(':id')
   @ApiOperation({ summary: 'Get catalog by id' })
   @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ description: 'Get catalog by id', type: Catalog })
+  @ApiOkResponse({ description: 'Get catalog by id', type: CatalogInclude })
   @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
+  @ApiForbiddenResponse({ description: 'Forbidden', type: Error403 })
   @ApiNotFoundResponse({ description: 'Not found', type: Error404 })
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error',
@@ -102,7 +103,37 @@ export class CatalogsController {
     @Res() response: Response,
     @Param() params: UUIDDto,
   ): Promise<Response> {
-    throw new Error('Method not implemented.');
+    try {
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
+
+      const result: CatalogInclude = await this.catalogsService.getCatalogById(
+        params.id,
+      );
+
+      if (!result) {
+        return response.status(404).json({ message: 'Catalog not found' });
+      }
+
+      if (result.owner.username !== decodedJWT.username) {
+        return response.status(403).json({
+          message: 'You do not have permission to access this catalog',
+        });
+      }
+
+      return response.status(200).json(result);
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
   }
 
   @Post()
