@@ -19,6 +19,7 @@ export class User implements Prisma.UserCreateInput {
   updatedAt?: string | Date;
   notes?: Prisma.NoteCreateNestedManyWithoutAuthorInput;
   tags?: Prisma.NoteTagCreateNestedManyWithoutOwnerInput;
+  catalogs?: Prisma.CatalogCreateNestedManyWithoutOwnerInput;
 }
 
 export class UserShort implements Prisma.UserCreateInput {
@@ -35,6 +36,7 @@ export class UserShort implements Prisma.UserCreateInput {
   updatedAt?: string | Date;
   notes?: Prisma.NoteCreateNestedManyWithoutAuthorInput;
   tags?: Prisma.NoteTagCreateNestedManyWithoutOwnerInput;
+  catalogs?: Prisma.CatalogCreateNestedManyWithoutOwnerInput;
 }
 
 export class UserBasic {
