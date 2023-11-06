@@ -1,6 +1,6 @@
-import { User } from '@prisma/client';
 import { UserService } from './user.service';
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
@@ -22,12 +23,13 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { Error404, Error500 } from 'src/http_response_models';
-import { decodeJwt } from 'src/auth/jwt.decode';
+import { Error400, Error404, Error500 } from 'src/http_response_models';
+import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
 import { UUIDDto } from 'src/dto';
 import { validate } from 'class-validator';
 import { PrismaService } from 'src/prisma.service';
-import { UserBasic } from './user.model';
+import { User, UserBasic, UserPasswordless } from './user.model';
+import { UserOptionalDto } from './dto/user.optional.dto';
 
 @Controller('users')
 @ApiBearerAuth()
@@ -42,7 +44,11 @@ export class UserController {
   @Get(':id')
   @ApiOperation({ summary: 'Get user by id' })
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 200, description: 'Get user by id' })
+  @ApiResponse({
+    status: 200,
+    description: 'Get user by id',
+    type: UserPasswordless,
+  })
   @ApiNotFoundResponse({ description: 'User not found', type: Error404 })
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error',
@@ -61,7 +67,9 @@ export class UserController {
         return response.status(400).json({ message: 'Bad Request' });
       }
 
-      const result: User = await this.userService.getUserById(uuidDTO.id);
+      const result: UserPasswordless = await this.userService.getUserById(
+        uuidDTO.id,
+      );
 
       if (!result) {
         return response.status(404).json({ message: 'User not found' });
@@ -78,7 +86,13 @@ export class UserController {
   @Patch()
   @ApiOperation({ summary: 'Update user' })
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 200, description: 'Update user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Update user',
+    type: UserPasswordless,
+  })
+  @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
+  @ApiNotFoundResponse({ description: 'User not found', type: Error404 })
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error',
     type: Error500,
@@ -86,15 +100,69 @@ export class UserController {
   async updateUser(
     @Req() request: Request,
     @Res() response: Response,
+    @Body() updateUserDTO: UserOptionalDto,
   ): Promise<any> {
     try {
-      const decodedJWT = await decodeJwt(
-        this.jwtService,
-        request.headers.authorization,
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ message: 'Bad Request' });
+      }
+
+      const user: UserBasic = await this.userService.getUserByUsernameBasic(
+        decodedJWT.username,
       );
 
-      // TODO: complete the request
-      return response.status(200).json(decodedJWT);
+      if (!user) {
+        return response.status(404).json({ message: 'User not found' });
+      }
+
+      if (Object.keys(updateUserDTO).length === 0) {
+        return response.status(400).json({ message: 'Bad Request' });
+      }
+
+      const errors = await validate(updateUserDTO);
+      if (errors.length > 0) {
+        return response.status(400).json({ message: 'Bad Request' });
+      }
+
+      const userEditModel = new User();
+      if (updateUserDTO.username) {
+        userEditModel.username = updateUserDTO.username;
+      }
+      if (updateUserDTO.email) {
+        userEditModel.email = updateUserDTO.email;
+      }
+      if (updateUserDTO.name) {
+        userEditModel.name = updateUserDTO.name;
+      }
+      if (updateUserDTO.surname) {
+        userEditModel.surname = updateUserDTO.surname;
+      }
+      if (updateUserDTO.password) {
+        userEditModel.password = updateUserDTO.password;
+      }
+
+      const result = this.prismaService.user.update({
+        where: {
+          username: decodedJWT.username,
+        },
+        data: userEditModel,
+      });
+
+      if (!result) {
+        return response
+          .status(400)
+          .json({ message: 'Error while updating the user' });
+      }
+
+      return response.status(200).json({
+        message: 'User updated successfully',
+      });
     } catch (error) {
       return response
         .status(500)
