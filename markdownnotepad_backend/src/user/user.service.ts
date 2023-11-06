@@ -117,4 +117,28 @@ export class UserService {
       data: user,
     });
   }
+
+  async deleteUserByUsername(username: string): Promise<User> {
+    await this.prisma.noteTag.deleteMany({
+      where: {
+        owner: {
+          username: username,
+        },
+      },
+    });
+
+    await this.prisma.note.deleteMany({
+      where: {
+        author: {
+          username: username,
+        },
+      },
+    });
+
+    return await this.prisma.user.delete({
+      where: {
+        username: username,
+      },
+    });
+  }
 }
