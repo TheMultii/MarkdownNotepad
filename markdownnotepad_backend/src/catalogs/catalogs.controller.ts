@@ -139,7 +139,10 @@ export class CatalogsController {
   @Post()
   @ApiOperation({ summary: 'Create new catalog' })
   @UseGuards(JwtAuthGuard)
-  @ApiCreatedResponse({ description: 'Create new catalog' })
+  @ApiCreatedResponse({
+    description: 'Create new catalog',
+    type: CatalogInclude,
+  })
   @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error',
@@ -148,9 +151,56 @@ export class CatalogsController {
   async createCatalog(
     @Req() request: Request,
     @Res() response: Response,
-    @Body() catalog: CatalogDto,
+    @Body() catalogDto: CatalogDto,
   ): Promise<Response> {
-    throw new Error('Method not implemented.');
+    try {
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
+
+      const validationErrors = await validate(catalogDto);
+      if (validationErrors.length > 0) {
+        return response.status(400).send({
+          message: validationErrors,
+        });
+      }
+
+      const user: UserPasswordless = await this.userService.getUserByUsername(
+        decodedJWT.username,
+      );
+
+      if (!user) {
+        return response.status(500).json({ message: 'User not found' });
+      }
+
+      const catalog = new CatalogModel();
+      catalog.title = catalogDto.title;
+
+      const catalogCheck: Catalog =
+        await this.catalogsService.createCatalog(catalog);
+
+      if (!catalogCheck) {
+        return response.status(500).json({ message: 'Catalog not created' });
+      }
+
+      const result: CatalogInclude = await this.catalogsService.getCatalogById(
+        catalogCheck.id,
+      );
+
+      return response
+        .status(201)
+        .json({ message: 'Catalog created', catalog: result });
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
   }
 
   @Patch(':id')
