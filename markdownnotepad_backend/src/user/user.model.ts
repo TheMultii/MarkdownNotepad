@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
+import { Catalog, Note, NoteTag, Prisma } from '@prisma/client';
 
 export class User implements Prisma.UserCreateInput {
   @ApiProperty()
@@ -42,4 +42,17 @@ export class UserBasic {
   id?: string;
   @ApiProperty({ example: 'username' })
   username: string;
+}
+
+export class UserPasswordless {
+  id: string;
+  username: string;
+  email: string;
+  name?: string;
+  surname?: string;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+  notes: Pick<Note, 'id' | 'title' | 'createdAt' | 'updatedAt' | 'shared'>[];
+  tags: NoteTag[];
+  catalogs: Catalog[];
 }
