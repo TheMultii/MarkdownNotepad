@@ -54,6 +54,16 @@ export class NotesService {
   }
 
   async updateNoteById(id: string, note: NoteModel): Promise<Note> {
+    await this.prisma.note.update({
+      where: {
+        id,
+      },
+      data: {
+        tags: {
+          set: [],
+        },
+      },
+    });
     return await this.prisma.note.update({
       where: {
         id,
