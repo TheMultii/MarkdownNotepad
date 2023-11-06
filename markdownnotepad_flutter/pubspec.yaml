@@ -55,6 +55,7 @@ dependencies:
     flutter_math_fork: ^0.7.1
     url_launcher: ^6.2.1
     color_parser: ^0.0.3
+    socket_io_client: ^2.0.3+1
 
 dev_dependencies:
     flutter_test:
