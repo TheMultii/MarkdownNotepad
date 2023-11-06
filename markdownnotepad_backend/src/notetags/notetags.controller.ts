@@ -99,12 +99,26 @@ export class NoteTagsController {
     @Res() response: Response,
   ): Promise<Response> {
     try {
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
+
       const result: NoteTagInclude = await this.notetagsService.getNoteTagById(
         request.params.id,
       );
 
       if (!result) {
         return response.status(404).json({ message: 'Not found' });
+      }
+
+      if (result.owner.username !== decodedJWT.username) {
+        return response.status(403).json({ message: 'Forbidden' });
       }
 
       return response.status(200).json(result);
