@@ -157,6 +157,12 @@ export class UserController {
         decodedJWT.username,
       );
 
+      if (user.username !== decodedJWT.username) {
+        return response.status(403).json({
+          message: 'You do not have permission to edit this user',
+        });
+      }
+
       if (!user) {
         return response.status(404).json({ message: 'User not found' });
       }
