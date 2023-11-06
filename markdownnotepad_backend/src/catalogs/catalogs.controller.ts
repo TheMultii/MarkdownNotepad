@@ -34,6 +34,9 @@ import {
 } from 'src/http_response_models';
 import { UUIDDto } from 'src/dto';
 import { UserService } from 'src/user/user.service';
+import { Catalog } from './catalogs.model';
+import { CatalogDto } from './dto/catalogs.dto';
+import { CatalogDtoOptional } from './dto/catalogs.optional.dto';
 
 @Controller('catalogs')
 @ApiBearerAuth()
@@ -59,7 +62,7 @@ export class CatalogsController {
   @Get(':id')
   @ApiOperation({ summary: 'Get catalog by id' })
   @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ description: 'Get catalog by id' })
+  @ApiOkResponse({ description: 'Get catalog by id', type: Catalog })
   @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
   @ApiNotFoundResponse({ description: 'Not found', type: Error404 })
   @ApiInternalServerErrorResponse({
@@ -86,7 +89,7 @@ export class CatalogsController {
   async createCatalog(
     @Req() request: Request,
     @Res() response: Response,
-    @Body() catalog: any,
+    @Body() catalog: CatalogDto,
   ): Promise<Response> {
     throw new Error('Method not implemented.');
   }
@@ -94,7 +97,7 @@ export class CatalogsController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update catalog by id' })
   @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ description: 'Update catalog by id' })
+  @ApiOkResponse({ description: 'Update catalog by id', type: Catalog })
   @ApiBadRequestResponse({ description: 'Bad Request', type: Error400 })
   @ApiForbiddenResponse({ description: 'Forbidden', type: Error403 })
   @ApiNotFoundResponse({ description: 'Not found', type: Error404 })
@@ -105,7 +108,7 @@ export class CatalogsController {
   async updateCatalogById(
     @Req() request: Request,
     @Res() response: Response,
-    @Body() catalog: any,
+    @Body() catalog: CatalogDtoOptional,
     @Param() params: UUIDDto,
   ): Promise<Response> {
     throw new Error('Method not implemented.');
