@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CatalogsService } from './catalogs.service';
 import {
   Body,
@@ -34,9 +33,15 @@ import {
 } from 'src/http_response_models';
 import { DisconnectNoteUUIDDto, UUIDDto } from 'src/dto';
 import { UserService } from 'src/user/user.service';
-import { Catalog } from './catalogs.model';
+import { Catalog as CatalogModel, CatalogInclude } from './catalogs.model';
 import { CatalogDto } from './dto/catalogs.dto';
 import { CatalogDtoOptional } from './dto/catalogs.optional.dto';
+import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
+import { validate } from 'class-validator';
+import { UserPasswordless } from 'src/user/user.model';
+import { Catalog } from '@prisma/client';
+import { NoteInclude } from 'src/notes/notes.model';
+import { NotesService } from 'src/notes/notes.service';
 
 @Controller('catalogs')
 @ApiBearerAuth()
@@ -44,6 +49,7 @@ import { CatalogDtoOptional } from './dto/catalogs.optional.dto';
 export class CatalogsController {
   constructor(
     private readonly catalogsService: CatalogsService,
+    private readonly notesService: NotesService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
@@ -51,12 +57,34 @@ export class CatalogsController {
   @Get('getCatalogs')
   @ApiOperation({ summary: "Get all user's catalogs" })
   @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ description: "Get all user's catalogs" })
+  @ApiOkResponse({
+    description: "Get all user's catalogs",
+    type: CatalogInclude,
+    isArray: true,
+  })
   async getCatalogs(
     @Req() request: Request,
     @Res() response: Response,
   ): Promise<Response> {
-    throw new Error('Method not implemented.');
+    try {
+      let decodedJWT: JwtPayload;
+      try {
+        decodedJWT = await decodeJwt(
+          this.jwtService,
+          request.headers.authorization,
+        );
+      } catch (error) {
+        return response.status(400).json({ error: 'Bad request' });
+      }
+
+      const result: CatalogInclude[] =
+        await this.catalogsService.getUsersCatalogs(decodedJWT.username);
+      return response.status(200).json(result);
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Internal Server Error', error: error.message });
+    }
   }
 
   @Get(':id')
