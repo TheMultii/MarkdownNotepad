@@ -38,6 +38,8 @@ import { validate } from 'class-validator';
 import { Error400, Error404, Error500 } from 'src/http_response_models';
 import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
 import { UserPasswordless } from 'src/user/user.model';
+import { PrismaService } from 'src/prisma.service';
+import { NoteDtoOptional } from './dto/note.optional.dto';
 
 @Controller('notes')
 @ApiBearerAuth()
@@ -46,6 +48,7 @@ export class NotesController {
   constructor(
     private readonly notesService: NotesService,
     private readonly userService: UserService,
+    private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -218,7 +221,7 @@ export class NotesController {
   async updateNote(
     @Req() request: Request,
     @Res() response: Response,
-    @Body() noteDto: NoteDto,
+    @Body() noteDto: NoteDtoOptional,
   ): Promise<any> {
     try {
       let decodedJWT: JwtPayload;
@@ -255,14 +258,18 @@ export class NotesController {
       }
 
       const note = new NoteModel();
-      note.title = noteDto.title;
-      note.content = noteDto.content;
-      note.author = {
-        connect: {
-          id: user.id,
-        },
-      };
+      if (noteDto.title) note.title = noteDto.title;
+      if (noteDto.content) note.content = noteDto.content;
       if (noteDto.folderId) {
+        const f = this.prismaService.catalog.findUnique({
+          where: {
+            id: noteDto.folderId,
+          },
+        });
+        if (!f) {
+          return response.status(404).json({ message: 'Folder not found' });
+        }
+
         note.folder = {
           connect: {
             id: noteDto.folderId,
@@ -270,6 +277,16 @@ export class NotesController {
         };
       }
       if (noteDto.tags) {
+        noteDto.tags.forEach((tag) => {
+          const t = this.prismaService.noteTag.findUnique({
+            where: {
+              id: tag,
+            },
+          });
+          if (!t) {
+            return response.status(404).json({ message: 'Tag not found' });
+          }
+        });
         note.tags = {
           connect: noteDto.tags.map((tag) => {
             return { id: tag };
@@ -286,7 +303,9 @@ export class NotesController {
         return response.status(500).json({ message: 'Note not updated' });
       }
 
-      return response.status(200).json({ message: 'Note updated', noteCheck });
+      return response
+        .status(200)
+        .json({ message: 'Note updated', note: noteCheck });
     } catch (error) {
       return response
         .status(500)
@@ -317,7 +336,13 @@ export class NotesController {
       } catch (error) {
         return response.status(400).json({ error: 'Bad request' });
       }
-      // TODO: complete the request
+
+      this.prismaService.note.delete({
+        where: {
+          id: request.params.id,
+        },
+      });
+
       return response.status(200).json(decodedJWT);
     } catch (error) {
       return response
