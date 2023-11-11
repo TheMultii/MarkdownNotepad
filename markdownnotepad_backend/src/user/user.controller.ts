@@ -111,6 +111,8 @@ export class UserController {
         uuidDTO.id,
       );
 
+      // TODO: remove notes, catalogs and notetags from result
+
       if (!result) {
         return response.status(404).json({ message: 'User not found' });
       }
