@@ -51,12 +51,29 @@ class _MDNDrawerState extends State<MDNDrawer> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Nowa notatka"),
-          content: const TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Nazwa notatki",
-            ),
+          title: const Text(
+            "Nowa notatka",
+            textAlign: TextAlign.center,
+          ),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Nazwa notatki",
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Hasło notatki",
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
