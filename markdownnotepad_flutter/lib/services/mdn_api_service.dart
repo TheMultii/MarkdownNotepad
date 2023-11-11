@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:markdownnotepad/models/api_models/login_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
+import 'package:markdownnotepad/models/api_models/patch_note_tag_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_user_body_model.dart';
 import 'package:markdownnotepad/models/api_models/post_note_body_model.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
@@ -15,6 +16,7 @@ import 'package:markdownnotepad/models/api_responses/get_note_tag_response_model
 import 'package:markdownnotepad/models/api_responses/message_success_model.dart';
 import 'package:markdownnotepad/models/api_responses/miscellaneous_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/patch_note_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/patch_note_tag_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/post_note_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_id_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_me_response_model.dart';
@@ -117,6 +119,12 @@ abstract class MDNApiService {
   @GET("/notetags/{id}")
   Future<GetNoteTagResponseModel>? getNoteTag(
     @Path("id") int id,
+    @Header("Authorization") String authorization,
+  );
+
+  @PATCH("/notetags")
+  Future<PatchNoteTagResponseModel>? patchNoteTag(
+    @Body() PatchNoteTagBodyModel body,
     @Header("Authorization") String authorization,
   );
 }
