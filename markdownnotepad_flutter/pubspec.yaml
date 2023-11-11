@@ -15,8 +15,8 @@ dependencies:
     flutter_native_splash: ^2.3.3
     hive: ^2.2.3
     hive_flutter: ^1.1.0
-    eval_annotation: ^0.6.0
-    flutter_eval: ^0.6.1+1
+    eval_annotation: ^0.7.0
+    flutter_eval: ^0.7.0
     cached_network_image:
         git:
             url: https://github.com/prashantsolankispaceo/cached_network_image.git

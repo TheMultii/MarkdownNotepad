@@ -353,10 +353,10 @@ packages:
     dependency: "direct main"
     description:
       name: eval_annotation
-      sha256: "65870a5cb758bf991f68ba3d1b4ef23f6a7b7266aaf4d58c68489682b1a9a80a"
+      sha256: "6c385cc57acbbaed784ae7e46b9700e17078aeafba1fbf41dfb68603669ae874"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.0"
+    version: "0.7.0"
   exception_templates:
     dependency: transitive
     description:
@@ -447,10 +447,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_eval
-      sha256: "198821468bff420bc0688ac1ff231d5c837fe1477706f11db190350c91d93b03"
+      sha256: "9832985b4c20809f4925988618bb38669697c36d63acd0d77c334f150facbff6"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.1+1"
+    version: "0.7.0"
   flutter_feather_icons:
     dependency: "direct main"
     description:
