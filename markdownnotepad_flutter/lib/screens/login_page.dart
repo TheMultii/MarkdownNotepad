@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:markdownnotepad/components/auth/auth_button.dart';
 import 'package:markdownnotepad/components/cached_network_image.dart';
 import 'package:markdownnotepad/components/input_input.dart';
+import 'package:markdownnotepad/helpers/validator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -72,7 +73,10 @@ class _LoginPageState extends State<LoginPage> {
                             MDNInputWidget(
                               inputController: mailController,
                               labelText: 'Adres e-mail',
-                              validator: null,
+                              validator: (emailValidator) =>
+                                  MDNValidator.validateEmail(
+                                emailValidator,
+                              ),
                             ),
                             const SizedBox(
                               width: double.infinity,
@@ -82,7 +86,10 @@ class _LoginPageState extends State<LoginPage> {
                               inputController: passwordController,
                               labelText: 'Hasło',
                               obscureText: true,
-                              validator: null,
+                              validator: (passwordValidator) =>
+                                  MDNValidator.validatePassword(
+                                passwordValidator,
+                              ),
                             ),
                           ],
                         ),
