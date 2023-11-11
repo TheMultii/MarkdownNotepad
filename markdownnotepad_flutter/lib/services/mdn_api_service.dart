@@ -4,6 +4,7 @@ import 'package:markdownnotepad/models/api_models/register_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/access_token_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/miscellaneous_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/user_id_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_me_response_model.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -34,6 +35,12 @@ abstract class MDNApiService {
 
   @GET("/users/me")
   Future<UserMeResponseModel>? getMe(
+    @Header("Authorization") String authorization,
+  );
+
+  @GET("/users/{id}")
+  Future<UserIdResponseModel>? getId(
+    @Path("id") int id,
     @Header("Authorization") String authorization,
   );
 }
