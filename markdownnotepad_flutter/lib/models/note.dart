@@ -30,7 +30,10 @@ class Note extends HiveObject {
   @JsonKey(toJson: User.userToJson, fromJson: User.userFromJson)
   User? user;
   @HiveField(9)
-  @JsonKey(toJson: Catalog.catalogToJson, fromJson: Catalog.catalogFromJson)
+  @JsonKey(
+    toJson: Catalog.catalogOptionalToJson,
+    fromJson: Catalog.catalogOptionalFromJson,
+  )
   Catalog? folder;
 
   Note({

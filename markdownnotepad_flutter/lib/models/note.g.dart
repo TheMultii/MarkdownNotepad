@@ -81,7 +81,8 @@ Note _$NoteFromJson(Map<String, dynamic> json) => Note(
       localNotePassword: json['localNotePassword'] as String?,
       tags: NoteTag.noteTagsFromJson(json['tags'] as List),
       user: User.userFromJson(json['user'] as Map<String, dynamic>?),
-      folder: Catalog.catalogFromJson(json['folder'] as Map<String, dynamic>?),
+      folder: Catalog.catalogOptionalFromJson(
+          json['folder'] as Map<String, dynamic>?),
     );
 
 Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
@@ -94,5 +95,5 @@ Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
       'localNotePassword': instance.localNotePassword,
       'tags': NoteTag.noteTagsToJson(instance.tags),
       'user': User.userToJson(instance.user),
-      'folder': Catalog.catalogToJson(instance.folder),
+      'folder': Catalog.catalogOptionalToJson(instance.folder),
     };
