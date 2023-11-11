@@ -5,7 +5,7 @@ import 'package:markdownnotepad/mdn.app.dart';
 import 'package:markdownnotepad/models/catalog.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/models/notetag.dart';
-import 'package:markdownnotepad/models/server_settings.dart';
+import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:markdownnotepad/models/user.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
 import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';

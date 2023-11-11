@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/core/app_theme.dart';
-import 'package:markdownnotepad/models/server_settings.dart';
+import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:markdownnotepad/screens/loading_splash_screen.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 

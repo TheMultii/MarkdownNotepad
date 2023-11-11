@@ -9,7 +9,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lan_scanner/lan_scanner.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
-import 'package:markdownnotepad/models/server_settings.dart';
+import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:collection/collection.dart';
 
