@@ -64,4 +64,18 @@ class MDNValidator {
     }
     return null;
   }
+
+  static String? validateEmail(String? email) {
+    return ValidatorString(email)
+        .email(
+          errMsg: "Niepoprawny adres e-mail",
+        )
+        .length(
+          min: 4,
+          max: 320,
+          errMsg: (email, min, max) =>
+              "Adres e-mail musi mieć od $min do $max znaków",
+        )
+        .build();
+  }
 }
