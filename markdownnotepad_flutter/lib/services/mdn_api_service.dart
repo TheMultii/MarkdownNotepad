@@ -6,6 +6,7 @@ import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_tag_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_user_body_model.dart';
 import 'package:markdownnotepad/models/api_models/post_note_body_model.dart';
+import 'package:markdownnotepad/models/api_models/post_note_tag_body_model.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/access_token_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
@@ -18,6 +19,7 @@ import 'package:markdownnotepad/models/api_responses/miscellaneous_response_mode
 import 'package:markdownnotepad/models/api_responses/patch_note_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/patch_note_tag_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/post_note_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/post_note_tag_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_id_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_me_response_model.dart';
 import 'package:retrofit/retrofit.dart';
@@ -131,6 +133,12 @@ abstract class MDNApiService {
   @DELETE("/notetags/{id}")
   Future<MessageSuccessModel>? deleteNoteTag(
     @Path("id") int id,
+    @Header("Authorization") String authorization,
+  );
+
+  @POST("/notetags")
+  Future<PostNoteTagResponseModel>? postNoteTag(
+    @Body() PostNoteTagBodyModel body,
     @Header("Authorization") String authorization,
   );
 }
