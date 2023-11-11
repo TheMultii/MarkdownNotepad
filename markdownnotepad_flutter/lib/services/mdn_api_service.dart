@@ -8,6 +8,7 @@ import 'package:markdownnotepad/models/api_models/post_note_body_model.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/access_token_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/get_all_note_tags_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_all_notes_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_note_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/message_success_model.dart';
@@ -104,6 +105,11 @@ abstract class MDNApiService {
   @DELETE("notes/{id}")
   Future<MessageSuccessModel>? deleteNote(
     @Path("id") int id,
+    @Header("Authorization") String authorization,
+  );
+
+  @GET("/notetags/getNoteTags")
+  Future<GetAllNoteTagsResponseModel>? getNoteTags(
     @Header("Authorization") String authorization,
   );
 }
