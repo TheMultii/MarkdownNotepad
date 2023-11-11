@@ -4,6 +4,7 @@ import 'package:markdownnotepad/models/api_models/patch_user_body_model.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/access_token_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/get_all_notes_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/message_success_model.dart';
 import 'package:markdownnotepad/models/api_responses/miscellaneous_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_id_response_model.dart';
@@ -65,6 +66,11 @@ abstract class MDNApiService {
 
   @DELETE("/avatar")
   Future<MessageSuccessModel>? deleteAvatar(
+    @Header("Authorization") String authorization,
+  );
+
+  @GET("notes/getNotes")
+  Future<GetAllNotesResponseModel>? getNotes(
     @Header("Authorization") String authorization,
   );
 }
