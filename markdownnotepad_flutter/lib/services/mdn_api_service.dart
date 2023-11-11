@@ -56,4 +56,10 @@ abstract class MDNApiService {
   Future<MessageSuccessModel>? deleteUser(
     @Header("Authorization") String authorization,
   );
+
+  @POST("/avatar")
+  Future<MessageSuccessModel>? postAvatar(
+    @Body() FormData avatar,
+    @Header("Authorization") String authorization,
+  );
 }
