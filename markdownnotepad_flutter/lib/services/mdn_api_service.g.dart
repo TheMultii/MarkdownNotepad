@@ -253,19 +253,27 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<MessageSuccessModel>? postAvatar(
-    FormData avatar,
+    File avatar,
     String authorization,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': authorization};
     _headers.removeWhere((k, v) => v == null);
-    final _data = avatar;
+    final _data = FormData();
+    _data.files.add(MapEntry(
+      'avatar',
+      MultipartFile.fromFileSync(
+        avatar.path,
+        filename: avatar.path.split(Platform.pathSeparator).last,
+      ),
+    ));
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<MessageSuccessModel>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
+      contentType: 'multipart/form-data',
     )
             .compose(
               _dio.options,

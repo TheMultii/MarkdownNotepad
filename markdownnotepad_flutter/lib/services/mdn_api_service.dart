@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:markdownnotepad/models/api_models/login_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_user_body_model.dart';
@@ -60,8 +62,9 @@ abstract class MDNApiService {
   );
 
   @POST("/avatar")
+  @MultiPart()
   Future<MessageSuccessModel>? postAvatar(
-    @Body() FormData avatar,
+    @Part() File avatar,
     @Header("Authorization") String authorization,
   );
 
