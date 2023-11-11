@@ -10,6 +10,7 @@ import 'package:markdownnotepad/models/api_models/post_note_tag_body_model.dart'
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/access_token_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/get_all_catalogs_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_all_note_tags_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_all_notes_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_note_response_model.dart';
@@ -139,6 +140,11 @@ abstract class MDNApiService {
   @POST("/notetags")
   Future<PostNoteTagResponseModel>? postNoteTag(
     @Body() PostNoteTagBodyModel body,
+    @Header("Authorization") String authorization,
+  );
+
+  @GET("/catalogs/getCatalogs")
+  Future<GetAllCatalogsResponseModel>? getCatalogs(
     @Header("Authorization") String authorization,
   );
 }
