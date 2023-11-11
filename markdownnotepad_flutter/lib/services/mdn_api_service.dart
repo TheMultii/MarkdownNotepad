@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:markdownnotepad/models/api_models/login_body_model.dart';
+import 'package:markdownnotepad/models/api_models/patch_catalog_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_tag_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_user_body_model.dart';
@@ -18,6 +19,7 @@ import 'package:markdownnotepad/models/api_responses/get_note_response_model.dar
 import 'package:markdownnotepad/models/api_responses/get_note_tag_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/message_success_model.dart';
 import 'package:markdownnotepad/models/api_responses/miscellaneous_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/patch_catalog_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/patch_note_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/patch_note_tag_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/post_note_response_model.dart';
@@ -152,6 +154,13 @@ abstract class MDNApiService {
   @GET("/catalogs/{id}")
   Future<GetCatalogResponseModel>? getCatalog(
     @Path("id") int id,
+    @Header("Authorization") String authorization,
+  );
+
+  @PATCH("/catalogs/{id}")
+  Future<PatchCatalogResponseModel>? patchCatalog(
+    @Path("id") int id,
+    @Body() PatchCatalogBodyModel body,
     @Header("Authorization") String authorization,
   );
 }
