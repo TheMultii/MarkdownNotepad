@@ -59,6 +59,7 @@ dependencies:
     lan_scanner: ^4.0.0+1
     network_info_plus: ^4.1.0
     collection: ^1.17.2
+    animated_splash_screen: ^1.3.0
 
 dev_dependencies:
     flutter_test:
