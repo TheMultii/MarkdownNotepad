@@ -4,6 +4,7 @@ import 'package:markdownnotepad/models/api_models/patch_user_body_model.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/access_token_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/message_success_model.dart';
 import 'package:markdownnotepad/models/api_responses/miscellaneous_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_id_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_me_response_model.dart';
@@ -48,6 +49,11 @@ abstract class MDNApiService {
   @PATCH("/users")
   Future<MessageSuccessModel>? patchUser(
     @Body() PatchUserBodyModel body,
+    @Header("Authorization") String authorization,
+  );
+
+  @DELETE("/users")
+  Future<MessageSuccessModel>? deleteUser(
     @Header("Authorization") String authorization,
   );
 }
