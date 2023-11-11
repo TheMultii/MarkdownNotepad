@@ -71,6 +71,9 @@ class _MDNAppState extends State<MDNApp> {
           );
         }
 
+        if (redirectToInitialPage) {
+          Modular.to.pushReplacementNamed('/init-setup/');
+        }
         return child!;
       },
     );
