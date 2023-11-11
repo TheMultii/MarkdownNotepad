@@ -70,39 +70,45 @@ class _RegisterPageState extends State<RegisterPage> {
                     //register form
                     Padding(
                       padding: const EdgeInsets.all(45.0),
-                      child: Column(
-                        children: <Widget>[
-                          MDNInputWidget(
-                            inputController: usernameController,
-                            labelText: 'Nazwa użytkownika',
-                          ),
-                          const SizedBox(
-                            width: double.infinity,
-                            height: 22,
-                          ),
-                          MDNInputWidget(
-                            inputController: mailController,
-                            labelText: 'Adres e-mail',
-                          ),
-                          const SizedBox(
-                            width: double.infinity,
-                            height: 22,
-                          ),
-                          MDNInputWidget(
-                            inputController: passwordController,
-                            labelText: 'Hasło',
-                            obscureText: true,
-                          ),
-                          const SizedBox(
-                            width: double.infinity,
-                            height: 22,
-                          ),
-                          MDNInputWidget(
-                            inputController: confirmPasswordController,
-                            labelText: 'Powtórz hasło',
-                            obscureText: true,
-                          ),
-                        ],
+                      child: Form(
+                        child: Column(
+                          children: <Widget>[
+                            MDNInputWidget(
+                              inputController: usernameController,
+                              labelText: 'Nazwa użytkownika',
+                              validator: null,
+                            ),
+                            const SizedBox(
+                              width: double.infinity,
+                              height: 22,
+                            ),
+                            MDNInputWidget(
+                              inputController: mailController,
+                              labelText: 'Adres e-mail',
+                              validator: null,
+                            ),
+                            const SizedBox(
+                              width: double.infinity,
+                              height: 22,
+                            ),
+                            MDNInputWidget(
+                              inputController: passwordController,
+                              labelText: 'Hasło',
+                              obscureText: true,
+                              validator: null,
+                            ),
+                            const SizedBox(
+                              width: double.infinity,
+                              height: 22,
+                            ),
+                            MDNInputWidget(
+                              inputController: confirmPasswordController,
+                              labelText: 'Powtórz hasło',
+                              obscureText: true,
+                              validator: null,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     //Buttons
