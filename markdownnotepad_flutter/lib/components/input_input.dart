@@ -7,6 +7,7 @@ class MDNInputWidget extends StatelessWidget {
   final String labelText;
   final bool obscureText;
   final String? Function(String?)? validator;
+  final AutovalidateMode? autovalidationMode;
 
   const MDNInputWidget({
     super.key,
@@ -14,11 +15,14 @@ class MDNInputWidget extends StatelessWidget {
     required this.labelText,
     this.obscureText = false,
     this.validator,
+    this.autovalidationMode,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode:
+          autovalidationMode ?? AutovalidateMode.onUserInteraction,
       validator: validator,
       obscureText: obscureText,
       controller: inputController,
