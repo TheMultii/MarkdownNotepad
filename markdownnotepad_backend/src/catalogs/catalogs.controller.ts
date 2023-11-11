@@ -79,7 +79,9 @@ export class CatalogsController {
 
       const result: CatalogInclude[] =
         await this.catalogsService.getUsersCatalogs(decodedJWT.username);
-      return response.status(200).json(result);
+      return response.status(200).json({
+        catalogs: result,
+      });
     } catch (error) {
       return response
         .status(500)
@@ -128,7 +130,9 @@ export class CatalogsController {
         });
       }
 
-      return response.status(200).json(result);
+      return response.status(200).json({
+        catalog: result,
+      });
     } catch (error) {
       return response
         .status(500)
