@@ -85,7 +85,9 @@ export class NotesController {
       const result: Note[] = await this.notesService.getUsersNotes(
         decodedJWT.username,
       );
-      return response.status(200).json(result);
+      return response.status(200).json({
+        notes: result,
+      });
     } catch (error) {
       return response
         .status(500)
@@ -133,7 +135,9 @@ export class NotesController {
           .json({ message: 'You do not have permission to access this note' });
       }
 
-      return response.status(200).json(result);
+      return response.status(200).json({
+        note: result,
+      });
     } catch (error) {
       return response
         .status(500)
