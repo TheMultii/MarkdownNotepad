@@ -66,8 +66,7 @@ class Note extends HiveObject {
     return json;
   }
 
-  static Note? noteFromJson(Map<String, dynamic>? json) =>
-      json != null ? Note.fromJson(json) : null;
+  static Note noteFromJson(Map<String, dynamic> json) => Note.fromJson(json);
 
-  static Map<String, dynamic>? noteToJson(Note? note) => note?.toJson();
+  static Map<String, dynamic>? noteToJson(Note note) => note.toJson();
 }
