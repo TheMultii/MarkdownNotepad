@@ -1,3 +1,5 @@
+import 'package:flutterfly/flutterfly.dart';
+
 class MDNValidator {
   static String? validateIPAddress(String? ipAddress) {
     if (ipAddress == null || ipAddress.isEmpty) {
@@ -23,5 +25,15 @@ class MDNValidator {
       return "Niepoprawny adres IP";
     }
     return null;
+  }
+
+  static String? validatePort(String? port) {
+    return ValidatorNumber(port)
+        .between(
+          80,
+          65535,
+          errMsg: (min, max) => "Port musi być pomiędzy $min a $max",
+        )
+        .build();
   }
 }
