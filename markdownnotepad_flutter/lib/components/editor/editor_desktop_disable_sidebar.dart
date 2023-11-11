@@ -4,11 +4,13 @@ import 'package:markdownnotepad/core/app_theme_extension.dart';
 class EditorDesktopDisableSidebar extends StatefulWidget {
   final String text;
   final void Function() onTap;
+  final bool isEditorOpen;
 
   const EditorDesktopDisableSidebar({
     super.key,
     required this.text,
     required this.onTap,
+    required this.isEditorOpen,
   });
 
   @override
@@ -36,10 +38,12 @@ class _EditorDesktopDisableSidebarState
           isHovered = false;
         });
       },
-      cursor: SystemMouseCursors.click,
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
-        onTap: () => widget.onTap(),
+        onTap: widget.isEditorOpen ? () => widget.onTap() : null,
+        mouseCursor: widget.isEditorOpen
+            ? SystemMouseCursors.click
+            : SystemMouseCursors.basic,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           width: double.infinity,

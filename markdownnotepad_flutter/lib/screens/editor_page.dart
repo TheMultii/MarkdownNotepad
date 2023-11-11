@@ -139,28 +139,32 @@ class _EditorPageState extends State<EditorPage> {
                       currentTab: selectedTab,
                       onTabChange: onTabChange,
                     ),
-                    if (selectedTab == EditorTabs.editor)
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              top: 8.0,
-                              bottom: 4.0,
-                            ),
-                            child: Opacity(
-                              opacity: .5,
-                              child: Divider(),
-                            ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            top: 8.0,
+                            bottom: 4.0,
                           ),
-                          EditorDesktopDisableSidebar(
-                            text:
-                                "W${isEditorSidebarEnabled ? 'y' : ''}łącz sidebar",
-                            onTap: toggleEditorSidebar,
+                          child: Opacity(
+                            opacity: .5,
+                            child: Divider(),
                           ),
-                        ],
-                      ).animate().fadeIn(duration: 150.ms),
+                        ),
+                        EditorDesktopDisableSidebar(
+                          isEditorOpen: selectedTab == EditorTabs.editor,
+                          text:
+                              "W${isEditorSidebarEnabled ? 'y' : ''}łącz sidebar",
+                          onTap: toggleEditorSidebar,
+                        ),
+                      ],
+                    )
+                        .animate(
+                          target: selectedTab == EditorTabs.editor ? 1.0 : 0.0,
+                        )
+                        .fade(duration: 150.ms, begin: 0.0, end: 1.0),
                   ],
                 ),
               ),
