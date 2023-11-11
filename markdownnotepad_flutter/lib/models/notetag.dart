@@ -55,4 +55,10 @@ class NoteTag extends HiveObject {
     }
     return json;
   }
+
+  static NoteTag noteTagFromJson(Map<String, dynamic> json) =>
+      NoteTag.fromJson(json);
+
+  static Map<String, dynamic> noteTagToJson(NoteTag noteTag) =>
+      noteTag.toJson();
 }
