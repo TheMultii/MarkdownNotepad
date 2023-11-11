@@ -127,4 +127,10 @@ abstract class MDNApiService {
     @Body() PatchNoteTagBodyModel body,
     @Header("Authorization") String authorization,
   );
+
+  @DELETE("/notetags/{id}")
+  Future<MessageSuccessModel>? deleteNoteTag(
+    @Path("id") int id,
+    @Header("Authorization") String authorization,
+  );
 }
