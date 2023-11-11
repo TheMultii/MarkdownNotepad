@@ -11,6 +11,7 @@ import 'package:markdownnotepad/models/api_models/post_note_body_model.dart';
 import 'package:markdownnotepad/models/api_models/post_note_tag_body_model.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/access_token_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/disconnect_catalog_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_all_catalogs_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_all_note_tags_response_model.dart';
@@ -175,6 +176,13 @@ abstract class MDNApiService {
   @POST("/catalogs")
   Future<PostCatalogResponseModel>? postCatalog(
     @Body() PostCatalogBodyModel body,
+    @Header("Authorization") String authorization,
+  );
+
+  @PATCH("/catalogs/{id}/disconnect/{noteId}")
+  Future<DisconnectCatalogResponseModel>? disconnectNoteFromCatalog(
+    @Path("id") int id,
+    @Path("noteId") int noteId,
     @Header("Authorization") String authorization,
   );
 }
