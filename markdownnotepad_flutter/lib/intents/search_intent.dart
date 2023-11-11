@@ -16,7 +16,7 @@ class MDNSearchIntent extends StatelessWidget {
   });
 
   final controlShiftF = const SingleActivator(
-    LogicalKeyboardKey.keyF,
+    LogicalKeyboardKey.keyP,
     control: true,
     shift: true,
   );
@@ -30,7 +30,11 @@ class MDNSearchIntent extends StatelessWidget {
       child: Actions(
         actions: <Type, Action<Intent>>{
           SearchIntent: CallbackAction<Intent>(
-            onInvoke: invokeFunction,
+            onInvoke: (Intent intent) {
+              debugPrint("will invoke");
+              invokeFunction(intent);
+              return null;
+            },
           ),
         },
         child: child,
