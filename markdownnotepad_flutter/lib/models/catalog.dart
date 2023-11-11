@@ -53,9 +53,15 @@ class Catalog extends HiveObject {
     return json;
   }
 
-  static Catalog? catalogFromJson(Map<String, dynamic>? json) =>
-      json != null ? Catalog.fromJson(json) : null;
+  static Catalog catalogFromJson(Map<String, dynamic> json) =>
+      Catalog.fromJson(json);
 
-  static Map<String, dynamic>? catalogToJson(Catalog? catalog) =>
+  static Map<String, dynamic> catalogToJson(Catalog catalog) =>
+      catalog.toJson();
+
+  static Catalog? catalogOptionalFromJson(Map<String, dynamic>? json) =>
+      json == null ? null : Catalog.fromJson(json);
+
+  static Map<String, dynamic>? catalogOptionalToJson(Catalog? catalog) =>
       catalog?.toJson();
 }
