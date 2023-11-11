@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:markdownnotepad/models/api_models/login_body_model.dart';
+import 'package:markdownnotepad/models/api_models/patch_user_body_model.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/access_token_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
@@ -41,6 +42,12 @@ abstract class MDNApiService {
   @GET("/users/{id}")
   Future<UserIdResponseModel>? getId(
     @Path("id") int id,
+    @Header("Authorization") String authorization,
+  );
+
+  @PATCH("/users")
+  Future<MessageSuccessModel>? patchUser(
+    @Body() PatchUserBodyModel body,
     @Header("Authorization") String authorization,
   );
 }
