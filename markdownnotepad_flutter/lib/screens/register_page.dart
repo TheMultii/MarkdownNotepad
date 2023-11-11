@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:markdownnotepad/components/auth/auth_button.dart';
 import 'package:markdownnotepad/components/cached_network_image.dart';
 import 'package:markdownnotepad/components/input_input.dart';
+import 'package:markdownnotepad/helpers/validator.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -76,7 +77,10 @@ class _RegisterPageState extends State<RegisterPage> {
                             MDNInputWidget(
                               inputController: usernameController,
                               labelText: 'Nazwa użytkownika',
-                              validator: null,
+                              validator: (usernameValidator) =>
+                                  MDNValidator.validateUsername(
+                                usernameValidator,
+                              ),
                             ),
                             const SizedBox(
                               width: double.infinity,
@@ -85,7 +89,10 @@ class _RegisterPageState extends State<RegisterPage> {
                             MDNInputWidget(
                               inputController: mailController,
                               labelText: 'Adres e-mail',
-                              validator: null,
+                              validator: (emailValidator) =>
+                                  MDNValidator.validateEmail(
+                                emailValidator,
+                              ),
                             ),
                             const SizedBox(
                               width: double.infinity,
@@ -95,7 +102,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               inputController: passwordController,
                               labelText: 'Hasło',
                               obscureText: true,
-                              validator: null,
+                              validator: (passwordValidator) =>
+                                  MDNValidator.validatePassword(
+                                passwordValidator,
+                              ),
                             ),
                             const SizedBox(
                               width: double.infinity,
@@ -105,7 +115,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               inputController: confirmPasswordController,
                               labelText: 'Powtórz hasło',
                               obscureText: true,
-                              validator: null,
+                              validator: (repeatPasswordValidator) =>
+                                  MDNValidator.validateRepeatPassword(
+                                passwordController.text,
+                                repeatPasswordValidator,
+                              ),
                             ),
                           ],
                         ),
