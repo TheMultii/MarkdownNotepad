@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:markdownnotepad/models/api_models/login_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_user_body_model.dart';
+import 'package:markdownnotepad/models/api_models/post_note_body_model.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/access_token_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
@@ -12,6 +13,7 @@ import 'package:markdownnotepad/models/api_responses/get_note_response_model.dar
 import 'package:markdownnotepad/models/api_responses/message_success_model.dart';
 import 'package:markdownnotepad/models/api_responses/miscellaneous_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/patch_note_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/post_note_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_id_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_me_response_model.dart';
 import 'package:retrofit/retrofit.dart';
@@ -83,6 +85,12 @@ abstract class MDNApiService {
   @GET("notes/{id}")
   Future<GetNoteResponseModel>? getNote(
     @Path("id") int id,
+    @Header("Authorization") String authorization,
+  );
+
+  @POST("notes")
+  Future<PostNoteResponseModel>? postNote(
+    @Body() PostNoteBodyModel body,
     @Header("Authorization") String authorization,
   );
 
