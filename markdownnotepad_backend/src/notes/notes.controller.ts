@@ -212,7 +212,9 @@ export class NotesController {
         return response.status(500).json({ message: 'Note not created' });
       }
 
-      return response.status(201).json({ message: 'Note created', noteCheck });
+      return response
+        .status(201)
+        .json({ message: 'Note created', note: noteCheck });
     } catch (error) {
       return response
         .status(500)
