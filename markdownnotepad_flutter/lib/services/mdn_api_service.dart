@@ -11,6 +11,7 @@ import 'package:markdownnotepad/models/api_responses/get_all_notes_response_mode
 import 'package:markdownnotepad/models/api_responses/get_note_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/message_success_model.dart';
 import 'package:markdownnotepad/models/api_responses/miscellaneous_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/patch_note_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_id_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_me_response_model.dart';
 import 'package:retrofit/retrofit.dart';
@@ -89,6 +90,12 @@ abstract class MDNApiService {
   Future<PatchNoteResponseModel>? patchNote(
     @Path("id") int id,
     @Body() PatchNoteBodyModel body,
+    @Header("Authorization") String authorization,
+  );
+
+  @DELETE("notes/{id}")
+  Future<MessageSuccessModel>? deleteNote(
+    @Path("id") int id,
     @Header("Authorization") String authorization,
   );
 }
