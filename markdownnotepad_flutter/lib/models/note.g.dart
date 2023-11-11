@@ -66,3 +66,33 @@ class NoteAdapter extends TypeAdapter<Note> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Note _$NoteFromJson(Map<String, dynamic> json) => Note(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      content: json['content'] as String,
+      shared: json['shared'] as bool,
+      createdAt: json['createdAt'] as String,
+      updatedAt: json['updatedAt'] as String,
+      localNotePassword: json['localNotePassword'] as String?,
+      tags: NoteTag.noteTagsFromJson(json['tags'] as List),
+      user: User.userFromJson(json['user'] as Map<String, dynamic>?),
+      folder: Catalog.catalogFromJson(json['folder'] as Map<String, dynamic>?),
+    );
+
+Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
+      'id': instance.id,
+      'title': instance.title,
+      'content': instance.content,
+      'shared': instance.shared,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+      'localNotePassword': instance.localNotePassword,
+      'tags': NoteTag.noteTagsToJson(instance.tags),
+      'user': User.userToJson(instance.user),
+      'folder': Catalog.catalogToJson(instance.folder),
+    };

@@ -1,9 +1,11 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/models/user.dart';
 
 part 'notetag.g.dart';
 
+@JsonSerializable()
 @HiveType(typeId: 4)
 class NoteTag extends HiveObject {
   @HiveField(0)
@@ -17,8 +19,10 @@ class NoteTag extends HiveObject {
   @HiveField(4)
   String updatedAt;
   @HiveField(5)
-  User owner;
+  @JsonKey(toJson: User.userToJson, fromJson: User.userFromJson)
+  User? owner;
   @HiveField(6)
+  @JsonKey(toJson: Note.notesToJson, fromJson: Note.notesFromJson)
   List<Note>? notes;
 
   NoteTag({
@@ -30,4 +34,25 @@ class NoteTag extends HiveObject {
     required this.owner,
     this.notes,
   });
+
+  factory NoteTag.fromJson(Map<String, dynamic> json) =>
+      _$NoteTagFromJson(json);
+  Map<String, dynamic> toJson() => _$NoteTagToJson(this);
+
+  static List<NoteTag> noteTagsFromJson(List<dynamic> json) {
+    List<NoteTag> noteTags = [];
+    for (var noteTag in json) {
+      noteTags.add(NoteTag.fromJson(noteTag));
+    }
+    return noteTags;
+  }
+
+  static List<Map<String, dynamic>> noteTagsToJson(List<NoteTag>? noteTags) {
+    if (noteTags == null) return [];
+    List<Map<String, dynamic>> json = [];
+    for (var noteTag in noteTags) {
+      json.add(noteTag.toJson());
+    }
+    return json;
+  }
 }

@@ -65,3 +65,32 @@ class UserAdapter extends TypeAdapter<User> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+User _$UserFromJson(Map<String, dynamic> json) => User(
+      id: json['id'] as String,
+      username: json['username'] as String,
+      email: json['email'] as String,
+      name: json['name'] as String,
+      surname: json['surname'] as String,
+      createdAt: json['createdAt'] as String,
+      updatedAt: json['updatedAt'] as String,
+      notes: Note.notesFromJson(json['notes'] as List),
+      catalogs: Catalog.catalogsFromJson(json['catalogs'] as List),
+    )..tags = NoteTag.noteTagsFromJson(json['tags'] as List);
+
+Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+      'id': instance.id,
+      'username': instance.username,
+      'email': instance.email,
+      'name': instance.name,
+      'surname': instance.surname,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+      'notes': Note.notesToJson(instance.notes),
+      'tags': NoteTag.noteTagsToJson(instance.tags),
+      'catalogs': Catalog.catalogsToJson(instance.catalogs),
+    };

@@ -1,10 +1,12 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:markdownnotepad/models/catalog.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/models/notetag.dart';
 
 part 'user.g.dart';
 
+@JsonSerializable()
 @HiveType(typeId: 1)
 class User extends HiveObject {
   @HiveField(0)
@@ -22,10 +24,13 @@ class User extends HiveObject {
   @HiveField(6)
   String updatedAt;
   @HiveField(7)
+  @JsonKey(toJson: Note.notesToJson, fromJson: Note.notesFromJson)
   List<Note>? notes;
   @HiveField(8)
+  @JsonKey(toJson: NoteTag.noteTagsToJson, fromJson: NoteTag.noteTagsFromJson)
   List<NoteTag>? tags;
   @HiveField(9)
+  @JsonKey(toJson: Catalog.catalogsToJson, fromJson: Catalog.catalogsFromJson)
   List<Catalog>? catalogs;
 
   User({
@@ -39,4 +44,29 @@ class User extends HiveObject {
     this.notes,
     this.catalogs,
   });
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+
+  static List<User> usersFromJson(List<dynamic> json) {
+    List<User> users = [];
+    for (var element in json) {
+      users.add(User.fromJson(element));
+    }
+    return users;
+  }
+
+  static List<Map<String, dynamic>> usersToJson(List<User>? users) {
+    if (users == null) return [];
+    List<Map<String, dynamic>> json = [];
+    for (var user in users) {
+      json.add(user.toJson());
+    }
+    return json;
+  }
+
+  static User? userFromJson(Map<String, dynamic>? json) =>
+      json != null ? User.fromJson(json) : null;
+
+  static Map<String, dynamic>? userToJson(User? user) => user?.toJson();
 }

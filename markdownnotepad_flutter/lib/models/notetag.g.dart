@@ -22,7 +22,7 @@ class NoteTagAdapter extends TypeAdapter<NoteTag> {
       color: fields[2] as String,
       createdAt: fields[3] as String,
       updatedAt: fields[4] as String,
-      owner: fields[5] as User,
+      owner: fields[5] as User?,
       notes: (fields[6] as List?)?.cast<Note>(),
     );
   }
@@ -57,3 +57,27 @@ class NoteTagAdapter extends TypeAdapter<NoteTag> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+NoteTag _$NoteTagFromJson(Map<String, dynamic> json) => NoteTag(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      color: json['color'] as String,
+      createdAt: json['createdAt'] as String,
+      updatedAt: json['updatedAt'] as String,
+      owner: User.userFromJson(json['owner'] as Map<String, dynamic>?),
+      notes: Note.notesFromJson(json['notes'] as List),
+    );
+
+Map<String, dynamic> _$NoteTagToJson(NoteTag instance) => <String, dynamic>{
+      'id': instance.id,
+      'title': instance.title,
+      'color': instance.color,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+      'owner': User.userToJson(instance.owner),
+      'notes': Note.notesToJson(instance.notes),
+    };
