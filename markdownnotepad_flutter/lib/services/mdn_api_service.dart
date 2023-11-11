@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/miscellaneous_response_model.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -10,4 +11,10 @@ abstract class MDNApiService {
 
   @GET("/")
   Future<MiscellaneousResponseModel>? getMiscellaneous();
+
+  @GET("/eventlogs/{page}")
+  Future<EventLogsResponseModel>? getEventLogs(
+    @Path("page") int page,
+    @Header("Authorization") String authorization,
+  );
 }
