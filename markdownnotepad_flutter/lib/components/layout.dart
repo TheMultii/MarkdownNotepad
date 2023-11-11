@@ -3,6 +3,7 @@ import 'package:markdownnotepad/components/drawer/drawer.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
+import 'package:markdownnotepad/core/search_bar.dart';
 import 'package:markdownnotepad/intents/search_intent.dart';
 
 class MDNLayout extends StatefulWidget {
@@ -34,27 +35,42 @@ class _MDNLayoutState extends State<MDNLayout> {
       key: drawerKey,
       drawer: const MDNDrawer(),
       body: SafeArea(
-        child: Row(
+        child: Stack(
           children: [
-            Responsive.isDesktop(context) && widget.displayDrawer
-                ? const Expanded(
-                    flex: 2,
-                    child: MDNDrawer(),
-                  )
-                : Container(),
-            Expanded(
-              flex: 7,
-              child: MDNSearchIntent(
-                invokeFunction: (Intent intent) {
-                  debugPrint("SearchIntent invoked at ${DateTime.now()}");
+            Row(
+              children: [
+                Responsive.isDesktop(context) && widget.displayDrawer
+                    ? const Expanded(
+                        flex: 2,
+                        child: MDNDrawer(),
+                      )
+                    : Container(),
+                Expanded(
+                  flex: 7,
+                  child: Focus(
+                    autofocus: true,
+                    focusNode: FocusNode()..requestFocus(),
+                    child: MDNSearchIntent(
+                      invokeFunction: (Intent intent) {
+                        debugPrint("SearchIntent invoked at ${DateTime.now()}");
 
-                  return notifyToast.show(
-                    context: context,
-                    child: const SampleNotifyToast(),
-                  );
-                },
-                child: widget.child,
-              ),
+                        //push a new route on top of the current one, with a transparent background
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            opaque: false,
+                            pageBuilder: (_, __, ___) => MDNSearchBarWidget(
+                              dismissEntry: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                      child: widget.child,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
