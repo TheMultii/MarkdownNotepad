@@ -66,22 +66,26 @@ class _LoginPageState extends State<LoginPage> {
                     //login form
                     Padding(
                       padding: const EdgeInsets.all(60.0),
-                      child: Column(
-                        children: <Widget>[
-                          MDNInputWidget(
-                            inputController: mailController,
-                            labelText: 'Adres e-mail',
-                          ),
-                          const SizedBox(
-                            width: double.infinity,
-                            height: 22,
-                          ),
-                          MDNInputWidget(
-                            inputController: passwordController,
-                            labelText: 'Hasło',
-                            obscureText: true,
-                          ),
-                        ],
+                      child: Form(
+                        child: Column(
+                          children: <Widget>[
+                            MDNInputWidget(
+                              inputController: mailController,
+                              labelText: 'Adres e-mail',
+                              validator: null,
+                            ),
+                            const SizedBox(
+                              width: double.infinity,
+                              height: 22,
+                            ),
+                            MDNInputWidget(
+                              inputController: passwordController,
+                              labelText: 'Hasło',
+                              obscureText: true,
+                              validator: null,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     //Buttons
