@@ -229,7 +229,7 @@ packages:
     source: hosted
     version: "4.7.0"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       sha256: f092b211a4319e98e5ff58223576de6c2803db36221657b46c82574721240687
@@ -297,10 +297,10 @@ packages:
     dependency: transitive
     description:
       name: dart_eval
-      sha256: "2b94cab3b22cccb5ea0c3241e1ddbfd57a62fc28c3af855cb2b3cbec7c7a5212"
+      sha256: "61eacdc6ab4fcb3b8c7050389314bcaa781a42efc9eb98e9493a3ca26492003d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.5"
+    version: "0.7.1"
   dart_ping:
     dependency: transitive
     description:
