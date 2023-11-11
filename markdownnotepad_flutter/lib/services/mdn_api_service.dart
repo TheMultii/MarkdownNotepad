@@ -163,4 +163,10 @@ abstract class MDNApiService {
     @Body() PatchCatalogBodyModel body,
     @Header("Authorization") String authorization,
   );
+
+  @DELETE("/catalogs/{id}")
+  Future<MessageSuccessModel>? deleteCatalog(
+    @Path("id") int id,
+    @Header("Authorization") String authorization,
+  );
 }
