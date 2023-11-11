@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:markdownnotepad/components/auth/auth_button.dart';
 import 'package:markdownnotepad/components/cached_network_image.dart';
 import 'package:markdownnotepad/components/input_input.dart';
+import 'package:markdownnotepad/helpers/validator.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});
@@ -71,7 +72,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             MDNInputWidget(
                               inputController: mailController,
                               labelText: 'Adres e-mail',
-                              validator: null,
+                              validator: (emailValidator) =>
+                                  MDNValidator.validateEmail(
+                                emailValidator,
+                              ),
                             ),
                           ],
                         ),
