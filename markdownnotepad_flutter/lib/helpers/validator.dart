@@ -36,4 +36,14 @@ class MDNValidator {
         )
         .build();
   }
+
+  static String? validateUsername(String? username) {
+    return Validator(username)
+        .length(
+            min: 4,
+            max: 20,
+            errMsg: (uname, min, max) =>
+                "Nazwa użytkownika musi mieć od $min do $max znaków")
+        .build();
+  }
 }
