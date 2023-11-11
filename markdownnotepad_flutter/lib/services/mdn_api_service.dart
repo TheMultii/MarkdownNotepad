@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:markdownnotepad/models/api_models/login_body_model.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/access_token_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
@@ -23,5 +24,10 @@ abstract class MDNApiService {
   @POST("/auth/register")
   Future<AccessTokenResponseModel>? register(
     @Body() RegisterBodyModel body,
+  );
+
+  @POST("/auth/login")
+  Future<AccessTokenResponseModel>? login(
+    @Body() LoginBodyModel body,
   );
 }
