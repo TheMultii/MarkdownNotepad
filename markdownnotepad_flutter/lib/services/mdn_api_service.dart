@@ -6,6 +6,7 @@ import 'package:markdownnotepad/models/api_models/patch_catalog_body_model.dart'
 import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_tag_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_user_body_model.dart';
+import 'package:markdownnotepad/models/api_models/post_catalog_body_model.dart';
 import 'package:markdownnotepad/models/api_models/post_note_body_model.dart';
 import 'package:markdownnotepad/models/api_models/post_note_tag_body_model.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
@@ -22,6 +23,7 @@ import 'package:markdownnotepad/models/api_responses/miscellaneous_response_mode
 import 'package:markdownnotepad/models/api_responses/patch_catalog_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/patch_note_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/patch_note_tag_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/post_catalog_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/post_note_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/post_note_tag_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/user_id_response_model.dart';
@@ -167,6 +169,12 @@ abstract class MDNApiService {
   @DELETE("/catalogs/{id}")
   Future<MessageSuccessModel>? deleteCatalog(
     @Path("id") int id,
+    @Header("Authorization") String authorization,
+  );
+
+  @POST("/catalogs")
+  Future<PostCatalogResponseModel>? postCatalog(
+    @Body() PostCatalogBodyModel body,
     @Header("Authorization") String authorization,
   );
 }
