@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:markdownnotepad/components/dashboard/sections/dashboard_favorites_section.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_header_menu_button.dart';
 import 'package:markdownnotepad/components/dashboard/sections/dashboard_last_viewed_section.dart';
@@ -38,11 +39,46 @@ class _DashboardPageState extends State<DashboardPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "👋 Cześć, Marcel",
+              Text.rich(
+                TextSpan(
+                  children: [
+                    WidgetSpan(
+                      child: const Text(
+                        "👋 ",
+                        style: TextStyle(
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                          .animate()
+                          .rotate(
+                            end: 0.05,
+                            duration: .75.seconds,
+                          )
+                          .scale(
+                            end: const Offset(1.05, 1.05),
+                            duration: .75.seconds,
+                          )
+                          .then(
+                            delay: 75.ms,
+                          )
+                          .rotate(
+                            end: -.05,
+                            duration: .75.seconds,
+                          )
+                          .scale(
+                            end: const Offset(1.0, 1.0),
+                            duration: .75.seconds,
+                          ),
+                    ),
+                    const TextSpan(
+                      text: "Cześć, Marcel",
+                    ),
+                  ],
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 28.0,
                   fontWeight: FontWeight.w600,
                 ),
