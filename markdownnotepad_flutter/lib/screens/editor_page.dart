@@ -106,6 +106,8 @@ class _EditorPageState extends State<EditorPage> {
                       )
                     : EditorTabVisualPreview(
                         textToRender: controller.fullText,
+                        isLiveShareEnabled: isLiveShareEnabled,
+                        toggleLiveShare: toggleLiveShare,
                       ),
               ),
             ),
