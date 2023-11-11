@@ -13,6 +13,7 @@ import 'package:markdownnotepad/models/api_responses/event_logs_response_model.d
 import 'package:markdownnotepad/models/api_responses/get_all_catalogs_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_all_note_tags_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_all_notes_response_model.dart';
+import 'package:markdownnotepad/models/api_responses/get_catalog_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_note_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_note_tag_response_model.dart';
 import 'package:markdownnotepad/models/api_responses/message_success_model.dart';
@@ -145,6 +146,12 @@ abstract class MDNApiService {
 
   @GET("/catalogs/getCatalogs")
   Future<GetAllCatalogsResponseModel>? getCatalogs(
+    @Header("Authorization") String authorization,
+  );
+
+  @GET("/catalogs/{id}")
+  Future<GetCatalogResponseModel>? getCatalog(
+    @Path("id") int id,
     @Header("Authorization") String authorization,
   );
 }
