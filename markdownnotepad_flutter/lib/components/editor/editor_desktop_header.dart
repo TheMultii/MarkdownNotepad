@@ -4,11 +4,13 @@ import 'package:markdownnotepad/components/editor/editor_desktop_header_list_ite
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 
 class EditorDesktopHeader extends StatelessWidget {
+  final bool isTitleEditable;
   final bool isLiveShareEnabled;
   final VoidCallback toggleLiveShare;
 
   const EditorDesktopHeader({
     super.key,
+    this.isTitleEditable = true,
     required this.isLiveShareEnabled,
     required this.toggleLiveShare,
   });
@@ -35,6 +37,7 @@ class EditorDesktopHeader extends StatelessWidget {
               Expanded(
                 child: TextFormField(
                   initialValue: "Lorem ipsum",
+                  readOnly: !isTitleEditable,
                   maxLines: 1,
                   decoration: InputDecoration(
                     border: InputBorder.none,
