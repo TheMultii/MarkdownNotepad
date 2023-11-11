@@ -562,14 +562,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutterfly:
-    dependency: "direct main"
-    description:
-      name: flutterfly
-      sha256: "790d9c98e623a3217c9ba0a56296a5bf7033b1608daa9434fa8d26ec75011a45"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   frontend_server_client:
     dependency: transitive
     description:
