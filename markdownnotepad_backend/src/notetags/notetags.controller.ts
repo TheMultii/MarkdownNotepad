@@ -76,7 +76,9 @@ export class NoteTagsController {
       const result: NoteTag[] = await this.notetagsService.getUsersNoteTags(
         decodedJWT.username,
       );
-      return response.status(200).json(result);
+      return response.status(200).json({
+        noteTags: result,
+      });
     } catch (error) {
       return response
         .status(500)
@@ -121,7 +123,9 @@ export class NoteTagsController {
         return response.status(403).json({ message: 'Forbidden' });
       }
 
-      return response.status(200).json(result);
+      return response.status(200).json({
+        noteTag: result,
+      });
     } catch (error) {
       return response
         .status(500)
@@ -176,7 +180,9 @@ export class NoteTagsController {
 
       const result: NoteTag = await this.notetagsService.createNoteTag(noteTag);
 
-      return response.status(201).json(result);
+      return response.status(201).json({
+        noteTag: result,
+      });
     } catch (error) {
       return response
         .status(500)
