@@ -6,12 +6,12 @@ export class NoteDtoOptional {
   @IsString()
   @IsOptional()
   @Length(3, 256)
-  title: string;
+  title?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  content: string;
+  content?: string;
 
   @ApiProperty()
   @IsString()
