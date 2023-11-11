@@ -65,13 +65,16 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     //reset password form
                     Padding(
                       padding: const EdgeInsets.all(100.0),
-                      child: Column(
-                        children: <Widget>[
-                          MDNInputWidget(
-                            inputController: mailController,
-                            labelText: 'Adres e-mail',
-                          ),
-                        ],
+                      child: Form(
+                        child: Column(
+                          children: <Widget>[
+                            MDNInputWidget(
+                              inputController: mailController,
+                              labelText: 'Adres e-mail',
+                              validator: null,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     //Buttons
