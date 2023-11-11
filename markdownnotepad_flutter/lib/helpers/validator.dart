@@ -56,4 +56,12 @@ class MDNValidator {
                 "Hasło musi mieć od $min do $max znaków")
         .build();
   }
+
+  static String? validateRepeatPassword(
+      String? password, String? repeatPassword) {
+    if (password != repeatPassword) {
+      return "Hasła muszą być takie same";
+    }
+    return null;
+  }
 }
