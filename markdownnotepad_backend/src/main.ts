@@ -5,7 +5,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { RedocModule, RedocOptions } from '@juicyllama/nestjs-redoc';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: false });
+  const app = await NestFactory.create(AppModule);
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   app.enableShutdownHooks();
   app.getHttpAdapter().getInstance().disable('x-powered-by');
