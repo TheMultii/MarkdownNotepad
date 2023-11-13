@@ -12,13 +12,28 @@ class CurrentLoggedInUserProvider extends ChangeNotifier {
 
   LoggedInUser? _currentUser;
   LoggedInUser? get currentUser => _currentUser;
+
+  String _avatarUrl = '';
+  String get avatarUrl => _avatarUrl;
+
   CurrentLoggedInUserProvider() {
     final cU = _loggedInUserBox.get('logged_in_user');
     _currentUser = cU;
+
+    updateAvatarUrl();
   }
   void setCurrentUser(LoggedInUser newUser) {
     _currentUser = newUser;
     updateAvatarUrl();
+    notifyListeners();
+  }
+
+  void updateAvatarUrl() {
+    final settings = _serverSettingsBox.get('server_settings');
+    if (settings == null || _currentUser == null) return;
+
+    _avatarUrl =
+        'http://${settings.ipAddress}:${settings.port}/avatar/${_currentUser!.user.id}?seed=${DateTime.now().millisecondsSinceEpoch}';
     notifyListeners();
   }
 }
