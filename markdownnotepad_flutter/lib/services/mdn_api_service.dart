@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' hide Headers;
 import 'package:markdownnotepad/models/api_models/login_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_catalog_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
@@ -80,9 +78,13 @@ abstract class MDNApiService {
 
   @POST("/avatar")
   @MultiPart()
-  Future<MessageSuccessModel>? postAvatar(
-    @Part() File avatar,
+  @Headers(<String, dynamic>{
+    "accept": "*/*",
+    "Content-Type": "multipart/form-data",
+  })
+  Future<MessageSuccessModel?> postAvatar(
     @Header("Authorization") String authorization,
+    @Part() List<MultipartFile> avatar,
   );
 
   @DELETE("/avatar")
