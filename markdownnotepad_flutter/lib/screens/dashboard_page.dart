@@ -5,7 +5,7 @@ import 'package:markdownnotepad/components/dashboard/dashboard_header_menu_butto
 import 'package:markdownnotepad/components/dashboard/sections/dashboard_last_viewed_section.dart';
 import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
-import 'package:markdownnotepad/enums/dsahboard_tabs.dart';
+import 'package:markdownnotepad/enums/dashboard_tabs.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
