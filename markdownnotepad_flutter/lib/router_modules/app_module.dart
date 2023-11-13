@@ -47,7 +47,7 @@ class MDNAppModule extends Module {
     );
     r.child(
       '/auth',
-      child: (context) => const HomePage(displayDrawer: false),
+      child: (context) => const RouterOutlet(),
       children: [
         ModuleRoute(
           '/',
