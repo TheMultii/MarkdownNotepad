@@ -19,7 +19,7 @@ class MDNDrawerHeader extends StatelessWidget {
           const SizedBox(width: 16),
           Expanded(
             child: Text(
-              "MDN Editor",
+              "MDN Notepad",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.plusJakartaSans().copyWith(
