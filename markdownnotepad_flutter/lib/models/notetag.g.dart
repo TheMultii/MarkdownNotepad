@@ -22,7 +22,7 @@ class NoteTagAdapter extends TypeAdapter<NoteTag> {
       color: fields[2] as String,
       createdAt: fields[3] as String,
       updatedAt: fields[4] as String,
-      owner: fields[5] as User?,
+      owner: fields[5] as UserSimple?,
       notes: (fields[6] as List?)?.cast<Note>(),
     );
   }
@@ -68,7 +68,7 @@ NoteTag _$NoteTagFromJson(Map<String, dynamic> json) => NoteTag(
       color: json['color'] as String,
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
-      owner: User.userFromJson(json['owner'] as Map<String, dynamic>?),
+      owner: UserSimple.userFromJson(json['owner'] as Map<String, dynamic>?),
       notes: Note.notesFromJson(json['notes'] as List),
     );
 
@@ -78,6 +78,6 @@ Map<String, dynamic> _$NoteTagToJson(NoteTag instance) => <String, dynamic>{
       'color': instance.color,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
-      'owner': User.userToJson(instance.owner),
+      'owner': UserSimple.userToJson(instance.owner),
       'notes': Note.notesToJson(instance.notes),
     };
