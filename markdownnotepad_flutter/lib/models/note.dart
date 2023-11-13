@@ -24,15 +24,24 @@ class Note extends HiveObject {
   @HiveField(6)
   String? localNotePassword;
   @HiveField(7)
-  @JsonKey(toJson: NoteTag.noteTagsToJson, fromJson: NoteTag.noteTagsFromJson)
+  @JsonKey(
+    toJson: NoteTag.noteTagsToJson,
+    fromJson: NoteTag.noteTagsFromJson,
+    defaultValue: null,
+  )
   List<NoteTag>? tags;
   @HiveField(8)
-  @JsonKey(toJson: User.userToJson, fromJson: User.userFromJson)
+  @JsonKey(
+    toJson: User.userToJson,
+    fromJson: User.userFromJson,
+    defaultValue: null,
+  )
   User? user;
   @HiveField(9)
   @JsonKey(
     toJson: Catalog.catalogOptionalToJson,
     fromJson: Catalog.catalogOptionalFromJson,
+    defaultValue: null,
   )
   Catalog? folder;
 
