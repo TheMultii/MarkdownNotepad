@@ -69,6 +69,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                 height: 10,
               ),
               TextField(
+                obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: "Hasło notatki",
