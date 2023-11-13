@@ -29,7 +29,6 @@ class _MDNAppState extends State<MDNApp> {
     if (savedSettings?.ipAddress == null || savedSettings!.ipAddress.isEmpty) {
       redirectToInitialPage = true;
     }
-    // TODO: maybe check if server is available?
   }
 
   @override
