@@ -404,10 +404,11 @@ class _InitSetupPageState extends State<InitSetupPage> {
                             ? double.infinity
                             : 300.0,
                         child: Form(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: Column(
                             children: [
                               TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 initialValue: customServerAddress,
                                 onChanged: (value) {
                                   setState(() {
@@ -435,6 +436,8 @@ class _InitSetupPageState extends State<InitSetupPage> {
                                 height: 8,
                               ),
                               TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 initialValue: customServerPort,
                                 onChanged: (value) {
                                   setState(() {
