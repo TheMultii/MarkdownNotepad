@@ -62,7 +62,11 @@ export class EventLogsController {
         page.page,
       );
 
-      return response.status(200).json(result);
+      return response.status(200).json({
+        page: parseInt(page.page.toString()),
+        totalPages: 9999999, //TODO: change this
+        eventLogs: result,
+      });
     } catch (error) {
       return response
         .status(500)
