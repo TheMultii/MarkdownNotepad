@@ -332,10 +332,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                 ),
               );
             }),
-            const MDNDrawerFooter(
-              avatarUrl: "https://api.mganczarczyk.pl/user/TheMultii/profile",
-              username: "TheMultii",
-            ),
+            const MDNDrawerFooter(),
           ],
         ),
       ),
