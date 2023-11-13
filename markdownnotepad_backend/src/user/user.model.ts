@@ -12,6 +12,8 @@ export class User implements Prisma.UserCreateInput {
   name?: string;
   @ApiProperty({ example: 'Doe' })
   surname?: string;
+  @ApiProperty({ example: 'Bio' })
+  bio?: string;
   password: string;
   @ApiProperty({ example: '2023-11-02T00:00:00.000Z' })
   createdAt?: string | Date;
@@ -29,6 +31,8 @@ export class UserShort implements Prisma.UserCreateInput {
   username: string;
   @ApiProperty({ example: 'mail@mail.com' })
   email: string;
+  @ApiProperty({ example: 'Bio' })
+  bio?: string;
   name?: string;
   surname?: string;
   password: string;
@@ -53,6 +57,8 @@ export class UserPasswordless {
   username: string;
   @ApiProperty({ example: 'mail@mail.com' })
   email: string;
+  @ApiProperty({ example: 'Bio' })
+  bio?: string;
   @ApiProperty()
   name?: string;
   @ApiProperty()
