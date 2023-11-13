@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:markdownnotepad/components/tag_chip/tag_chip_small.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/enums/dashboard_history_item_actions.dart';
-import 'package:markdownnotepad/helpers/add_zero.dart';
+import 'package:markdownnotepad/helpers/date_helper.dart';
 import 'package:markdownnotepad/helpers/pluralize_helper.dart';
+import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
+import 'package:provider/provider.dart';
 
 class DashboardHistoryListItem extends StatelessWidget {
   final bool isLast;
-  final Map<String, dynamic> user;
+  final String userName;
   final DateTime actionDateTime;
   final Map<String, dynamic> note;
   final DashboardHistoryItemActions action;
@@ -16,7 +19,7 @@ class DashboardHistoryListItem extends StatelessWidget {
   const DashboardHistoryListItem({
     super.key,
     required this.isLast,
-    required this.user,
+    required this.userName,
     required this.actionDateTime,
     required this.note,
     required this.action,
@@ -45,8 +48,7 @@ class DashboardHistoryListItem extends StatelessWidget {
       relativeTime = "Przed chwilą";
     }
 
-    String dateString =
-        "${actionDateTime.day}.${addZero(actionDateTime.month)}.${actionDateTime.year}";
+    String dateString = DateHelper.getFormattedDate(actionDateTime);
 
     return TextSpan(
       text: relativeTime,
@@ -172,10 +174,17 @@ class DashboardHistoryListItem extends StatelessWidget {
                         cursor: SystemMouseCursors.click,
                         child: GestureDetector(
                           onTap: () {
-                            debugPrint("Go to user profile: ${user['id']}");
+                            const String destination = "/miscellaneous/account";
+
+                            context
+                                .read<DrawerCurrentTabProvider>()
+                                .setCurrentTab(destination);
+                            Modular.to.navigate(
+                              destination,
+                            );
                           },
                           child: Text(
-                            user['name'],
+                            userName,
                           ),
                         ),
                       ),
