@@ -58,6 +58,16 @@ class MDNValidator {
         )
         .build();
   }
+
+  static String? validateName(String? name) {
+    return ValidatorString(name)
+        .length(
+          min: 0,
+          max: 32,
+          errMsg: "Imię musi mieć maksymalnie 32 znaki",
+        )
+        .build();
+  }
 }
 
 class Validator {
