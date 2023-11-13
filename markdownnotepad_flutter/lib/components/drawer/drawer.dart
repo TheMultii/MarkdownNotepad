@@ -100,6 +100,47 @@ class _MDNDrawerState extends State<MDNDrawer> {
       },
     );
   }
+
+  void onCreateNewCatalogPressed(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            "Nowy folder",
+            textAlign: TextAlign.center,
+          ),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Nazwa folderu",
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Anuluj"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Utwórz"),
+            ),
+          ],
+        ).animate().fadeIn(duration: 100.ms).scale(
+              duration: 100.ms,
+              curve: Curves.easeInOut,
+              begin: const Offset(0, 0),
+              end: const Offset(1, 1),
+            );
       },
     );
   }
