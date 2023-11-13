@@ -225,11 +225,13 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               if (selectedTab == AccountTabs.accountDetails)
                 const AccountDetailsSection()
-              else if (selectedTab == AccountTabs.editProfile)
-                const AccountEditProfileSection()
               else if (selectedTab == AccountTabs.deleteAccount)
                 const AccountDeleteAccountSection(),
-            ],
+                else if (selectedTab == AccountTabs.editProfile)
+                  AccountEditProfileSection(
+                    serverSettings: serverSettings,
+                  )
+              ],
             ),
           ),
         ),
