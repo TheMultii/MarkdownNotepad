@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:markdownnotepad/components/drawer/drawer_footer.dart';
@@ -89,7 +90,15 @@ class _MDNDrawerState extends State<MDNDrawer> {
               child: const Text("Utwórz"),
             ),
           ],
-        );
+        ).animate().fadeIn(duration: 100.ms).scale(
+              duration: 100.ms,
+              curve: Curves.easeInOut,
+              begin: const Offset(0, 0),
+              end: const Offset(1, 1),
+            );
+      },
+    );
+  }
       },
     );
   }
