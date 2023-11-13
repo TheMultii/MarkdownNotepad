@@ -7,6 +7,7 @@ class UserIdResponseModel {
   final String id;
   final String username;
   final String email;
+  final String? bio;
   final String? name;
   final String? surname;
   final DateTime createdAt;
@@ -16,6 +17,7 @@ class UserIdResponseModel {
     required this.id,
     required this.username,
     required this.email,
+    this.bio,
     required this.name,
     required this.surname,
     required this.createdAt,
