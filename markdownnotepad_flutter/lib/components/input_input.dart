@@ -62,6 +62,18 @@ class MDNInputWidget extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(8),
         ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.red,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: Colors.red,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
       style: GoogleFonts.getFont(
         'Poppins',
