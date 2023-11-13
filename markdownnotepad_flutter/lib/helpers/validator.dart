@@ -78,6 +78,16 @@ class MDNValidator {
         )
         .build();
   }
+
+  static String? validateBio(String? bio) {
+    return ValidatorString(bio)
+        .length(
+          min: 0,
+          max: 100,
+          errMsg: "Biogram musi mieć maksymalnie 100 znaków",
+        )
+        .build();
+  }
 }
 
 class Validator {
