@@ -36,4 +36,10 @@ class CurrentLoggedInUserProvider extends ChangeNotifier {
         'http://${settings.ipAddress}:${settings.port}/avatar/${_currentUser!.user.id}?seed=${DateTime.now().millisecondsSinceEpoch}';
     notifyListeners();
   }
+
+  void logout() {
+    _loggedInUserBox.delete('logged_in_user');
+    _currentUser = null;
+    notifyListeners();
+  }
 }
