@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +25,8 @@ class _InitSetupPageState extends State<InitSetupPage> {
   final LanScanner? scanner = kIsWeb ? null : LanScanner();
   List<Host>? availableHosts;
   Host? selectedHost;
+  String? selectedAddress;
+  String? selectedPort;
   Socket? socketBeingChecked;
 
   bool advancedMode = false;
@@ -42,6 +45,13 @@ class _InitSetupPageState extends State<InitSetupPage> {
 
   void scan() async {
     String ipAddress = "";
+
+    if (kIsWeb) {
+      setState(() {
+        advancedMode = true;
+      });
+      return;
+    }
 
     if (!kIsWeb) {
       var wifiIP = await NetworkInfo().getWifiIP();
@@ -129,6 +139,31 @@ class _InitSetupPageState extends State<InitSetupPage> {
       return;
     }
 
+    if (kIsWeb) {
+      final Dio dio = Dio();
+      final url = Uri.parse("http://$customServerAddress:$customServerPort/");
+      final response = await dio.get(
+        url.toString(),
+      );
+
+      if (response.statusCode != 200) {
+        setState(() {
+          customServerError = "Nie można połączyć się z serwerem";
+          hasSuccessfullyConnectedToHost = false;
+          selectedHost = null;
+        });
+        return;
+      }
+
+      setState(() {
+        customServerError = "";
+        selectedAddress = customServerAddress;
+        selectedPort = customServerPort;
+        hasSuccessfullyConnectedToHost = true;
+      });
+      return;
+    }
+
     final hostToCheck = Host(
       internetAddress: InternetAddress(customServerAddress),
     );
@@ -160,12 +195,17 @@ class _InitSetupPageState extends State<InitSetupPage> {
     setState(() {
       customServerError = "";
       selectedHost = host;
+      selectedAddress = customServerAddress;
+      selectedPort = customServerPort;
       hasSuccessfullyConnectedToHost = true;
     });
   }
 
   void completeSetup() {
-    if (selectedHost == null) {
+    if (selectedHost == null && !kIsWeb) {
+      return;
+    }
+    if (kIsWeb && !hasSuccessfullyConnectedToHost) {
       return;
     }
 
@@ -173,8 +213,8 @@ class _InitSetupPageState extends State<InitSetupPage> {
     serverSettingsBox.put(
       'server_settings',
       ServerSettings(
-        ipAddress: selectedHost!.internetAddress.address,
-        port: int.parse(customServerPort.isEmpty ? "3000" : customServerPort),
+        ipAddress: selectedAddress!,
+        port: int.parse(selectedPort ?? "3000"),
       ),
     );
 
@@ -317,20 +357,23 @@ class _InitSetupPageState extends State<InitSetupPage> {
                                   )
                                   .toList()
                             ]
-                          : [
-                              const Text(
-                                "Skanowanie sieci lokalnej...",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 12.0),
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 3.0,
-                                ),
-                              ),
-                            ],
+                          : kIsWeb
+                              ? []
+                              : [
+                                  const Text(
+                                    "Skanowanie sieci lokalnej...",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 12.0),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 3.0,
+                                    ),
+                                  ),
+                                ],
                     ),
                     const SizedBox(height: 8),
                     ElevatedButton(
