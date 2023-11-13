@@ -68,6 +68,16 @@ class MDNValidator {
         )
         .build();
   }
+
+  static String? validateSurname(String? surname) {
+    return ValidatorString(surname)
+        .length(
+          min: 0,
+          max: 32,
+          errMsg: "Nazwisko musi mieć maksymalnie 32 znaki",
+        )
+        .build();
+  }
 }
 
 class Validator {
