@@ -223,8 +223,10 @@ class _AccountPageState extends State<AccountPage> {
                     ],
                   ),
                 ),
-              if (selectedTab == AccountTabs.accountDetails)
-                const AccountDetailsSection()
+                if (selectedTab == AccountTabs.accountDetails)
+                  AccountDetailsSection(
+                    serverSettings: serverSettings,
+                  )
                 else if (selectedTab == AccountTabs.editProfile)
                   AccountEditProfileSection(
                     serverSettings: serverSettings,
