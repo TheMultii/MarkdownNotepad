@@ -6,6 +6,7 @@ import 'package:markdownnotepad/mdn.app.dart';
 import 'package:markdownnotepad/models/catalog.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/models/notetag.dart';
+import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:markdownnotepad/models/user.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
@@ -21,6 +22,7 @@ void main() async {
   Hive.registerAdapter(NoteAdapter());
   Hive.registerAdapter(NoteTagAdapter());
   Hive.registerAdapter(CatalogAdapter());
+  Hive.registerAdapter(LoggedInUserAdapter());
   Hive.registerAdapter(ExtensionStatusAdapter());
   await Hive.openBox<ServerSettings>('server_settings');
   await Hive.openBox<User>('user');
