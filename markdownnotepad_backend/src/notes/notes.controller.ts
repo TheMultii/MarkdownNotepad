@@ -274,7 +274,7 @@ export class NotesController {
       if (noteDto.title) note.title = noteDto.title;
       if (noteDto.content) note.content = noteDto.content;
       if (noteDto.folderId) {
-        const f = this.prismaService.catalog.findUnique({
+        const f = await this.prismaService.catalog.findUnique({
           where: {
             id: noteDto.folderId,
           },
@@ -290,8 +290,8 @@ export class NotesController {
         };
       }
       if (noteDto.tags) {
-        noteDto.tags.forEach((tag) => {
-          const t = this.prismaService.noteTag.findUnique({
+        noteDto.tags.forEach(async (tag) => {
+          const t = await this.prismaService.noteTag.findUnique({
             where: {
               id: tag,
             },
