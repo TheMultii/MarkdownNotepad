@@ -179,19 +179,22 @@ export class UserController {
       }
 
       const userEditModel = new User();
-      if (updateUserDTO.username) {
+      if (updateUserDTO.username != null) {
         userEditModel.username = updateUserDTO.username;
       }
-      if (updateUserDTO.email) {
+      if (updateUserDTO.email != null) {
         userEditModel.email = updateUserDTO.email;
       }
-      if (updateUserDTO.name) {
+      if (updateUserDTO.bio != null) {
+        userEditModel.bio = updateUserDTO.bio;
+      }
+      if (updateUserDTO.name != null) {
         userEditModel.name = updateUserDTO.name;
       }
-      if (updateUserDTO.surname) {
+      if (updateUserDTO.surname != null) {
         userEditModel.surname = updateUserDTO.surname;
       }
-      if (updateUserDTO.password) {
+      if (updateUserDTO.password != null) {
         userEditModel.password = updateUserDTO.password;
       }
 
