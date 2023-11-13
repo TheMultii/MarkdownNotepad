@@ -11,6 +11,7 @@ PatchUserBodyModel _$PatchUserBodyModelFromJson(Map<String, dynamic> json) =>
       username: json['username'] as String?,
       email: json['email'] as String?,
       name: json['name'] as String?,
+      bio: json['bio'] as String?,
       surname: json['surname'] as String?,
       password: json['password'] as String?,
     );
@@ -20,6 +21,7 @@ Map<String, dynamic> _$PatchUserBodyModelToJson(PatchUserBodyModel instance) =>
       'username': instance.username,
       'email': instance.email,
       'name': instance.name,
+      'bio': instance.bio,
       'surname': instance.surname,
       'password': instance.password,
     };

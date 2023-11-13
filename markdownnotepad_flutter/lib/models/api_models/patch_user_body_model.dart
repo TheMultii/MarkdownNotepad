@@ -4,16 +4,18 @@ part 'patch_user_body_model.g.dart';
 
 @JsonSerializable()
 class PatchUserBodyModel {
-  final String? username;
-  final String? email;
-  final String? name;
-  final String? surname;
-  final String? password;
+  String? username;
+  String? email;
+  String? name;
+  String? bio;
+  String? surname;
+  String? password;
 
   PatchUserBodyModel({
     this.username,
     this.email,
     this.name,
+    this.bio,
     this.surname,
     this.password,
   });
