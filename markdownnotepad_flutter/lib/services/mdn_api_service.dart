@@ -90,31 +90,31 @@ abstract class MDNApiService {
     @Header("Authorization") String authorization,
   );
 
-  @GET("notes/getNotes")
+  @GET("/notes/getNotes")
   Future<GetAllNotesResponseModel>? getNotes(
     @Header("Authorization") String authorization,
   );
 
-  @GET("notes/{id}")
+  @GET("/notes/{id}")
   Future<GetNoteResponseModel>? getNote(
     @Path("id") int id,
     @Header("Authorization") String authorization,
   );
 
-  @POST("notes")
+  @POST("/notes")
   Future<PostNoteResponseModel>? postNote(
     @Body() PostNoteBodyModel body,
     @Header("Authorization") String authorization,
   );
 
-  @PATCH("notes/{id}")
+  @PATCH("/notes/{id}")
   Future<PatchNoteResponseModel>? patchNote(
     @Path("id") int id,
     @Body() PatchNoteBodyModel body,
     @Header("Authorization") String authorization,
   );
 
-  @DELETE("notes/{id}")
+  @DELETE("/notes/{id}")
   Future<MessageSuccessModel>? deleteNote(
     @Path("id") int id,
     @Header("Authorization") String authorization,

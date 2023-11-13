@@ -333,7 +333,7 @@ class _MDNApiService implements MDNApiService {
     )
             .compose(
               _dio.options,
-              'notes/getNotes',
+              '/notes/getNotes',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -364,7 +364,7 @@ class _MDNApiService implements MDNApiService {
     )
             .compose(
               _dio.options,
-              'notes/${id}',
+              '/notes/${id}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -396,7 +396,7 @@ class _MDNApiService implements MDNApiService {
     )
             .compose(
               _dio.options,
-              'notes',
+              '/notes',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -429,7 +429,7 @@ class _MDNApiService implements MDNApiService {
     )
             .compose(
               _dio.options,
-              'notes/${id}',
+              '/notes/${id}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -460,7 +460,7 @@ class _MDNApiService implements MDNApiService {
     )
             .compose(
               _dio.options,
-              'notes/${id}',
+              '/notes/${id}',
               queryParameters: queryParameters,
               data: _data,
             )
