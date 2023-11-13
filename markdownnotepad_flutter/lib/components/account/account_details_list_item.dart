@@ -5,12 +5,16 @@ class AccountDetailsListItem extends StatelessWidget {
   final String title;
   final String value;
   final EdgeInsets padding;
+  final bool isItalic;
+  final bool isBold;
 
   const AccountDetailsListItem({
     super.key,
     required this.title,
     required this.value,
     this.padding = EdgeInsets.zero,
+    this.isItalic = false,
+    this.isBold = false,
   });
 
   @override
@@ -37,9 +41,10 @@ class AccountDetailsListItem extends StatelessWidget {
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14.0,
-              fontWeight: FontWeight.w600,
+              fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
+              fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
             ),
           ),
         ],
