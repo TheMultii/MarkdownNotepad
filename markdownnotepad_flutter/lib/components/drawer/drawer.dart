@@ -228,7 +228,16 @@ class _MDNDrawerState extends State<MDNDrawer> {
                           );
                         },
                       ),
-                      const MDNDrawerItemSection(title: "Ostatnie notatki"),
+                      MDNDrawerItemSection(
+                        title: "Ostatnie notatki",
+                        icon: Icon(
+                          FeatherIcons.plus,
+                          size: 12,
+                          color: extendedTheme?.text,
+                        ),
+                        iconClickCallback: () =>
+                            onCreateNewNotePressed(context),
+                      ),
                       ...List.generate(
                         3,
                         (index) {
