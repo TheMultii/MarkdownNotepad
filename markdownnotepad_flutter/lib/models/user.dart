@@ -45,6 +45,7 @@ class User extends HiveObject {
     required this.createdAt,
     required this.updatedAt,
     this.notes,
+    this.tags,
     this.catalogs,
   });
 
