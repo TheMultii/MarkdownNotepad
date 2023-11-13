@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:markdownnotepad/enums/extension_status.dart';
 import 'package:markdownnotepad/mdn.app.dart';
 import 'package:markdownnotepad/models/catalog.dart';
 import 'package:markdownnotepad/models/note.dart';
@@ -20,6 +21,7 @@ void main() async {
   Hive.registerAdapter(NoteAdapter());
   Hive.registerAdapter(NoteTagAdapter());
   Hive.registerAdapter(CatalogAdapter());
+  Hive.registerAdapter(ExtensionStatusAdapter());
   await Hive.openBox<ServerSettings>('server_settings');
   await Hive.openBox<User>('user');
 
