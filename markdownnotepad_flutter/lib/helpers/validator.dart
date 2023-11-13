@@ -13,7 +13,7 @@ class MDNValidator {
         .between(
           80,
           65535,
-          errMsg: (min, max) => "Port musi być pomiędzy $min a $max",
+          errMsg: "Port musi być pomiędzy 80 a 65535",
         )
         .build();
   }
@@ -21,19 +21,20 @@ class MDNValidator {
   static String? validateUsername(String? username) {
     return Validator(username)
         .length(
-            min: 4,
-            max: 20,
-            errMsg: (min, max) =>
-                "Nazwa użytkownika musi mieć od $min do $max znaków")
+          min: 4,
+          max: 20,
+          errMsg: "Nazwa użytkownika musi mieć od 4 do 20 znaków",
+        )
         .build();
   }
 
   static String? validatePassword(String? password) {
     return Validator(password)
         .length(
-            min: 8,
-            max: 32,
-            errMsg: (min, max) => "Hasło musi mieć od $min do $max znaków")
+          min: 8,
+          max: 32,
+          errMsg: "Hasło musi mieć od 8 do 32 znaków",
+        )
         .build();
   }
 
@@ -53,7 +54,7 @@ class MDNValidator {
         .length(
           min: 4,
           max: 320,
-          errMsg: (min, max) => "Adres e-mail musi mieć od $min do $max znaków",
+          errMsg: "Adres e-mail musi mieć od 4 do 320 znaków",
         )
         .build();
   }
@@ -61,14 +62,13 @@ class MDNValidator {
 
 class Validator {
   String? value;
-  String Function(int min, int max)? errorMessage;
+  String? errorMessage;
 
   Validator(this.value);
 
   Validator length(
-      {required int min,
-      required int max,
-      required String Function(int min, int max) errMsg}) {
+      {required int min, required int max, required String errMsg}) {
+    if (errorMessage != null) return this;
     if (value != null && (value!.length < min || value!.length > max)) {
       errorMessage = errMsg;
     }
@@ -76,15 +76,15 @@ class Validator {
   }
 
   String? build() {
-    return errorMessage != null ? errorMessage!(0, 0) : null;
+    return errorMessage;
   }
 }
 
 class ValidatorNumber extends Validator {
   ValidatorNumber(String? value) : super(value);
 
-  ValidatorNumber between(int min, int max,
-      {required String Function(int min, int max) errMsg}) {
+  ValidatorNumber between(int min, int max, {required String errMsg}) {
+    if (errorMessage != null) return this;
     if (value != null) {
       int intValue = int.tryParse(value!) ?? 0;
       if (intValue < min || intValue > max) {
@@ -99,21 +99,24 @@ class ValidatorString extends Validator {
   ValidatorString(String? value) : super(value);
 
   ValidatorString isNotEmpty({required String errMsg}) {
+    if (errorMessage != null) return this;
     if (value == null || value!.isEmpty) {
-      errorMessage = (min, max) => errMsg;
+      errorMessage = errMsg;
     }
     return this;
   }
 
   ValidatorString email({required String errMsg}) {
+    if (errorMessage != null) return this;
     if (value != null &&
         !RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(value!)) {
-      errorMessage = (min, max) => errMsg;
+      errorMessage = errMsg;
     }
     return this;
   }
 
   ValidatorString ipAddress({required String errMsg}) {
+    if (errorMessage != null) return this;
     final RegExp ipv4RegExp = RegExp(
       r"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
       caseSensitive: false,
@@ -130,7 +133,7 @@ class ValidatorString extends Validator {
         ipv4RegExp.hasMatch(value!) || ipv6RegExp.hasMatch(value!);
 
     if (!isValid) {
-      errorMessage = (min, max) => errMsg;
+      errorMessage = errMsg;
     }
 
     return this;
