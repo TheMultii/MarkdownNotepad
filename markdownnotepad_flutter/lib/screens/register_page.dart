@@ -206,6 +206,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             MDNInputWidget(
                               inputController: usernameController,
                               labelText: 'Nazwa użytkownika',
+                              onEditingComplete: () => register(),
                               validator: (usernameValidator) =>
                                   MDNValidator.validateUsername(
                                 usernameValidator,
@@ -218,6 +219,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             MDNInputWidget(
                               inputController: mailController,
                               labelText: 'Adres e-mail',
+                              onEditingComplete: () => register(),
                               validator: (emailValidator) =>
                                   MDNValidator.validateEmail(
                                 emailValidator,
@@ -230,6 +232,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             MDNInputWidget(
                               inputController: passwordController,
                               labelText: 'Hasło',
+                              onEditingComplete: () => register(),
                               obscureText: true,
                               validator: (passwordValidator) =>
                                   MDNValidator.validatePassword(
@@ -243,6 +246,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             MDNInputWidget(
                               inputController: confirmPasswordController,
                               labelText: 'Powtórz hasło',
+                              onEditingComplete: () => register(),
                               obscureText: true,
                               validator: (repeatPasswordValidator) =>
                                   MDNValidator.validateRepeatPassword(
