@@ -1,12 +1,26 @@
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/components/auth/auth_button.dart';
 import 'package:markdownnotepad/components/cached_network_image.dart';
 import 'package:markdownnotepad/components/input_input.dart';
+import 'package:markdownnotepad/components/notifications/error_notify_toast.dart';
+import 'package:markdownnotepad/components/notifications/success_notify_toast.dart';
+import 'package:markdownnotepad/core/notify_toast.dart';
+import 'package:markdownnotepad/helpers/get_logged_in_user_details.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
+import 'package:markdownnotepad/models/api_models/login_body_model.dart';
+import 'package:markdownnotepad/models/api_responses/message_failure_model.dart';
+import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
+import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
+import 'package:markdownnotepad/services/mdn_api_service.dart';
+import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
+import 'package:markdownnotepad/viewmodels/server_settings.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,13 +30,102 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController mailController = TextEditingController();
+  final loggedInUserBox = Hive.box<LoggedInUser>('logged_in_user');
+  final NotifyToast notifyToast = NotifyToast();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  late MDNApiService apiService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final serverSettingsBox = Hive.box<ServerSettings>('server_settings');
+    final ServerSettings? savedSettings =
+        serverSettingsBox.get('server_settings');
+
+    apiService = MDNApiService(
+      Dio(
+        BaseOptions(contentType: "application/json"),
+      ),
+      baseUrl: "http://${savedSettings?.ipAddress}:${savedSettings?.port}",
+    );
+  }
+
+  Future<void> login() async {
+    if (MDNValidator.validateUsername(usernameController.text) != null ||
+        MDNValidator.validatePassword(passwordController.text) != null) {
+      return;
+    }
+
+    try {
+      final loginData = await apiService.login(
+        LoginBodyModel(
+          username: usernameController.text,
+          password: passwordController.text,
+        ),
+      );
+
+      final loggedInUser = await getLoggedInUserDetails(
+        apiService,
+        "Bearer ${loginData!.accessToken}",
+      );
+
+      loggedInUserBox.put("logged_in_user", loggedInUser);
+
+      // ignore: use_build_context_synchronously
+      notifyToast.show(
+        context: context,
+        child: const SuccessNotifyToast(
+          title: "Pomyślnie zalogowano",
+          body: "Za chwilę zostaniesz przekierowany",
+          minWidth: 200,
+        ),
+      );
+
+      await Future.delayed(const Duration(seconds: 1), () {
+        context
+            .read<CurrentLoggedInUserProvider>()
+            .setCurrentUser(loggedInUser);
+        context.read<DrawerCurrentTabProvider>().setCurrentTab("/dashboard/");
+        Modular.to.navigate("/dashboard/");
+      });
+    } on DioException catch (e) {
+      try {
+        final errMsg = MessageFailureModel.fromJson(
+          e.response?.data ?? {"message": "Błąd"},
+        );
+        // ignore: use_build_context_synchronously
+        notifyToast.show(
+          context: context,
+          child: ErrorNotifyToast(
+            title: "Błąd",
+            body: errMsg.message,
+            minWidth: 200,
+          ),
+        );
+      } catch (e) {
+        debugPrint(e.toString());
+        // ignore: use_build_context_synchronously
+        notifyToast.show(
+          context: context,
+          child: const ErrorNotifyToast(
+            title: "Błąd",
+            body: "Błędne dane",
+            minWidth: 200,
+          ),
+        );
+        debugPrint(e.toString());
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final String randomImage = [
-      "https://images.unsplash.com/photo-1695982206826-970fd4e8e27e?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://pbs.twimg.com/media/Fo1tbQ4aUAAn_Fy?format=jpg",
       "https://api.mganczarczyk.pl/tairiku/display/1123719621581527065"
     ][Random().nextInt(2)];
 
@@ -71,11 +174,12 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           children: <Widget>[
                             MDNInputWidget(
-                              inputController: mailController,
-                              labelText: 'Adres e-mail',
-                              validator: (emailValidator) =>
-                                  MDNValidator.validateEmail(
-                                emailValidator,
+                              inputController: usernameController,
+                              labelText: 'Nazwa użytkownika',
+                              onEditingComplete: () => login(),
+                              validator: (usernameValidator) =>
+                                  MDNValidator.validateUsername(
+                                usernameValidator,
                               ),
                             ),
                             const SizedBox(
@@ -86,6 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                               inputController: passwordController,
                               labelText: 'Hasło',
                               obscureText: true,
+                              onEditingComplete: () => login(),
                               validator: (passwordValidator) =>
                                   MDNValidator.validatePassword(
                                 passwordValidator,
@@ -98,10 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                     //Buttons
                     AuthButton(
                       actionText: 'Zaloguj się',
-                      onPressed: () {
-                        debugPrint(
-                            "(login) Login: ${mailController.text} Password: ${passwordController.text}");
-                      },
+                      onPressed: () => login(),
                     ),
                     // zapomniałeś hasło?
                     Padding(
