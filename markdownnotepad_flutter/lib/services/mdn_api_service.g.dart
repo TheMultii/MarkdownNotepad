@@ -133,6 +133,34 @@ class _MDNApiService implements MDNApiService {
   }
 
   @override
+  Future<AccessTokenResponseModel>? refreshToken(String authorization) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': authorization};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<AccessTokenResponseModel>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/auth/refresh',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = AccessTokenResponseModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<UserMeResponseModel>? getMe(String authorization) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -284,7 +312,9 @@ class _MDNApiService implements MDNApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = MessageSuccessModel.fromJson(_result.data!);
+    final value = _result.data == null
+        ? null
+        : MessageSuccessModel.fromJson(_result.data!);
     return value;
   }
 
@@ -312,9 +342,7 @@ class _MDNApiService implements MDNApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = _result.data == null
-        ? null
-        : MessageSuccessModel.fromJson(_result.data!);
+    final value = MessageSuccessModel.fromJson(_result.data!);
     return value;
   }
 

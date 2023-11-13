@@ -54,6 +54,11 @@ abstract class MDNApiService {
     @Body() LoginBodyModel body,
   );
 
+  @POST("/auth/refresh")
+  Future<AccessTokenResponseModel>? refreshToken(
+    @Header("Authorization") String authorization,
+  );
+
   @GET("/users/me")
   Future<UserMeResponseModel>? getMe(
     @Header("Authorization") String authorization,
