@@ -10,6 +10,7 @@ class UserMeResponseModel {
   final String id;
   final String username;
   final String email;
+  final String? bio;
   final String? name;
   final String? surname;
   final DateTime createdAt;
@@ -25,8 +26,9 @@ class UserMeResponseModel {
     required this.id,
     required this.username,
     required this.email,
-    required this.name,
-    required this.surname,
+    this.bio,
+    this.name,
+    this.surname,
     required this.createdAt,
     required this.updatedAt,
     required this.notes,
