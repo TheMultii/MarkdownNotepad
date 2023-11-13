@@ -8,6 +8,7 @@ class MDNInputWidget extends StatelessWidget {
   final bool obscureText;
   final String? Function(String?)? validator;
   final AutovalidateMode? autovalidationMode;
+  final Function()? onEditingComplete;
 
   const MDNInputWidget({
     super.key,
@@ -16,6 +17,7 @@ class MDNInputWidget extends StatelessWidget {
     this.obscureText = false,
     this.validator,
     this.autovalidationMode,
+    this.onEditingComplete,
   });
 
   @override
@@ -27,6 +29,10 @@ class MDNInputWidget extends StatelessWidget {
       obscureText: obscureText,
       controller: inputController,
       cursorColor: Colors.white,
+      onEditingComplete: () {
+        FocusScope.of(context).unfocus();
+        onEditingComplete?.call();
+      },
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: GoogleFonts.getFont(
