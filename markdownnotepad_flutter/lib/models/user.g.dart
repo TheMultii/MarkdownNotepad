@@ -20,19 +20,21 @@ class UserAdapter extends TypeAdapter<User> {
       id: fields[0] as String,
       username: fields[1] as String,
       email: fields[2] as String,
-      name: fields[3] as String,
-      surname: fields[4] as String,
-      createdAt: fields[5] as String,
-      updatedAt: fields[6] as String,
-      notes: (fields[7] as List?)?.cast<Note>(),
-      catalogs: (fields[9] as List?)?.cast<Catalog>(),
-    )..tags = (fields[8] as List?)?.cast<NoteTag>();
+      bio: fields[3] as String?,
+      name: fields[4] as String,
+      surname: fields[5] as String,
+      createdAt: fields[6] as String,
+      updatedAt: fields[7] as String,
+      notes: (fields[8] as List?)?.cast<Note>(),
+      tags: (fields[9] as List?)?.cast<NoteTag>(),
+      catalogs: (fields[10] as List?)?.cast<Catalog>(),
+    );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -40,18 +42,20 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(2)
       ..write(obj.email)
       ..writeByte(3)
-      ..write(obj.name)
+      ..write(obj.bio)
       ..writeByte(4)
-      ..write(obj.surname)
+      ..write(obj.name)
       ..writeByte(5)
-      ..write(obj.createdAt)
+      ..write(obj.surname)
       ..writeByte(6)
-      ..write(obj.updatedAt)
+      ..write(obj.createdAt)
       ..writeByte(7)
-      ..write(obj.notes)
+      ..write(obj.updatedAt)
       ..writeByte(8)
-      ..write(obj.tags)
+      ..write(obj.notes)
       ..writeByte(9)
+      ..write(obj.tags)
+      ..writeByte(10)
       ..write(obj.catalogs);
   }
 
@@ -74,18 +78,21 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       id: json['id'] as String,
       username: json['username'] as String,
       email: json['email'] as String,
+      bio: json['bio'] as String?,
       name: json['name'] as String,
       surname: json['surname'] as String,
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       notes: Note.notesFromJson(json['notes'] as List),
+      tags: NoteTag.noteTagsFromJson(json['tags'] as List),
       catalogs: Catalog.catalogsFromJson(json['catalogs'] as List),
-    )..tags = NoteTag.noteTagsFromJson(json['tags'] as List);
+    );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
       'email': instance.email,
+      'bio': instance.bio,
       'name': instance.name,
       'surname': instance.surname,
       'createdAt': instance.createdAt,

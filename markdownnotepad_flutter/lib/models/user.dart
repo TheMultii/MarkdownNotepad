@@ -16,20 +16,22 @@ class User extends HiveObject {
   @HiveField(2)
   String email;
   @HiveField(3)
-  String name;
+  String? bio;
   @HiveField(4)
-  String surname;
+  String name;
   @HiveField(5)
-  String createdAt;
+  String surname;
   @HiveField(6)
-  String updatedAt;
+  String createdAt;
   @HiveField(7)
+  String updatedAt;
+  @HiveField(8)
   @JsonKey(toJson: Note.notesToJson, fromJson: Note.notesFromJson)
   List<Note>? notes;
-  @HiveField(8)
+  @HiveField(9)
   @JsonKey(toJson: NoteTag.noteTagsToJson, fromJson: NoteTag.noteTagsFromJson)
   List<NoteTag>? tags;
-  @HiveField(9)
+  @HiveField(10)
   @JsonKey(toJson: Catalog.catalogsToJson, fromJson: Catalog.catalogsFromJson)
   List<Catalog>? catalogs;
 
@@ -37,6 +39,7 @@ class User extends HiveObject {
     required this.id,
     required this.username,
     required this.email,
+    this.bio,
     required this.name,
     required this.surname,
     required this.createdAt,
