@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:markdownnotepad/enums/dsahboard_tabs.dart';
+import 'package:markdownnotepad/enums/dashboard_tabs.dart';
 
 class DashboardHeaderMenuButton extends StatelessWidget {
   final String text;
