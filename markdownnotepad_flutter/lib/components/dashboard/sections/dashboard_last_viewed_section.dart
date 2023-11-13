@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_history_list_item.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_last_viewed_cards.dart';
 import 'package:markdownnotepad/enums/dashboard_history_item_actions.dart';
+import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 
 class DashboardLastViewedSection extends StatelessWidget {
+  final LoggedInUser loggedInUser;
+
   const DashboardLastViewedSection({
     super.key,
+    required this.loggedInUser,
   });
 
   @override
@@ -67,10 +71,9 @@ class DashboardLastViewedSection extends StatelessWidget {
               children: [
                 DashboardHistoryListItem(
                   isLast: false,
-                  user: const {
-                    "id": 1,
-                    "name": "Marcel Gańczarczyk",
-                  },
+                  userName: loggedInUser.user.name.isNotEmpty
+                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
+                      : loggedInUser.user.username,
                   actionDateTime: DateTime.now(),
                   note: const {
                     "id": 1,
@@ -80,10 +83,9 @@ class DashboardLastViewedSection extends StatelessWidget {
                 ),
                 DashboardHistoryListItem(
                   isLast: false,
-                  user: const {
-                    "id": 1,
-                    "name": "Marcel Gańczarczyk",
-                  },
+                  userName: loggedInUser.user.name.isNotEmpty
+                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
+                      : loggedInUser.user.username,
                   actionDateTime: DateTime.now(),
                   note: const {
                     "id": 1,
@@ -94,10 +96,9 @@ class DashboardLastViewedSection extends StatelessWidget {
                 ),
                 DashboardHistoryListItem(
                   isLast: false,
-                  user: const {
-                    "id": 1,
-                    "name": "Marcel Gańczarczyk",
-                  },
+                  userName: loggedInUser.user.name.isNotEmpty
+                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
+                      : loggedInUser.user.username,
                   actionDateTime: DateTime.now(),
                   note: const {
                     "id": 1,
@@ -108,10 +109,9 @@ class DashboardLastViewedSection extends StatelessWidget {
                 ),
                 DashboardHistoryListItem(
                   isLast: false,
-                  user: const {
-                    "id": 1,
-                    "name": "Marcel Gańczarczyk",
-                  },
+                  userName: loggedInUser.user.name.isNotEmpty
+                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
+                      : loggedInUser.user.username,
                   actionDateTime: DateTime.now().subtract(
                     const Duration(hours: 3),
                   ),
@@ -123,10 +123,9 @@ class DashboardLastViewedSection extends StatelessWidget {
                 ),
                 DashboardHistoryListItem(
                   isLast: false,
-                  user: const {
-                    "id": 1,
-                    "name": "Marcel Gańczarczyk",
-                  },
+                  userName: loggedInUser.user.name.isNotEmpty
+                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
+                      : loggedInUser.user.username,
                   actionDateTime: DateTime.now().subtract(
                     const Duration(days: 7),
                   ),
@@ -138,10 +137,9 @@ class DashboardLastViewedSection extends StatelessWidget {
                 ),
                 DashboardHistoryListItem(
                   isLast: false,
-                  user: const {
-                    "id": 1,
-                    "name": "Marcel Gańczarczyk",
-                  },
+                  userName: loggedInUser.user.name.isNotEmpty
+                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
+                      : loggedInUser.user.username,
                   actionDateTime: DateTime.now().subtract(
                     const Duration(days: 400),
                   ),
