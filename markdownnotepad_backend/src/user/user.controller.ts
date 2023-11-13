@@ -195,7 +195,7 @@ export class UserController {
         userEditModel.password = updateUserDTO.password;
       }
 
-      const result = this.prismaService.user.update({
+      const result = await this.prismaService.user.update({
         where: {
           username: decodedJWT.username,
         },
