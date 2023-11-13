@@ -1,12 +1,16 @@
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/components/auth/auth_button.dart';
 import 'package:markdownnotepad/components/cached_network_image.dart';
 import 'package:markdownnotepad/components/input_input.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
+import 'package:markdownnotepad/services/mdn_api_service.dart';
+import 'package:markdownnotepad/viewmodels/server_settings.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});
@@ -17,6 +21,23 @@ class ResetPasswordPage extends StatefulWidget {
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final TextEditingController mailController = TextEditingController();
+  late MDNApiService apiService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final serverSettingsBox = Hive.box<ServerSettings>('server_settings');
+    final ServerSettings? savedSettings =
+        serverSettingsBox.get('server_settings');
+
+    apiService = MDNApiService(
+      Dio(
+        BaseOptions(contentType: "application/json"),
+      ),
+      baseUrl: "http://${savedSettings?.ipAddress}:${savedSettings?.port}",
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
