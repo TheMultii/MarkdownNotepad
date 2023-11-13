@@ -256,7 +256,16 @@ class _MDNDrawerState extends State<MDNDrawer> {
                           );
                         },
                       ),
-                      const MDNDrawerItemSection(title: "Foldery"),
+                      MDNDrawerItemSection(
+                        title: "Foldery",
+                        icon: Icon(
+                          FeatherIcons.plus,
+                          size: 12,
+                          color: extendedTheme?.text,
+                        ),
+                        iconClickCallback: () =>
+                            onCreateNewCatalogPressed(context),
+                      ),
                       ...List.generate(
                         3,
                         (index) {
