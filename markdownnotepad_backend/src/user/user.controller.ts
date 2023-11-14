@@ -179,9 +179,6 @@ export class UserController {
       }
 
       const userEditModel = new User();
-      if (updateUserDTO.username != null) {
-        userEditModel.username = updateUserDTO.username;
-      }
       if (updateUserDTO.email != null) {
         userEditModel.email = updateUserDTO.email;
       }

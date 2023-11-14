@@ -42,7 +42,6 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
   late LoggedInUser? loggedInUser;
   final NotifyToast notifyToast = NotifyToast();
   final TextEditingController emailInputController = TextEditingController(),
-      usernameInputController = TextEditingController(),
       firstNameInputController = TextEditingController(),
       lastNameInputController = TextEditingController(),
       bioInputController = TextEditingController(),
@@ -61,7 +60,6 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
 
   Future<void> updateUserProfile() async {
     if (MDNValidator.validateEmail(emailInputController.text) != null ||
-        MDNValidator.validateUsername(usernameInputController.text) != null ||
         MDNValidator.validateName(firstNameInputController.text) != null ||
         MDNValidator.validateSurname(lastNameInputController.text) != null ||
         MDNValidator.validateBio(bioInputController.text) != null ||
@@ -126,9 +124,6 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
     PatchUserBodyModel patchModel = PatchUserBodyModel();
     if (emailInputController.text != loggedInUser!.user.email) {
       patchModel.email = emailInputController.text;
-    }
-    if (usernameInputController.text != loggedInUser!.user.username) {
-      patchModel.username = usernameInputController.text;
     }
     if (firstNameInputController.text != loggedInUser!.user.name) {
       patchModel.name = firstNameInputController.text;
@@ -218,7 +213,6 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
     }
 
     emailInputController.text = loggedInUser!.user.email;
-    usernameInputController.text = loggedInUser!.user.username;
     firstNameInputController.text = loggedInUser!.user.name;
     lastNameInputController.text = loggedInUser!.user.surname;
     bioInputController.text = loggedInUser!.user.bio ?? '';
@@ -246,7 +240,6 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
                       AccountEditProfileSectionColumn1(
                         loggedInUser: loggedInUser,
                         emailInputController: emailInputController,
-                        usernameInputController: usernameInputController,
                         firstNameInputController: firstNameInputController,
                         lastNameInputController: lastNameInputController,
                         bioInputController: bioInputController,
@@ -277,7 +270,6 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
                         child: AccountEditProfileSectionColumn1(
                           loggedInUser: loggedInUser,
                           emailInputController: emailInputController,
-                          usernameInputController: usernameInputController,
                           firstNameInputController: firstNameInputController,
                           lastNameInputController: lastNameInputController,
                           bioInputController: bioInputController,

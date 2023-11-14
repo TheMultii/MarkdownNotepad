@@ -10,12 +10,6 @@ import {
 export class UserOptionalDto {
   @ApiProperty()
   @IsOptional()
-  @IsString()
-  @Length(4, 20)
-  username?: string;
-
-  @ApiProperty()
-  @IsOptional()
   @IsEmail()
   @Length(4, 320)
   email: string;

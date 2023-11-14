@@ -6,7 +6,6 @@ import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 class AccountEditProfileSectionColumn1 extends StatelessWidget {
   final LoggedInUser loggedInUser;
   final TextEditingController emailInputController,
-      usernameInputController,
       firstNameInputController,
       lastNameInputController,
       bioInputController,
@@ -18,7 +17,6 @@ class AccountEditProfileSectionColumn1 extends StatelessWidget {
     super.key,
     required this.loggedInUser,
     required this.emailInputController,
-    required this.usernameInputController,
     required this.firstNameInputController,
     required this.lastNameInputController,
     required this.bioInputController,
@@ -41,16 +39,6 @@ class AccountEditProfileSectionColumn1 extends StatelessWidget {
             validator: (emailValidator) => MDNValidator.validateEmail(
               emailValidator,
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          MDNInputWidget(
-            inputController: usernameInputController,
-            labelText: 'Nazwa użytkownika',
-            onEditingComplete: () => updateUserProfile(),
-            validator: (usernameValidator) =>
-                MDNValidator.validateUsername(usernameValidator),
           ),
           const SizedBox(
             height: 10,
