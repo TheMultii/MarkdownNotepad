@@ -37,6 +37,8 @@ export class NotesGateway
   private connectedUsers: Map<string, Set<UserBasic>> = new Map();
   private readonly logger = new Logger(NotesGateway.name);
 
+  private noteMutex: Map<string, boolean> = new Map();
+
   afterInit() {
     this.logger.log('Initialized notes gateway.');
   }
@@ -200,8 +202,16 @@ export class NotesGateway
     if (data.title) note.title = data.title;
     if (data.content) note.content = data.content;
 
+    if (this.noteMutex.get(note.id)) {
+      this.sendErrorToClient(client, 'Note is being edited');
+      return;
+    } else {
+      this.noteMutex.set(note.id, true);
+    }
+
     await this.notesService.updateNoteById(note.id, noteModel);
     this.notifyClientsAboutNoteChange(note, user);
+    this.noteMutex.set(note.id, false);
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
