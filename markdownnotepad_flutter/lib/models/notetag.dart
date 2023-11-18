@@ -15,9 +15,9 @@ class NoteTag extends HiveObject {
   @HiveField(2)
   String color;
   @HiveField(3)
-  String createdAt;
+  DateTime createdAt;
   @HiveField(4)
-  String updatedAt;
+  DateTime updatedAt;
   @HiveField(5)
   @JsonKey(toJson: UserSimple.userToJson, fromJson: UserSimple.userFromJson)
   UserSimple? owner;
