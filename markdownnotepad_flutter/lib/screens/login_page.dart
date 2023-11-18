@@ -15,11 +15,11 @@ import 'package:markdownnotepad/helpers/get_logged_in_user_details.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/login_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/message_failure_model.dart';
+import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
-import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -40,16 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
 
-    final serverSettingsBox = Hive.box<ServerSettings>('server_settings');
-    final ServerSettings? savedSettings =
-        serverSettingsBox.get('server_settings');
-
-    apiService = MDNApiService(
-      Dio(
-        BaseOptions(contentType: "application/json"),
-      ),
-      baseUrl: "http://${savedSettings?.ipAddress}:${savedSettings?.port}",
-    );
+    apiService = context.read<ApiServiceProvider>().apiService;
   }
 
   Future<void> login() async {
