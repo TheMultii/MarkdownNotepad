@@ -4,7 +4,7 @@ import 'package:markdownnotepad/helpers/add_zero.dart';
 
 class DashboardCard extends StatelessWidget {
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final DateTime editDate;
   final bool isLocalImage;
   final String backgroundImage;
@@ -15,11 +15,11 @@ class DashboardCard extends StatelessWidget {
   const DashboardCard({
     super.key,
     required this.title,
-    required this.subtitle,
     required this.editDate,
     required this.isLocalImage,
     required this.backgroundImage,
     required this.onTap,
+    this.subtitle,
     this.imageAlignment = Alignment.topCenter,
     this.imageFit = BoxFit.cover,
   });
@@ -95,7 +95,7 @@ class DashboardCard extends StatelessWidget {
                               Flexible(
                                 fit: FlexFit.tight,
                                 child: Text(
-                                  subtitle,
+                                  subtitle ?? "",
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 14,
