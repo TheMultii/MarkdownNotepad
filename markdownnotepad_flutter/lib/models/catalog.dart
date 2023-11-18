@@ -13,9 +13,9 @@ class Catalog extends HiveObject {
   @HiveField(1)
   String title;
   @HiveField(2)
-  String createdAt;
+  DateTime createdAt;
   @HiveField(3)
-  String updatedAt;
+  DateTime updatedAt;
   @HiveField(4)
   @JsonKey(toJson: Note.notesToJson, fromJson: Note.notesFromJson)
   List<Note>? notes;
