@@ -7,6 +7,7 @@ import 'package:markdownnotepad/models/catalog.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/models/notetag.dart';
 import 'package:markdownnotepad/models/user_simple.dart';
+import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/viewmodels/extension.dart';
 import 'package:markdownnotepad/viewmodels/imported_extensions.dart';
@@ -46,6 +47,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => CurrentLoggedInUserProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ApiServiceProvider(),
         ),
       ],
       child: ModularApp(
