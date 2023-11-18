@@ -46,7 +46,7 @@ class CurrentLoggedInUserProvider extends ChangeNotifier {
 
   void setCurrentUser(LoggedInUser newUser) {
     _currentUser = newUser;
-    updateAvatarUrl();
+    if (avatarUrl.isEmpty) updateAvatarUrl();
     notifyListeners();
   }
 
