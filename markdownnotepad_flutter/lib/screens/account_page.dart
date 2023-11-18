@@ -23,7 +23,6 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  late ServerSettings serverSettings;
   late LoggedInUser loggedInUser;
   late MDNDiscordRPC mdnDiscordRPC;
   AccountTabs selectedTab = AccountTabs.accountDetails;
@@ -31,10 +30,6 @@ class _AccountPageState extends State<AccountPage> {
   @override
   void initState() {
     super.initState();
-
-    final serverSettingsBox = Hive.box<ServerSettings>('server_settings');
-
-    serverSettings = serverSettingsBox.get('server_settings')!;
 
     mdnDiscordRPC = MDNDiscordRPC();
     mdnDiscordRPC.clearPresence();
@@ -224,17 +219,11 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                 ),
                 if (selectedTab == AccountTabs.accountDetails)
-                  AccountDetailsSection(
-                    serverSettings: serverSettings,
-                  )
+                  const AccountDetailsSection()
                 else if (selectedTab == AccountTabs.editProfile)
-                  AccountEditProfileSection(
-                    serverSettings: serverSettings,
-                  )
+                  const AccountEditProfileSection()
                 else if (selectedTab == AccountTabs.deleteAccount)
-                  AccountDeleteAccountSection(
-                    serverSettings: serverSettings,
-                  ),
+                  const AccountDeleteAccountSection(),
               ],
             ),
           ),
