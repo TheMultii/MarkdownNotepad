@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:markdownnotepad/components/drawer/drawer.dart';
 import 'package:markdownnotepad/components/no_internet_connection_alert_widget.dart';
@@ -9,7 +8,9 @@ import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/core/search_bar.dart';
 import 'package:markdownnotepad/intents/search_intent.dart';
+import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
+import 'package:provider/provider.dart';
 
 class MDNLayout extends StatefulWidget {
   final Widget child;
@@ -37,12 +38,7 @@ class _MDNLayoutState extends State<MDNLayout> {
   void initState() {
     super.initState();
 
-    apiService = MDNApiService(
-      Dio(
-        BaseOptions(contentType: "application/json"),
-      ),
-      baseUrl: "http://localhost:3000", //TODO: fix an url
-    );
+    apiService = context.read<ApiServiceProvider>().apiService;
 
     checkConnectionTimer = Timer.periodic(
       const Duration(seconds: 5),
