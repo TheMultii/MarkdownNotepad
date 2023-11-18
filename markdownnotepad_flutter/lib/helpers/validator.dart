@@ -88,6 +88,17 @@ class MDNValidator {
         )
         .build();
   }
+
+  static String? validateCatalogName(String? catalogName) {
+    return ValidatorString(catalogName)
+        .isNotEmpty(errMsg: "Nazwa folderu nie może być pusta")
+        .length(
+          min: 3,
+          max: 256,
+          errMsg: "Nazwa folderu musi mieć od 3 do 256 znaków",
+        )
+        .build();
+  }
 }
 
 class Validator {
