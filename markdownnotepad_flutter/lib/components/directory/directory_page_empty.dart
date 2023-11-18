@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 
@@ -43,7 +44,11 @@ class DirectoryPageEmpty extends StatelessWidget {
             style: GoogleFonts.inter(),
           ),
         ],
-      ),
+      ).animate().fadeIn(
+            begin: 0.0,
+            duration: 150.ms,
+            curve: Curves.easeInOut,
+          ),
     );
   }
 }
