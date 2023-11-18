@@ -20,8 +20,8 @@ class NoteTagSimpleAdapter extends TypeAdapter<NoteTagSimple> {
       id: fields[0] as String,
       title: fields[1] as String,
       color: fields[2] as String,
-      createdAt: fields[3] as String,
-      updatedAt: fields[4] as String,
+      createdAt: fields[3] as DateTime,
+      updatedAt: fields[4] as DateTime,
     );
   }
 
@@ -61,8 +61,8 @@ NoteTagSimple _$NoteTagSimpleFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       title: json['title'] as String,
       color: json['color'] as String,
-      createdAt: json['createdAt'] as String,
-      updatedAt: json['updatedAt'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$NoteTagSimpleToJson(NoteTagSimple instance) =>
@@ -70,6 +70,6 @@ Map<String, dynamic> _$NoteTagSimpleToJson(NoteTagSimple instance) =>
       'id': instance.id,
       'title': instance.title,
       'color': instance.color,
-      'createdAt': instance.createdAt,
-      'updatedAt': instance.updatedAt,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };

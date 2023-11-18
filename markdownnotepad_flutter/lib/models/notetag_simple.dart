@@ -13,9 +13,9 @@ class NoteTagSimple extends HiveObject {
   @HiveField(2)
   String color;
   @HiveField(3)
-  String createdAt;
+  DateTime createdAt;
   @HiveField(4)
-  String updatedAt;
+  DateTime updatedAt;
 
   NoteTagSimple({
     required this.id,
