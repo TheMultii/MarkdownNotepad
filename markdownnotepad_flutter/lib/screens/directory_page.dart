@@ -147,6 +147,46 @@ class _DirectoryPageState extends State<DirectoryPage> {
     }
   }
 
+  Future<void> deleteCatalog() async {
+    if (catalogData?.notes!.isNotEmpty ?? true) {
+      notifyToast.show(
+        context: context,
+        child: const ErrorNotifyToast(
+          title: "Wystąpił błąd",
+          body: "Nie można usunąć katalogu, który nie jest pusty.",
+        ),
+      );
+      return;
+    }
+
+    try {
+      final resp = await apiService.deleteCatalog(
+        widget.directoryId,
+        authorizationString,
+      );
+
+      if (resp == null) {
+        notifyToast.show(
+          context: context,
+          child: const ErrorNotifyToast(
+            title: "Wystąpił błąd",
+            body: "Wystąpił błąd podczas usuwania katalogu.",
+          ),
+        );
+        return;
+      }
+
+      final newUser = loggedInUser;
+      newUser!.user.catalogs?.removeWhere(
+        (element) => element.id == widget.directoryId,
+      );
+      loggedInUserProvider.setCurrentUser(newUser);
+      Modular.to.navigate("/dashboard/");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   Future<void> removeFromDirectory(String noteId) async {
     try {
       final resp = await apiService.disconnectNoteFromCatalog(
