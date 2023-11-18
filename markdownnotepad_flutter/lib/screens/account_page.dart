@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart' show Modular;
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/components/account/account_header_menu_button.dart';
 import 'package:markdownnotepad/components/account/sections/account_delete_account_section.dart';
 import 'package:markdownnotepad/components/account/sections/account_details_section.dart';
@@ -12,7 +11,6 @@ import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/enums/account_tabs.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
-import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:provider/provider.dart';
 
 class AccountPage extends StatefulWidget {
