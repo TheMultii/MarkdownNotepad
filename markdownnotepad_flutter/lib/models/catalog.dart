@@ -1,7 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:markdownnotepad/models/note.dart';
-import 'package:markdownnotepad/models/user.dart';
+import 'package:markdownnotepad/models/note_simple.dart';
+import 'package:markdownnotepad/models/user_simple.dart';
 
 part 'catalog.g.dart';
 
@@ -17,11 +17,11 @@ class Catalog extends HiveObject {
   @HiveField(3)
   DateTime updatedAt;
   @HiveField(4)
-  @JsonKey(toJson: Note.notesToJson, fromJson: Note.notesFromJson)
-  List<Note>? notes;
+  @JsonKey(toJson: NoteSimple.notesToJson, fromJson: NoteSimple.notesFromJson)
+  List<NoteSimple>? notes;
   @HiveField(5)
-  @JsonKey(toJson: User.userToJson, fromJson: User.userFromJson)
-  User? owner;
+  @JsonKey(toJson: UserSimple.userToJson, fromJson: UserSimple.userFromJson)
+  UserSimple? owner;
 
   Catalog({
     required this.id,

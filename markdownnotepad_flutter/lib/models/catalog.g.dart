@@ -19,10 +19,10 @@ class CatalogAdapter extends TypeAdapter<Catalog> {
     return Catalog(
       id: fields[0] as String,
       title: fields[1] as String,
-      notes: (fields[4] as List?)?.cast<Note>(),
-      owner: fields[5] as User?,
       createdAt: fields[2] as DateTime,
       updatedAt: fields[3] as DateTime,
+      notes: (fields[4] as List?)?.cast<NoteSimple>(),
+      owner: fields[5] as UserSimple?,
     );
   }
 
@@ -62,17 +62,17 @@ class CatalogAdapter extends TypeAdapter<Catalog> {
 Catalog _$CatalogFromJson(Map<String, dynamic> json) => Catalog(
       id: json['id'] as String,
       title: json['title'] as String,
-      notes: Note.notesFromJson(json['notes'] as List),
-      owner: User.userFromJson(json['owner'] as Map<String, dynamic>?),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
+      notes: NoteSimple.notesFromJson(json['notes'] as List),
+      owner: UserSimple.userFromJson(json['owner'] as Map<String, dynamic>?),
     );
 
 Map<String, dynamic> _$CatalogToJson(Catalog instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
-      'notes': Note.notesToJson(instance.notes),
-      'owner': User.userToJson(instance.owner),
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
+      'notes': NoteSimple.notesToJson(instance.notes),
+      'owner': UserSimple.userToJson(instance.owner),
     };
