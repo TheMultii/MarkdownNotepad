@@ -34,6 +34,13 @@ packages:
     source: hosted
     version: "1.3.0"
   animations:
+    dependency: transitive
+    description:
+      name: animations
+      sha256: ef57563eed3620bd5d75ad96189846aca1e033c0c45fc9a7d26e80ab02b88a70
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.8"
   archive:
     dependency: transitive
     description:
@@ -90,6 +97,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  barcode:
+    dependency: transitive
+    description:
+      name: barcode
+      sha256: "789f898eef0bd88312470bdb2cc996f895ad7dd5f89e9adde84b204546a90b45"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.4"
+  bidi:
+    dependency: transitive
+    description:
+      name: bidi
+      sha256: "1a7d0c696324b2089f72e7671fd1f1f64fef44c980f3cebc84e803967c597b63"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.10"
   boolean_selector:
     dependency: transitive
     description:
@@ -552,6 +575,8 @@ packages:
     version: "0.0.0"
   flutter_to_pdf:
     dependency: "direct main"
+    description:
+      name: flutter_to_pdf
       sha256: c0311c9d15d6cd0ffb81c7fd9628794219c9201b165b707310f8070cfc694715
       url: "https://pub.dev"
     source: hosted
@@ -945,6 +970,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  pdf:
+    dependency: transitive
+    description:
+      name: pdf
+      sha256: aa8835fcb9cfaf57ab2f1970e8548ceed3d0cb53eda7da906648f8153eaf37c9
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.10.6"
   pedantic:
     dependency: transitive
     description:
@@ -1025,14 +1058,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.3"
-  quote_buffer:
+  qr:
     dependency: transitive
     description:
-      name: quote_buffer
-      sha256: a9eefd3ddc63bb310ffbc855b6ebe0363d925235485bc5778e28c492b1224b31
+      name: qr
+      sha256: "64957a3930367bf97cc211a5af99551d630f2f4625e38af10edd6b19131b64b3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.5"
+    version: "3.0.1"
   result_dart:
     dependency: transitive
     description:
