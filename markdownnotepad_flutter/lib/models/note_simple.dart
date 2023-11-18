@@ -15,9 +15,9 @@ class NoteSimple extends HiveObject {
   @HiveField(3)
   bool shared;
   @HiveField(4)
-  String createdAt;
+  DateTime createdAt;
   @HiveField(5)
-  String updatedAt;
+  DateTime updatedAt;
   @HiveField(6)
   String? localNotePassword;
 

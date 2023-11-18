@@ -21,8 +21,8 @@ class NoteSimpleAdapter extends TypeAdapter<NoteSimple> {
       title: fields[1] as String,
       content: fields[2] as String?,
       shared: fields[3] as bool,
-      createdAt: fields[4] as String,
-      updatedAt: fields[5] as String,
+      createdAt: fields[4] as DateTime,
+      updatedAt: fields[5] as DateTime,
       localNotePassword: fields[6] as String?,
     );
   }
@@ -67,8 +67,8 @@ NoteSimple _$NoteSimpleFromJson(Map<String, dynamic> json) => NoteSimple(
       title: json['title'] as String,
       content: json['content'] as String?,
       shared: json['shared'] as bool,
-      createdAt: json['createdAt'] as String,
-      updatedAt: json['updatedAt'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
       localNotePassword: json['localNotePassword'] as String?,
     );
 
@@ -78,7 +78,7 @@ Map<String, dynamic> _$NoteSimpleToJson(NoteSimple instance) =>
       'title': instance.title,
       'content': instance.content,
       'shared': instance.shared,
-      'createdAt': instance.createdAt,
-      'updatedAt': instance.updatedAt,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
       'localNotePassword': instance.localNotePassword,
     };
