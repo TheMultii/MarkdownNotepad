@@ -185,6 +185,11 @@ export class CatalogsController {
 
       const catalog = new CatalogModel();
       catalog.title = catalogDto.title;
+      catalog.owner = {
+        connect: {
+          id: user.id,
+        },
+      };
 
       const catalogCheck: Catalog =
         await this.catalogsService.createCatalog(catalog);
