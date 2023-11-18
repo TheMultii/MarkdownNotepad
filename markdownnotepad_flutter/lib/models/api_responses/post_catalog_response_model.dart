@@ -1,13 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:markdownnotepad/models/catalog.dart';
+import 'package:markdownnotepad/models/catalog_simple.dart';
 
 part 'post_catalog_response_model.g.dart';
 
 @JsonSerializable()
 class PostCatalogResponseModel {
   String message;
-  @JsonKey(toJson: Catalog.catalogToJson, fromJson: Catalog.catalogFromJson)
-  Catalog catalog;
+  @JsonKey(
+    toJson: CatalogSimple.catalogToJson,
+    fromJson: CatalogSimple.catalogFromJson,
+  )
+  CatalogSimple catalog;
 
   PostCatalogResponseModel({
     required this.message,

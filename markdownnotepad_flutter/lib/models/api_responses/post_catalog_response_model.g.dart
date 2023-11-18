@@ -10,12 +10,13 @@ PostCatalogResponseModel _$PostCatalogResponseModelFromJson(
         Map<String, dynamic> json) =>
     PostCatalogResponseModel(
       message: json['message'] as String,
-      catalog: Catalog.catalogFromJson(json['catalog'] as Map<String, dynamic>),
+      catalog: CatalogSimple.catalogFromJson(
+          json['catalog'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PostCatalogResponseModelToJson(
         PostCatalogResponseModel instance) =>
     <String, dynamic>{
       'message': instance.message,
-      'catalog': Catalog.catalogToJson(instance.catalog),
+      'catalog': CatalogSimple.catalogToJson(instance.catalog),
     };
