@@ -8,17 +8,14 @@ import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/enums/dashboard_history_item_actions.dart';
 import 'package:markdownnotepad/helpers/date_helper.dart';
 import 'package:markdownnotepad/models/api_responses/event_logs_response_model.dart';
+import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
-import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:provider/provider.dart';
 
 class AccountDetailsSection extends StatefulWidget {
-  final ServerSettings serverSettings;
-
   const AccountDetailsSection({
     super.key,
-    required this.serverSettings,
   });
 
   @override
@@ -33,13 +30,7 @@ class _AccountDetailsSectionState extends State<AccountDetailsSection> {
   void initState() {
     super.initState();
 
-    apiService = MDNApiService(
-      Dio(
-        BaseOptions(contentType: "application/json"),
-      ),
-      baseUrl:
-          "http://${widget.serverSettings.ipAddress}:${widget.serverSettings.port}",
-    );
+    apiService = context.read<ApiServiceProvider>().apiService;
 
     getLastActivity();
   }
@@ -140,7 +131,7 @@ class _AccountDetailsSectionState extends State<AccountDetailsSection> {
                       ),
                       AccountDetailsListItem(
                         title: "Data rejestracji",
-                        value: DateHelper.getFormattedDateTimeString(
+                        value: DateHelper.getFormattedDateTime(
                           loggedInUser.user.createdAt,
                         ),
                       ),
