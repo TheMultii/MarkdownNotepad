@@ -18,7 +18,7 @@ UserMeResponseModel _$UserMeResponseModelFromJson(Map<String, dynamic> json) =>
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       notes: NoteSimple.notesFromJson(json['notes'] as List),
       tags: NoteTagSimple.noteTagsFromJson(json['tags'] as List),
-      catalogs: Catalog.catalogsFromJson(json['catalogs'] as List),
+      catalogs: CatalogSimple.catalogsFromJson(json['catalogs'] as List),
     );
 
 Map<String, dynamic> _$UserMeResponseModelToJson(
@@ -34,5 +34,5 @@ Map<String, dynamic> _$UserMeResponseModelToJson(
       'updatedAt': instance.updatedAt.toIso8601String(),
       'notes': NoteSimple.notesToJson(instance.notes),
       'tags': NoteTagSimple.noteTagsToJson(instance.tags),
-      'catalogs': Catalog.catalogsToJson(instance.catalogs),
+      'catalogs': CatalogSimple.catalogsToJson(instance.catalogs),
     };

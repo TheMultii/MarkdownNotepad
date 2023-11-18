@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:markdownnotepad/models/catalog.dart';
+import 'package:markdownnotepad/models/catalog_simple.dart';
 import 'package:markdownnotepad/models/note_simple.dart';
 import 'package:markdownnotepad/models/notetag_simple.dart';
 
@@ -21,8 +21,10 @@ class UserMeResponseModel {
       toJson: NoteTagSimple.noteTagsToJson,
       fromJson: NoteTagSimple.noteTagsFromJson)
   final List<NoteTagSimple> tags;
-  @JsonKey(toJson: Catalog.catalogsToJson, fromJson: Catalog.catalogsFromJson)
-  final List<Catalog> catalogs;
+  @JsonKey(
+      toJson: CatalogSimple.catalogsToJson,
+      fromJson: CatalogSimple.catalogsFromJson)
+  final List<CatalogSimple> catalogs;
 
   UserMeResponseModel({
     required this.id,
