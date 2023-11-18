@@ -48,6 +48,7 @@ class CurrentLoggedInUserProvider extends ChangeNotifier {
     _currentUser = newUser;
     if (avatarUrl.isEmpty) updateAvatarUrl();
     notifyListeners();
+    _loggedInUserBox.put('logged_in_user', newUser);
   }
 
   void updateAvatarUrl() {
