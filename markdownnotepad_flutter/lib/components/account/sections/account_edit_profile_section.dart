@@ -18,18 +18,15 @@ import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/helpers/get_logged_in_user_details.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/patch_user_body_model.dart';
+import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
-import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:provider/provider.dart';
 
 class AccountEditProfileSection extends StatefulWidget {
-  final ServerSettings serverSettings;
-
   const AccountEditProfileSection({
     super.key,
-    required this.serverSettings,
   });
 
   @override
@@ -196,13 +193,7 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
   void initState() {
     super.initState();
 
-    apiService = MDNApiService(
-      Dio(
-        BaseOptions(contentType: "application/json"),
-      ),
-      baseUrl:
-          "http://${widget.serverSettings.ipAddress}:${widget.serverSettings.port}",
-    );
+    apiService = context.read<ApiServiceProvider>().apiService;
 
     final loggedInUserBox = Hive.box<LoggedInUser>('logged_in_user');
     loggedInUser = loggedInUserBox.get('logged_in_user');
@@ -253,7 +244,6 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
                       ),
                       AccountEditProfileSectionColumn2(
                         loggedInUser: loggedInUser,
-                        serverSettings: widget.serverSettings,
                         setUploadedImage: setUploadedImage,
                         uploadedImage: uploadedImage,
                         uploadedImageBytes: uploadedImageBytes,
@@ -285,7 +275,6 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
                       Expanded(
                         child: AccountEditProfileSectionColumn2(
                           loggedInUser: loggedInUser,
-                          serverSettings: widget.serverSettings,
                           setUploadedImage: setUploadedImage,
                           uploadedImage: uploadedImage,
                           uploadedImageBytes: uploadedImageBytes,

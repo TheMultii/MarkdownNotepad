@@ -4,13 +4,13 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 import 'package:markdownnotepad/viewmodels/server_settings.dart';
 
 class AccountEditProfileSectionColumn2 extends StatefulWidget {
   final LoggedInUser loggedInUser;
-  final ServerSettings serverSettings;
   final Function(File, Uint8List) setUploadedImage;
   final File? uploadedImage;
   final Uint8List? uploadedImageBytes;
@@ -20,7 +20,6 @@ class AccountEditProfileSectionColumn2 extends StatefulWidget {
   const AccountEditProfileSectionColumn2({
     super.key,
     required this.loggedInUser,
-    required this.serverSettings,
     required this.setUploadedImage,
     required this.uploadedImageBytes,
     required this.updateUserProfile,
@@ -36,6 +35,16 @@ class AccountEditProfileSectionColumn2 extends StatefulWidget {
 class _AccountEditProfileSectionColumn2State
     extends State<AccountEditProfileSectionColumn2> {
   bool isAvatarInputHovered = false;
+
+  late ServerSettings serverSettings;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final serverSettingsBox = Hive.box<ServerSettings>('server_settings');
+    serverSettings = serverSettingsBox.get('server_settings')!;
+  }
 
   void startFilePicker() async {
     try {
@@ -108,7 +117,7 @@ class _AccountEditProfileSectionColumn2State
                               fit: BoxFit.cover,
                             )
                           : Image.network(
-                              "http://${widget.serverSettings.ipAddress}:${widget.serverSettings.port}/avatar/${widget.loggedInUser.user.id}?seed=${widget.randomAvatarString}",
+                              "http://${serverSettings.ipAddress}:${serverSettings.port}/avatar/${widget.loggedInUser.user.id}?seed=${widget.randomAvatarString}",
                               width: 175,
                               height: 175,
                               fit: BoxFit.cover,
