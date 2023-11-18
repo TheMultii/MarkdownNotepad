@@ -187,6 +187,10 @@ class _DirectoryPageState extends State<DirectoryPage> {
     }
   }
 
+  Future<void> createNewNote() async {
+    //TODO: create new note in this catalog
+  }
+
   Future<void> removeFromDirectory(String noteId) async {
     try {
       final resp = await apiService.disconnectNoteFromCatalog(
