@@ -66,7 +66,7 @@ abstract class MDNApiService {
 
   @GET("/users/{id}")
   Future<UserIdResponseModel>? getId(
-    @Path("id") int id,
+    @Path("id") String id,
     @Header("Authorization") String authorization,
   );
 
@@ -104,7 +104,7 @@ abstract class MDNApiService {
 
   @GET("/notes/{id}")
   Future<GetNoteResponseModel>? getNote(
-    @Path("id") int id,
+    @Path("id") String id,
     @Header("Authorization") String authorization,
   );
 
@@ -116,14 +116,14 @@ abstract class MDNApiService {
 
   @PATCH("/notes/{id}")
   Future<PatchNoteResponseModel>? patchNote(
-    @Path("id") int id,
+    @Path("id") String id,
     @Body() PatchNoteBodyModel body,
     @Header("Authorization") String authorization,
   );
 
   @DELETE("/notes/{id}")
   Future<MessageSuccessModel>? deleteNote(
-    @Path("id") int id,
+    @Path("id") String id,
     @Header("Authorization") String authorization,
   );
 
@@ -134,7 +134,7 @@ abstract class MDNApiService {
 
   @GET("/notetags/{id}")
   Future<GetNoteTagResponseModel>? getNoteTag(
-    @Path("id") int id,
+    @Path("id") String id,
     @Header("Authorization") String authorization,
   );
 
@@ -146,7 +146,7 @@ abstract class MDNApiService {
 
   @DELETE("/notetags/{id}")
   Future<MessageSuccessModel>? deleteNoteTag(
-    @Path("id") int id,
+    @Path("id") String id,
     @Header("Authorization") String authorization,
   );
 
@@ -163,20 +163,20 @@ abstract class MDNApiService {
 
   @GET("/catalogs/{id}")
   Future<GetCatalogResponseModel>? getCatalog(
-    @Path("id") int id,
+    @Path("id") String id,
     @Header("Authorization") String authorization,
   );
 
   @PATCH("/catalogs/{id}")
   Future<PatchCatalogResponseModel>? patchCatalog(
-    @Path("id") int id,
+    @Path("id") String id,
     @Body() PatchCatalogBodyModel body,
     @Header("Authorization") String authorization,
   );
 
   @DELETE("/catalogs/{id}")
   Future<MessageSuccessModel>? deleteCatalog(
-    @Path("id") int id,
+    @Path("id") String id,
     @Header("Authorization") String authorization,
   );
 
@@ -188,8 +188,8 @@ abstract class MDNApiService {
 
   @PATCH("/catalogs/{id}/disconnect/{noteId}")
   Future<DisconnectCatalogResponseModel>? disconnectNoteFromCatalog(
-    @Path("id") int id,
-    @Path("noteId") int noteId,
+    @Path("id") String id,
+    @Path("noteId") String noteId,
     @Header("Authorization") String authorization,
   );
 }

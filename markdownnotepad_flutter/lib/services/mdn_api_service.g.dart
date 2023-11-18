@@ -190,7 +190,7 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<UserIdResponseModel>? getId(
-    int id,
+    String id,
     String authorization,
   ) async {
     const _extra = <String, dynamic>{};
@@ -376,7 +376,7 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<GetNoteResponseModel>? getNote(
-    int id,
+    String id,
     String authorization,
   ) async {
     const _extra = <String, dynamic>{};
@@ -439,7 +439,7 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<PatchNoteResponseModel>? patchNote(
-    int id,
+    String id,
     PatchNoteBodyModel body,
     String authorization,
   ) async {
@@ -472,7 +472,7 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<MessageSuccessModel>? deleteNote(
-    int id,
+    String id,
     String authorization,
   ) async {
     const _extra = <String, dynamic>{};
@@ -531,7 +531,7 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<GetNoteTagResponseModel>? getNoteTag(
-    int id,
+    String id,
     String authorization,
   ) async {
     const _extra = <String, dynamic>{};
@@ -594,7 +594,7 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<MessageSuccessModel>? deleteNoteTag(
-    int id,
+    String id,
     String authorization,
   ) async {
     const _extra = <String, dynamic>{};
@@ -685,7 +685,7 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<GetCatalogResponseModel>? getCatalog(
-    int id,
+    String id,
     String authorization,
   ) async {
     const _extra = <String, dynamic>{};
@@ -716,7 +716,7 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<PatchCatalogResponseModel>? patchCatalog(
-    int id,
+    String id,
     PatchCatalogBodyModel body,
     String authorization,
   ) async {
@@ -749,7 +749,7 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<MessageSuccessModel>? deleteCatalog(
-    int id,
+    String id,
     String authorization,
   ) async {
     const _extra = <String, dynamic>{};
@@ -812,8 +812,8 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<DisconnectCatalogResponseModel>? disconnectNoteFromCatalog(
-    int id,
-    int noteId,
+    String id,
+    String noteId,
     String authorization,
   ) async {
     const _extra = <String, dynamic>{};
