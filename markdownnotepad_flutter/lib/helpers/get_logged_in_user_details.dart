@@ -3,7 +3,9 @@ import 'package:markdownnotepad/services/mdn_api_service.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 
 Future<LoggedInUser> getLoggedInUserDetails(
-    MDNApiService apiService, String authorization) async {
+  MDNApiService apiService,
+  String authorization,
+) async {
   final userMe = await apiService.getMe(
     authorization,
   );
@@ -25,8 +27,8 @@ Future<LoggedInUser> getLoggedInUserDetails(
       bio: userMe?.bio ?? "",
       name: userMe?.name ?? "",
       surname: userMe?.surname ?? "",
-      createdAt: (userMe?.createdAt ?? DateTime.now()).toString(),
-      updatedAt: (userMe?.updatedAt ?? DateTime.now()).toString(),
+      createdAt: userMe?.createdAt ?? DateTime.now(),
+      updatedAt: userMe?.updatedAt ?? DateTime.now(),
       notes: notes?.notes ?? [],
       catalogs: catalogs?.catalogs ?? [],
       tags: tags?.noteTags ?? [],
