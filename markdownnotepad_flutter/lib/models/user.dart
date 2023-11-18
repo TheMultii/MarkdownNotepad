@@ -22,9 +22,9 @@ class User extends HiveObject {
   @HiveField(5)
   String surname;
   @HiveField(6)
-  String createdAt;
+  DateTime createdAt;
   @HiveField(7)
-  String updatedAt;
+  DateTime updatedAt;
   @HiveField(8)
   @JsonKey(toJson: Note.notesToJson, fromJson: Note.notesFromJson)
   List<Note>? notes;
