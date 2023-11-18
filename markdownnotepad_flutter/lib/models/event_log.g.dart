@@ -15,8 +15,8 @@ EventLog _$EventLogFromJson(Map<String, dynamic> json) => EventLog(
       tagId: json['tagId'] as String,
       catalogId: json['catalogId'] as String,
       ip: json['ip'] as String,
-      createdAt: json['createdAt'] as String,
-      updatedAt: json['updatedAt'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$EventLogToJson(EventLog instance) => <String, dynamic>{
@@ -28,6 +28,6 @@ Map<String, dynamic> _$EventLogToJson(EventLog instance) => <String, dynamic>{
       'tagId': instance.tagId,
       'catalogId': instance.catalogId,
       'ip': instance.ip,
-      'createdAt': instance.createdAt,
-      'updatedAt': instance.updatedAt,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };

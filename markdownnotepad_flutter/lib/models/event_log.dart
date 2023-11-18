@@ -12,8 +12,8 @@ class EventLog {
   final String tagId;
   final String catalogId;
   final String ip;
-  final String createdAt;
-  final String updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   EventLog({
     required this.id,
