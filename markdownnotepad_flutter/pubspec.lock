@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "64.0.0"
+  after_layout:
+    dependency: transitive
+    description:
+      name: after_layout
+      sha256: "95a1cb2ca1464f44f14769329fbf15987d20ab6c88f8fc5d359bd362be625f29"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   analyzer:
     dependency: transitive
     description:
@@ -25,6 +33,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  animations:
   archive:
     dependency: transitive
     description:
@@ -341,14 +350,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.3"
-  directed_graph:
-    dependency: transitive
-    description:
-      name: directed_graph
-      sha256: "82061c9ce3ac74d9c4c173fb03daac515d503a0f9f77c0010a872f8c344a4f03"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.9"
   dynamic_height_grid_view:
     dependency: "direct main"
     description:
@@ -459,14 +460,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.1"
-  flutter_eval:
-    dependency: "direct main"
-    description:
-      name: flutter_eval
-      sha256: "9832985b4c20809f4925988618bb38669697c36d63acd0d77c334f150facbff6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.0"
   flutter_feather_icons:
     dependency: "direct main"
     description:
@@ -557,6 +550,12 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_to_pdf:
+    dependency: "direct main"
+      sha256: c0311c9d15d6cd0ffb81c7fd9628794219c9201b165b707310f8070cfc694715
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
