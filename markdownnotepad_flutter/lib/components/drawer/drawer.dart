@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:markdownnotepad/components/alertdialogs/create_new_catalog_alert_dialog.dart';
 import 'package:markdownnotepad/components/drawer/drawer_footer.dart';
 import 'package:markdownnotepad/components/drawer/drawer_header.dart';
 import 'package:markdownnotepad/components/drawer/drawer_item.dart';
@@ -105,42 +106,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            "Nowy folder",
-            textAlign: TextAlign.center,
-          ),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Nazwa folderu",
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Anuluj"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Utwórz"),
-            ),
-          ],
-        ).animate().fadeIn(duration: 100.ms).scale(
-              duration: 100.ms,
-              curve: Curves.easeInOut,
-              begin: const Offset(0, 0),
-              end: const Offset(1, 1),
-            );
+        return const CreateNewCatalogAlertDialog();
       },
     );
   }
