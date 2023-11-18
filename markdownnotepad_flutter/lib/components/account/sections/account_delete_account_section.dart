@@ -1,22 +1,18 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:markdownnotepad/components/notifications/error_notify_toast.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
+import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
-import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:provider/provider.dart';
 
 class AccountDeleteAccountSection extends StatefulWidget {
-  final ServerSettings serverSettings;
-
   const AccountDeleteAccountSection({
     super.key,
-    required this.serverSettings,
   });
 
   @override
@@ -33,13 +29,7 @@ class _AccountDeleteAccountSectionState
   void initState() {
     super.initState();
 
-    apiService = MDNApiService(
-      Dio(
-        BaseOptions(contentType: "application/json"),
-      ),
-      baseUrl:
-          "http://${widget.serverSettings.ipAddress}:${widget.serverSettings.port}",
-    );
+    apiService = context.read<ApiServiceProvider>().apiService;
 
     final loggedInUserBox = Hive.box<LoggedInUser>('logged_in_user');
     final loggedInUser = loggedInUserBox.get('logged_in_user');
