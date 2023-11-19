@@ -4,12 +4,13 @@ import 'package:markdownnotepad/components/notifications/info_notify_toast.dart'
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/helpers/save_file_helper.dart';
 
-List<ContextMenuEntry> getEditorContextMenu(
-  BuildContext context,
-  String textToRender,
-  bool isLiveShareEnabled,
-  VoidCallback toggleLiveShare,
-) {
+List<ContextMenuEntry> getEditorContextMenu({
+  required BuildContext context,
+  required String textToRender,
+  required bool isLiveShareEnabled,
+  required VoidCallback toggleLiveShare,
+  required VoidCallback changeNoteName,
+}) {
   return [
     const MenuHeader(text: "Opcje"),
     MenuItem.submenu(
@@ -30,6 +31,11 @@ List<ContextMenuEntry> getEditorContextMenu(
       ],
     ),
     const MenuDivider(),
+    MenuItem(
+      label: 'Zmień nazwę',
+      icon: Icons.edit,
+      onSelected: changeNoteName,
+    ),
     MenuItem(
       label: 'Przypisz do katalogu',
       icon: Icons.create_new_folder,

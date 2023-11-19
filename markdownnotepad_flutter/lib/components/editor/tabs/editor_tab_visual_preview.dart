@@ -25,6 +25,8 @@ class EditorTabVisualPreview extends StatefulWidget {
 class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
   @override
   Widget build(BuildContext context) {
+    final FocusNode noteTitleFocusNode = FocusNode();
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,11 +36,15 @@ class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
           isTitleEditable: false,
           isLiveShareEnabled: widget.isLiveShareEnabled,
           toggleLiveShare: widget.toggleLiveShare,
+          noteTitleFocusNode: noteTitleFocusNode,
           contextMenuOptions: getEditorContextMenu(
-            context,
-            widget.textToRender,
-            widget.isLiveShareEnabled,
-            widget.toggleLiveShare,
+            context: context,
+            textToRender: widget.textToRender,
+            isLiveShareEnabled: widget.isLiveShareEnabled,
+            toggleLiveShare: widget.toggleLiveShare,
+            changeNoteName: () => FocusScope.of(context).requestFocus(
+              noteTitleFocusNode,
+            ),
           ),
           contextMenuShortcuts: {
             LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyS):

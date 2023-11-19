@@ -8,7 +8,7 @@ import 'package:markdownnotepad/components/notifications/info_notify_toast.dart'
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 
-class EditorTabEditor extends StatelessWidget {
+class EditorTabEditor extends StatefulWidget {
   final CodeController controller;
   final FocusNode focusNode;
   final double sidebarWidth;
@@ -31,6 +31,13 @@ class EditorTabEditor extends StatelessWidget {
   });
 
   @override
+  State<EditorTabEditor> createState() => _EditorTabEditorState();
+}
+
+class _EditorTabEditorState extends State<EditorTabEditor> {
+  final FocusNode noteTitleFocusNode = FocusNode();
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: Responsive.isMobile(context)
@@ -42,13 +49,17 @@ class EditorTabEditor extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           EditorDesktopHeader(
-            isLiveShareEnabled: isLiveShareEnabled,
-            toggleLiveShare: toggleLiveShare,
+            isLiveShareEnabled: widget.isLiveShareEnabled,
+            toggleLiveShare: widget.toggleLiveShare,
+            noteTitleFocusNode: noteTitleFocusNode,
             contextMenuOptions: getEditorContextMenu(
-              context,
-              controller.text,
-              isLiveShareEnabled,
-              toggleLiveShare,
+              context: context,
+              textToRender: widget.controller.text,
+              isLiveShareEnabled: widget.isLiveShareEnabled,
+              toggleLiveShare: widget.toggleLiveShare,
+              changeNoteName: () => FocusScope.of(context).requestFocus(
+                noteTitleFocusNode,
+              ),
             ),
             contextMenuShortcuts: {
               LogicalKeySet(
@@ -67,25 +78,26 @@ class EditorTabEditor extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                if (!Responsive.isMobile(context) && isEditorSidebarEnabled)
+                if (!Responsive.isMobile(context) &&
+                    widget.isEditorSidebarEnabled)
                   Container(
-                    width: sidebarWidth,
+                    width: widget.sidebarWidth,
                     height: double.infinity,
-                    color: sidebarColor,
+                    color: widget.sidebarColor,
                   ),
                 SizedBox(
                   width: double.infinity,
                   height: double.infinity,
                   child: GestureDetector(
                     onTap: () {
-                      focusNode.requestFocus();
+                      widget.focusNode.requestFocus();
                     },
                   ),
                 ),
                 CodeTheme(
                   data: CodeThemeData(
                     styles: {
-                      ...editorStyle,
+                      ...widget.editorStyle,
                       'root': TextStyle(
                         backgroundColor:
                             Theme.of(context).colorScheme.background,
@@ -101,18 +113,18 @@ class EditorTabEditor extends StatelessWidget {
                   ),
                   child: SingleChildScrollView(
                     child: CodeField(
-                      controller: controller,
-                      focusNode: focusNode,
+                      controller: widget.controller,
+                      focusNode: widget.focusNode,
                       wrap: true,
                       separateGutterFromEditor: true,
                       gutterStyle: GutterStyle(
-                        width: sidebarWidth,
+                        width: widget.sidebarWidth,
                         margin: 0,
                         textAlign: TextAlign.right,
-                        background: sidebarColor,
-                        showErrors: isEditorSidebarEnabled,
-                        showFoldingHandles: isEditorSidebarEnabled,
-                        showLineNumbers: isEditorSidebarEnabled,
+                        background: widget.sidebarColor,
+                        showErrors: widget.isEditorSidebarEnabled,
+                        showFoldingHandles: widget.isEditorSidebarEnabled,
+                        showLineNumbers: widget.isEditorSidebarEnabled,
                       ),
                       lineNumberBuilder: (index, style) {
                         final int lineNumber = index + 1;

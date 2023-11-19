@@ -10,6 +10,7 @@ class EditorDesktopHeader extends StatefulWidget {
   final VoidCallback toggleLiveShare;
   final List<ContextMenuEntry> contextMenuOptions;
   final Map<ShortcutActivator, void Function()>? contextMenuShortcuts;
+  final FocusNode noteTitleFocusNode;
 
   const EditorDesktopHeader({
     super.key,
@@ -18,6 +19,7 @@ class EditorDesktopHeader extends StatefulWidget {
     required this.toggleLiveShare,
     this.contextMenuOptions = const [],
     this.contextMenuShortcuts,
+    required this.noteTitleFocusNode,
   });
 
   @override
@@ -48,6 +50,7 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
             children: [
               Expanded(
                 child: TextFormField(
+                  focusNode: widget.noteTitleFocusNode,
                   initialValue: "Lorem ipsum",
                   readOnly: !widget.isTitleEditable,
                   maxLines: 1,
