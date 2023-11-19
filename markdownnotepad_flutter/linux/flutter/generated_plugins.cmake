@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   dart_discord_rpc
+  file_selector_linux
   url_launcher_linux
 )
 
