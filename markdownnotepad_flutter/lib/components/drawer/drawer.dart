@@ -276,30 +276,6 @@ class _MDNDrawerState extends State<MDNDrawer> {
                             },
                           );
                         }).toList(),
-                        // ...List.generate(
-                        //   3,
-                        //   (index) {
-                        //     return MDNDrawerItem(
-                        //       icon: FeatherIcons.folder,
-                        //       title: "Folder ${index + 1}",
-                        //       isSelected: isTabSelected(
-                        //           "/dashboard/directory/${index + 1}"),
-                        //       onPressed: () {
-                        //         final String destination =
-                        //             "/dashboard/directory/${index + 1}";
-
-                        //         notifier.setCurrentTab(destination);
-                        //         Modular.to.navigate(
-                        //           destination,
-                        //           arguments: {
-                        //             "cardsCount":
-                        //                 index == 1 ? 0 : Random().nextInt(10) + 5
-                        //           },
-                        //         );
-                        //       },
-                        //     );
-                        //   },
-                        // ),
                         const MDNDrawerItemSection(title: "Miscellaneous"),
                         MDNDrawerItem(
                           icon: FeatherIcons.user,
