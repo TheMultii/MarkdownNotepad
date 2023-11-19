@@ -9,6 +9,7 @@ import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 
 class EditorTabEditor extends StatefulWidget {
+  final String noteID;
   final CodeController controller;
   final FocusNode focusNode;
   final double sidebarWidth;
@@ -20,6 +21,7 @@ class EditorTabEditor extends StatefulWidget {
 
   const EditorTabEditor({
     super.key,
+    required this.noteID,
     required this.controller,
     required this.focusNode,
     required this.sidebarWidth,
@@ -54,6 +56,7 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
             noteTitleFocusNode: noteTitleFocusNode,
             contextMenuOptions: getEditorContextMenu(
               context: context,
+              noteID: widget.noteID,
               textToRender: widget.controller.text,
               isLiveShareEnabled: widget.isLiveShareEnabled,
               toggleLiveShare: widget.toggleLiveShare,

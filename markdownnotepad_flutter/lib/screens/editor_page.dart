@@ -99,6 +99,7 @@ class _EditorPageState extends State<EditorPage> {
                         sidebarWidth: sidebarWidth,
                         sidebarColor: sidebarColor,
                         editorStyle: a11yDarkTheme,
+                        noteID: widget.id,
                         isEditorSidebarEnabled: !Responsive.isMobile(context) &&
                             isEditorSidebarEnabled,
                         isLiveShareEnabled: isLiveShareEnabled,
@@ -108,6 +109,7 @@ class _EditorPageState extends State<EditorPage> {
                         textToRender: controller.fullText,
                         isLiveShareEnabled: isLiveShareEnabled,
                         toggleLiveShare: toggleLiveShare,
+                        noteID: widget.id,
                       ),
               ),
             ),

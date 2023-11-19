@@ -6,6 +6,7 @@ import 'package:markdownnotepad/helpers/save_file_helper.dart';
 
 List<ContextMenuEntry> getEditorContextMenu({
   required BuildContext context,
+  required String noteID,
   required String textToRender,
   required bool isLiveShareEnabled,
   required VoidCallback toggleLiveShare,
@@ -23,7 +24,7 @@ List<ContextMenuEntry> getEditorContextMenu({
           onSelected: () async {
             SaveFileHelper.saveTextFile(
               context,
-              "output.md",
+              "$noteID.md",
               textToRender,
             );
           },

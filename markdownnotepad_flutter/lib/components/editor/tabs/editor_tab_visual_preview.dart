@@ -7,12 +7,14 @@ import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/markdown_visual_builder/markdown_preview.dart';
 
 class EditorTabVisualPreview extends StatefulWidget {
+  final String noteID;
   final String textToRender;
   final bool isLiveShareEnabled;
   final VoidCallback toggleLiveShare;
 
   const EditorTabVisualPreview({
     super.key,
+    required this.noteID,
     required this.textToRender,
     required this.isLiveShareEnabled,
     required this.toggleLiveShare,
@@ -39,6 +41,7 @@ class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
           noteTitleFocusNode: noteTitleFocusNode,
           contextMenuOptions: getEditorContextMenu(
             context: context,
+            noteID: widget.noteID,
             textToRender: widget.textToRender,
             isLiveShareEnabled: widget.isLiveShareEnabled,
             toggleLiveShare: widget.toggleLiveShare,
