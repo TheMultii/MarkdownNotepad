@@ -573,14 +573,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_to_pdf:
-    dependency: "direct main"
-    description:
-      name: flutter_to_pdf
-      sha256: c0311c9d15d6cd0ffb81c7fd9628794219c9201b165b707310f8070cfc694715
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -970,14 +962,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
-  pdf:
-    dependency: transitive
-    description:
-      name: pdf
-      sha256: aa8835fcb9cfaf57ab2f1970e8548ceed3d0cb53eda7da906648f8153eaf37c9
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.10.6"
   pedantic:
     dependency: transitive
     description:
@@ -1058,22 +1042,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.3"
-  qr:
-    dependency: transitive
-    description:
-      name: qr
-      sha256: "64957a3930367bf97cc211a5af99551d630f2f4625e38af10edd6b19131b64b3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.1"
-  quote_buffer:
-    dependency: transitive
-    description:
-      name: quote_buffer
-      sha256: a9eefd3ddc63bb310ffbc855b6ebe0363d925235485bc5778e28c492b1224b31
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.5"
   result_dart:
     dependency: transitive
     description:
