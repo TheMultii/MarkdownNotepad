@@ -309,6 +309,12 @@ class _InitSetupPageState extends State<InitSetupPage> {
                                             selectedHost = selectedHost == host
                                                 ? null
                                                 : host;
+                                            selectedAddress = selectedHost
+                                                ?.internetAddress.address;
+                                            selectedPort =
+                                                customServerPort.isEmpty
+                                                    ? "3000"
+                                                    : customServerPort;
                                             hasSuccessfullyConnectedToHost =
                                                 selectedHost != null;
                                             customServerError = "";
