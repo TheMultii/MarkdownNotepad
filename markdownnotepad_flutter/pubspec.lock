@@ -81,22 +81,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
-  barcode:
-    dependency: transitive
-    description:
-      name: barcode
-      sha256: "789f898eef0bd88312470bdb2cc996f895ad7dd5f89e9adde84b204546a90b45"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.4"
-  bidi:
-    dependency: transitive
-    description:
-      name: bidi
-      sha256: "1a7d0c696324b2089f72e7671fd1f1f64fef44c980f3cebc84e803967c597b63"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.10"
   boolean_selector:
     dependency: transitive
     description:
@@ -357,14 +341,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.3"
-  directed_graph:
-    dependency: transitive
-    description:
-      name: directed_graph
-      sha256: "82061c9ce3ac74d9c4c173fb03daac515d503a0f9f77c0010a872f8c344a4f03"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.9"
   dynamic_height_grid_view:
     dependency: "direct main"
     description:
@@ -389,14 +365,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.0"
-  exception_templates:
-    dependency: transitive
-    description:
-      name: exception_templates
-      sha256: e9303fd16ecdb845a14b397cb93476f807dd2b4706f5ee44f708dbc95c256c33
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.4"
   fake_async:
     dependency: transitive
     description:
@@ -738,14 +706,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0+1"
-  lazy_memo:
-    dependency: transitive
-    description:
-      name: lazy_memo
-      sha256: ca4be412d65726f79a30ba6e40b7056f1dbefbb35ec42913365b3f3e86d49279
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.9"
   linked_scroll_controller:
     dependency: transitive
     description:
