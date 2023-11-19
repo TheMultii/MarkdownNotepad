@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_highlight/themes/a11y-dark.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:highlight/languages/markdown.dart';
 import 'package:markdownnotepad/components/editor/editor_desktop_change_tab.dart';
 import 'package:markdownnotepad/components/editor/editor_desktop_disable_sidebar.dart';
@@ -27,6 +28,7 @@ class EditorPage extends StatefulWidget {
 }
 
 class _EditorPageState extends State<EditorPage> {
+  late String noteTitle;
   late MDNDiscordRPC mdnDiscordRPC;
   final controller = CodeController(
     text: '# test',
@@ -42,6 +44,7 @@ class _EditorPageState extends State<EditorPage> {
   void initState() {
     super.initState();
 
+    noteTitle = Modular.args.data?['noteTitle'] as String? ?? '';
     controller.text += '\n\n## ${widget.id}';
 
     mdnDiscordRPC = MDNDiscordRPC();
@@ -99,6 +102,7 @@ class _EditorPageState extends State<EditorPage> {
                         sidebarWidth: sidebarWidth,
                         sidebarColor: sidebarColor,
                         editorStyle: a11yDarkTheme,
+                        noteTitle: noteTitle,
                         noteID: widget.id,
                         isEditorSidebarEnabled: !Responsive.isMobile(context) &&
                             isEditorSidebarEnabled,
@@ -109,6 +113,7 @@ class _EditorPageState extends State<EditorPage> {
                         textToRender: controller.fullText,
                         isLiveShareEnabled: isLiveShareEnabled,
                         toggleLiveShare: toggleLiveShare,
+                        noteTitle: noteTitle,
                         noteID: widget.id,
                       ),
               ),

@@ -5,6 +5,7 @@ import 'package:markdownnotepad/components/editor/editor_desktop_header_list_ite
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 
 class EditorDesktopHeader extends StatefulWidget {
+  final String noteTitle;
   final bool isTitleEditable;
   final bool isLiveShareEnabled;
   final VoidCallback toggleLiveShare;
@@ -14,6 +15,7 @@ class EditorDesktopHeader extends StatefulWidget {
 
   const EditorDesktopHeader({
     super.key,
+    required this.noteTitle,
     this.isTitleEditable = true,
     required this.isLiveShareEnabled,
     required this.toggleLiveShare,
@@ -51,12 +53,12 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
               Expanded(
                 child: TextFormField(
                   focusNode: widget.noteTitleFocusNode,
-                  initialValue: "Lorem ipsum",
+                  initialValue: widget.noteTitle,
                   readOnly: !widget.isTitleEditable,
                   maxLines: 1,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "Title",
+                    hintText: "Tytuł notatki",
                     hintStyle: TextStyle(
                       color: Theme.of(context)
                           .extension<MarkdownNotepadTheme>()

@@ -247,6 +247,9 @@ class _MDNDrawerState extends State<MDNDrawer> {
                                 notifier.setCurrentTab(destination);
                                 Modular.to.navigate(
                                   destination,
+                                  arguments: {
+                                    "noteTitle": note.title,
+                                  },
                                 );
                               },
                             );
