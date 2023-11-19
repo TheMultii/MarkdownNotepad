@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
+import 'package:markdownnotepad/components/editor/editor_context_menu.dart';
 import 'package:markdownnotepad/components/editor/editor_desktop_header.dart';
 import 'package:markdownnotepad/components/editor/editor_page_live_share_user_small_avatar.dart';
+import 'package:markdownnotepad/components/notifications/info_notify_toast.dart';
+import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 
 class EditorTabEditor extends StatelessWidget {
@@ -40,6 +44,25 @@ class EditorTabEditor extends StatelessWidget {
           EditorDesktopHeader(
             isLiveShareEnabled: isLiveShareEnabled,
             toggleLiveShare: toggleLiveShare,
+            contextMenuOptions: getEditorContextMenu(
+              context,
+              controller.text,
+              isLiveShareEnabled,
+              toggleLiveShare,
+            ),
+            contextMenuShortcuts: {
+              LogicalKeySet(
+                      LogicalKeyboardKey.control, LogicalKeyboardKey.keyS):
+                  () async {
+                NotifyToast().show(
+                  context: context,
+                  child: const InfoNotifyToast(
+                    title: 'Aplikacja automatycznie zapisuje zmiany',
+                    body: 'Nie ma potrzeby ręcznego zapisywania zmian,',
+                  ),
+                );
+              },
+            },
           ),
           Expanded(
             child: Stack(

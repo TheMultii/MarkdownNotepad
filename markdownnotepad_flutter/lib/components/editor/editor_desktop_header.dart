@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_context_menu/flutter_context_menu.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:markdownnotepad/components/editor/editor_desktop_header_list_item.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 
-class EditorDesktopHeader extends StatelessWidget {
+class EditorDesktopHeader extends StatefulWidget {
   final bool isTitleEditable;
   final bool isLiveShareEnabled;
   final VoidCallback toggleLiveShare;
+  final List<ContextMenuEntry> contextMenuOptions;
+  final Map<ShortcutActivator, void Function()>? contextMenuShortcuts;
 
   const EditorDesktopHeader({
     super.key,
     this.isTitleEditable = true,
     required this.isLiveShareEnabled,
     required this.toggleLiveShare,
+    this.contextMenuOptions = const [],
+    this.contextMenuShortcuts,
   });
+
+  @override
+  State<EditorDesktopHeader> createState() => _EditorDesktopHeaderState();
+}
+
+class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
+  Offset cursorPosition = Offset.zero;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +49,7 @@ class EditorDesktopHeader extends StatelessWidget {
               Expanded(
                 child: TextFormField(
                   initialValue: "Lorem ipsum",
-                  readOnly: !isTitleEditable,
+                  readOnly: !widget.isTitleEditable,
                   maxLines: 1,
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -56,9 +68,9 @@ class EditorDesktopHeader extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () => toggleLiveShare(),
+                onPressed: () => widget.toggleLiveShare(),
                 icon: Icon(
-                  isLiveShareEnabled
+                  widget.isLiveShareEnabled
                       ? Icons.pause_outlined
                       : Icons.play_arrow_outlined,
                   color: Theme.of(context)
@@ -67,16 +79,38 @@ class EditorDesktopHeader extends StatelessWidget {
                       ?.withOpacity(.6),
                 ),
               ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.more_horiz,
-                  color: Theme.of(context)
-                      .extension<MarkdownNotepadTheme>()
-                      ?.text
-                      ?.withOpacity(.6),
+              MouseRegion(
+                onHover: (event) {
+                  setState(() {
+                    cursorPosition = event.position;
+                  });
+                },
+                child: IconButton(
+                  onPressed: () {
+                    if (widget.contextMenuOptions.isEmpty) {
+                      return;
+                    }
+                    final contextMenu = ContextMenu(
+                      entries: widget.contextMenuOptions,
+                      position: Offset(
+                        cursorPosition.dx / 2 - 200,
+                        cursorPosition.dy,
+                      ),
+                      padding: const EdgeInsets.all(8.0),
+                      shortcuts: widget.contextMenuShortcuts,
+                    );
+
+                    showContextMenu(context, contextMenu: contextMenu);
+                  },
+                  icon: Icon(
+                    Icons.more_horiz,
+                    color: Theme.of(context)
+                        .extension<MarkdownNotepadTheme>()
+                        ?.text
+                        ?.withOpacity(.6),
+                  ),
                 ),
-              ),
+              )
             ],
           ),
           Row(
@@ -96,7 +130,7 @@ class EditorDesktopHeader extends StatelessWidget {
               EditorDesktopHeaderListItem(
                 icon: FeatherIcons.users,
                 title: 'Kolaboracja',
-                value: 'W${isLiveShareEnabled ? '' : 'y'}łączona',
+                value: 'W${widget.isLiveShareEnabled ? '' : 'y'}łączona',
               ),
             ],
           ),
