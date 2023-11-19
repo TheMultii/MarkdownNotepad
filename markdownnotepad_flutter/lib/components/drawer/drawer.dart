@@ -12,6 +12,7 @@ import 'package:markdownnotepad/components/drawer/drawer_item.dart';
 import 'package:markdownnotepad/components/drawer/drawer_item_section.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/models/catalog.dart';
+import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
 import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
@@ -155,6 +156,13 @@ class _MDNDrawerState extends State<MDNDrawer> {
                         (a, b) => b.updatedAt.compareTo(a.updatedAt),
                       );
 
+                final List<Note> notesSorted = loggedInUser.user.notes == null
+                    ? []
+                    : loggedInUser.user.notes!
+                  ..sort(
+                    (a, b) => b.updatedAt.compareTo(a.updatedAt),
+                  );
+
                 return Expanded(
                   child: SingleChildScrollView(
                     controller: _scrollController,
@@ -221,16 +229,20 @@ class _MDNDrawerState extends State<MDNDrawer> {
                           iconClickCallback: () =>
                               onCreateNewNotePressed(context),
                         ),
-                        ...List.generate(
-                          3,
-                          (index) {
+                        ...notesSorted
+                            .getRange(
+                                0,
+                                notesSorted.length >= 3
+                                    ? 3
+                                    : notesSorted.length)
+                            .map(
+                          (note) {
                             return MDNDrawerItem(
                               icon: FeatherIcons.file,
-                              title: "Przykładowa notatka - ${index + 1}",
-                              isSelected: isTabSelected("/editor/${index + 1}"),
+                              title: note.title,
+                              isSelected: isTabSelected("/editor/${note.id}"),
                               onPressed: () {
-                                final String destination =
-                                    "/editor/${index + 1}";
+                                final String destination = "/editor/${note.id}";
 
                                 notifier.setCurrentTab(destination);
                                 Modular.to.navigate(
