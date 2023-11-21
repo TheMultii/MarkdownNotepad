@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_history_list_item.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_last_viewed_cards.dart';
 import 'package:markdownnotepad/enums/dashboard_history_item_actions.dart';
+import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 
-class DashboardLastViewedSection extends StatelessWidget {
+class DashboardLastViewedSection extends StatefulWidget {
   final LoggedInUser loggedInUser;
 
   const DashboardLastViewedSection({
@@ -13,47 +14,55 @@ class DashboardLastViewedSection extends StatelessWidget {
   });
 
   @override
+  State<DashboardLastViewedSection> createState() =>
+      _DashboardLastViewedSectionState();
+}
+
+class _DashboardLastViewedSectionState
+    extends State<DashboardLastViewedSection> {
+  @override
   Widget build(BuildContext context) {
+    final List<Note> notesSorted = widget.loggedInUser.user.notes == null
+        ? []
+        : widget.loggedInUser.user.notes!
+      ..sort(
+        (a, b) => b.updatedAt.compareTo(a.updatedAt),
+      );
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DashboardLastViewedCards(
           items: [
-            {
-              "id": "1",
-              "title": "Lorem ipsum 1",
-              "subtitle": "Lorem ipsum dolor sit amet",
-              "editDate": DateTime.now(),
-              "isLocalImage": false,
-              "backgroundImage":
-                  'https://images.unsplash.com/photo-1696114865389-55096a84df67?auto=format&fit=crop&q=80&w=1887&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-              "imageAlignment": const Alignment(1, -.55),
-            },
-            {
-              "id": "2",
-              "title": "Lorem ipsum 2",
-              "subtitle": "Lorem ipsum dolor sit amet",
-              "editDate": DateTime.now().subtract(const Duration(days: 1)),
-              "isLocalImage": false,
-              "backgroundImage":
-                  'https://images.unsplash.com/photo-1623039497550-c4f2ccc7b875?auto=format&fit=crop&q=80&w=1887&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-              "imageAlignment": const Alignment(1, -.225),
-            },
-            {
-              "id": "3",
-              "title": "Lorem ipsum 3",
-              "subtitle":
-                  "Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet",
-              "editDate": DateTime.now().subtract(const Duration(days: 2)),
-              "isLocalImage": false,
-              "backgroundImage":
-                  'https://images.unsplash.com/photo-1649864735667-300c31f0e5f2?auto=format&fit=crop&q=80&w=1887&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-              "imageAlignment": const Alignment(1, -.2),
-            }
+            ...notesSorted
+                .getRange(0, notesSorted.length >= 3 ? 3 : notesSorted.length)
+                .map(
+                  (note) => {
+                    "id": note.id,
+                    "title": note.title,
+                    "editDate": note.updatedAt,
+                    "isLocalImage": false,
+                    "backgroundImage":
+                        "https://api.mganczarczyk.pl/tairiku/random/streetmoe?safety=true&seed=${note.id}",
+                  },
+                ),
+            ...(notesSorted.length < 3
+                ? List.generate(
+                    3 - notesSorted.length,
+                    (index) => {
+                      "id": 0,
+                      "title": "",
+                      "editDate": DateTime.now(),
+                      "isLocalImage": false,
+                      "opacity": .15,
+                      "disabled": true,
+                      "backgroundImage": "",
+                    },
+                  )
+                : []),
           ],
         ),
-        const SizedBox(height: 36),
+        const SizedBox(height: 24.0),
         Stack(
           children: [
             Positioned(
@@ -71,9 +80,9 @@ class DashboardLastViewedSection extends StatelessWidget {
               children: [
                 DashboardHistoryListItem(
                   isLast: false,
-                  userName: loggedInUser.user.name.isNotEmpty
-                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
-                      : loggedInUser.user.username,
+                  userName: widget.loggedInUser.user.name.isNotEmpty
+                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
+                      : widget.loggedInUser.user.username,
                   actionDateTime: DateTime.now(),
                   note: const {
                     "id": 1,
@@ -83,9 +92,9 @@ class DashboardLastViewedSection extends StatelessWidget {
                 ),
                 DashboardHistoryListItem(
                   isLast: false,
-                  userName: loggedInUser.user.name.isNotEmpty
-                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
-                      : loggedInUser.user.username,
+                  userName: widget.loggedInUser.user.name.isNotEmpty
+                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
+                      : widget.loggedInUser.user.username,
                   actionDateTime: DateTime.now(),
                   note: const {
                     "id": 1,
@@ -96,9 +105,9 @@ class DashboardLastViewedSection extends StatelessWidget {
                 ),
                 DashboardHistoryListItem(
                   isLast: false,
-                  userName: loggedInUser.user.name.isNotEmpty
-                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
-                      : loggedInUser.user.username,
+                  userName: widget.loggedInUser.user.name.isNotEmpty
+                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
+                      : widget.loggedInUser.user.username,
                   actionDateTime: DateTime.now(),
                   note: const {
                     "id": 1,
@@ -109,9 +118,9 @@ class DashboardLastViewedSection extends StatelessWidget {
                 ),
                 DashboardHistoryListItem(
                   isLast: false,
-                  userName: loggedInUser.user.name.isNotEmpty
-                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
-                      : loggedInUser.user.username,
+                  userName: widget.loggedInUser.user.name.isNotEmpty
+                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
+                      : widget.loggedInUser.user.username,
                   actionDateTime: DateTime.now().subtract(
                     const Duration(hours: 3),
                   ),
@@ -123,9 +132,9 @@ class DashboardLastViewedSection extends StatelessWidget {
                 ),
                 DashboardHistoryListItem(
                   isLast: false,
-                  userName: loggedInUser.user.name.isNotEmpty
-                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
-                      : loggedInUser.user.username,
+                  userName: widget.loggedInUser.user.name.isNotEmpty
+                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
+                      : widget.loggedInUser.user.username,
                   actionDateTime: DateTime.now().subtract(
                     const Duration(days: 7),
                   ),
@@ -137,9 +146,9 @@ class DashboardLastViewedSection extends StatelessWidget {
                 ),
                 DashboardHistoryListItem(
                   isLast: false,
-                  userName: loggedInUser.user.name.isNotEmpty
-                      ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
-                      : loggedInUser.user.username,
+                  userName: widget.loggedInUser.user.name.isNotEmpty
+                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
+                      : widget.loggedInUser.user.username,
                   actionDateTime: DateTime.now().subtract(
                     const Duration(days: 400),
                   ),

@@ -48,15 +48,20 @@ class _DashboardLastViewedCardsState extends State<DashboardLastViewedCards> {
                         editDate: itemCard['editDate'],
                         isLocalImage: itemCard['isLocalImage'],
                         backgroundImage: itemCard['backgroundImage'],
-                        imageAlignment: itemCard['imageAlignment'],
-                        onTap: () {
-                          final String destination =
-                              "/editor/${itemCard['id']}";
-                          context
-                              .read<DrawerCurrentTabProvider>()
-                              .setCurrentTab(destination);
-                          Modular.to.navigate(destination);
-                        },
+                        imageAlignment:
+                            itemCard['imageAlignment'] ?? Alignment.topCenter,
+                        opacity: itemCard['opacity'] ?? 1.0,
+                        isDisabled: itemCard['disabled'] ?? false,
+                        onTap: itemCard['disabled'] ?? false
+                            ? null
+                            : () {
+                                final String destination =
+                                    "/editor/${itemCard['id']}";
+                                context
+                                    .read<DrawerCurrentTabProvider>()
+                                    .setCurrentTab(destination);
+                                Modular.to.navigate(destination);
+                              },
                       ),
                     )
                     .toList(),
