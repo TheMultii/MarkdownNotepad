@@ -121,9 +121,6 @@ class _MDNLayoutState extends State<MDNLayout> {
                       focusNode: FocusNode()..requestFocus(),
                       child: MDNSearchIntent(
                         invokeFunction: (Intent intent) {
-                          debugPrint(
-                              "SearchIntent invoked at ${DateTime.now()}");
-
                           //push a new route on top of the current one, with a transparent background
                           Navigator.of(context).push(
                             PageRouteBuilder(

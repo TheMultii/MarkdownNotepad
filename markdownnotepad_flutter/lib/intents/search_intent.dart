@@ -31,7 +31,6 @@ class MDNSearchIntent extends StatelessWidget {
         actions: <Type, Action<Intent>>{
           SearchIntent: CallbackAction<Intent>(
             onInvoke: (Intent intent) {
-              debugPrint("will invoke");
               invokeFunction(intent);
               return null;
             },
