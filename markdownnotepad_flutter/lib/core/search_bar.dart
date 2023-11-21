@@ -3,8 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:markdownnotepad/components/search_bar_item.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
+import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
+import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
+import 'package:markdownnotepad/viewmodels/search_result.dart';
+import 'package:markdownnotepad/viewmodels/search_results.dart';
+import 'package:provider/provider.dart';
 
 class MDNSearchBarWidget extends StatefulWidget {
   final Function() dismissEntry;
@@ -23,22 +30,130 @@ class _MDNSearchBarWidgetState extends State<MDNSearchBarWidget> {
   String textValue = "";
 
   bool isSearching = false;
+  SearchResults searchResults = SearchResults();
+
+  LoggedInUser? get loggedInUser =>
+      context.read<CurrentLoggedInUserProvider>().currentUser;
+
+  final List<Map<String, String>> searchActions = [
+    {"destination": "/dashboard/", "title": "Dashboard"},
+    {"destination": "/miscellaneous/account", "title": "Konto"},
+    {"destination": "/miscellaneous/account", "title": "Account"},
+    {"destination": "/miscellaneous/extensions", "title": "Rozszerzenia"},
+    {"destination": "/miscellaneous/extensions", "title": "Extensions"},
+    {"destination": "", "title": "Wyloguj"},
+    {"destination": "", "title": "Logout"}
+  ];
 
   void dismiss() {
     setState(() {
       widgetTop = -1000;
     });
     Timer(100.ms, () {
+      if (!mounted) return;
       widget.dismissEntry();
     });
   }
 
   void search() {
     setState(() => isSearching = true);
-    debugPrint("Search invoked with value: $textValue");
-    Future.delayed(500.ms, () {
-      setState(() => isSearching = false);
-    });
+
+    searchResults = SearchResults();
+    if (textValue.isNotEmpty) {
+      if (textValue.length > 2) {
+        for (final Map<String, String> action in searchActions) {
+          if (action['title']
+                  ?.toLowerCase()
+                  .contains(textValue.toLowerCase()) ??
+              false) {
+            searchResults.actionResult = SearchResult(
+              id: action['destination']!,
+              title: action["title"]!,
+              type: SearchResultType.other,
+              onTap: action["title"]! == "Wyloguj" ||
+                      action["title"]! == "Logout"
+                  ? () => context.read<CurrentLoggedInUserProvider>().logout()
+                  : null,
+            );
+            break;
+          }
+        }
+      }
+
+      searchResults.notes = loggedInUser!.user.notes!
+          .where((element) {
+            return element.title
+                    .toLowerCase()
+                    .contains(textValue.toLowerCase()) ||
+                (element.id.toLowerCase().contains(textValue.toLowerCase()) &&
+                    textValue.length == 36);
+          })
+          .map(
+            (e) => SearchResult(
+              id: e.id,
+              title: e.title,
+              type: SearchResultType.note,
+            ),
+          )
+          .toList();
+      searchResults.tags = loggedInUser!.user.tags!
+          .where((element) {
+            return element.title
+                    .toLowerCase()
+                    .contains(textValue.toLowerCase()) ||
+                (element.id.toLowerCase().contains(textValue.toLowerCase()) &&
+                    textValue.length == 36);
+          })
+          .map(
+            (e) => SearchResult(
+              id: e.id,
+              title: e.title,
+              type: SearchResultType.tag,
+            ),
+          )
+          .toList();
+      searchResults.catalogs = loggedInUser!.user.catalogs!
+          .where((element) {
+            return element.title
+                    .toLowerCase()
+                    .contains(textValue.toLowerCase()) ||
+                (element.id.toLowerCase().contains(textValue.toLowerCase()) &&
+                    textValue.length == 36);
+          })
+          .map(
+            (e) => SearchResult(
+              id: e.id,
+              title: e.title,
+              type: SearchResultType.catalog,
+            ),
+          )
+          .toList();
+    }
+
+    setState(() => isSearching = false);
+  }
+
+  void onTapItem(SearchResult searchResult) {
+    dismiss();
+    String destination = "";
+
+    switch (searchResult.type) {
+      case SearchResultType.note:
+        destination = "/editor/${searchResult.id}";
+        break;
+      case SearchResultType.catalog:
+        destination = "/dashboard/directory/${searchResult.id}";
+        break;
+      case SearchResultType.tag:
+        break;
+      case SearchResultType.other:
+        destination = searchResult.id;
+        break;
+    }
+
+    if (destination.isEmpty) return;
+    context.read<DrawerCurrentTabProvider>().setCurrentTab(destination);
+    Modular.to.navigate(destination);
   }
 
   @override
@@ -145,18 +260,135 @@ class _MDNSearchBarWidgetState extends State<MDNSearchBarWidget> {
                                       strokeWidth: 3.0,
                                     ),
                                   )
-                                : Column(
-                                    children: [1, 2, 3, 4, 5]
-                                        .map(
-                                          (e) => SearchBarItem(
-                                            e: e,
-                                            isLast: e == 5,
-                                            text: textValue,
-                                            dismiss: dismiss,
+                                : searchResults.isEmpty
+                                    ? const Center(
+                                        child: Text(
+                                          'Brak wyników',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                        )
-                                        .toList(),
-                                  ),
+                                        ),
+                                      )
+                                    : Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          if (searchResults.actionResult !=
+                                              null)
+                                            SearchBarItem(
+                                              elementID: searchResults
+                                                  .actionResult!.id,
+                                              text: searchResults
+                                                  .actionResult!.title,
+                                              isLast: true,
+                                              onTap: () {
+                                                if (searchResults
+                                                        .actionResult!.onTap !=
+                                                    null) {
+                                                  searchResults
+                                                      .actionResult!.onTap!();
+                                                  return;
+                                                }
+                                                onTapItem(searchResults
+                                                    .actionResult!);
+                                              },
+                                            ),
+                                          if (searchResults
+                                              .notes.isNotEmpty) ...[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 8.0,
+                                                vertical: 4.0,
+                                              ),
+                                              child: Text(
+                                                'Notatki (${searchResults.notes.length})',
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                            ...searchResults.notes
+                                                .getRange(
+                                                    0,
+                                                    searchResults.notes.length >
+                                                            2
+                                                        ? 2
+                                                        : searchResults
+                                                            .notes.length)
+                                                .toList()
+                                                .asMap()
+                                                .entries
+                                                .map(
+                                              (entry) {
+                                                final index = entry.key;
+                                                final entryValue = entry.value;
+
+                                                return SearchBarItem(
+                                                  elementID: entryValue.id,
+                                                  text: entryValue.title,
+                                                  isLast: index ==
+                                                      searchResults
+                                                              .notes.length -
+                                                          1,
+                                                  onTap: () =>
+                                                      onTapItem(entryValue),
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                          if (searchResults
+                                              .catalogs.isNotEmpty) ...[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 8.0,
+                                                vertical: 4.0,
+                                              ),
+                                              child: Text(
+                                                'Foldery (${searchResults.catalogs.length})',
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                            ...searchResults.catalogs
+                                                .getRange(
+                                                    0,
+                                                    searchResults.catalogs
+                                                                .length >
+                                                            2
+                                                        ? 2
+                                                        : searchResults
+                                                            .catalogs.length)
+                                                .toList()
+                                                .asMap()
+                                                .entries
+                                                .map(
+                                              (entry) {
+                                                final index = entry.key;
+                                                final entryValue = entry.value;
+
+                                                return SearchBarItem(
+                                                  elementID: entryValue.id,
+                                                  text: entryValue.title,
+                                                  isLast: index ==
+                                                      searchResults
+                                                              .notes.length -
+                                                          1,
+                                                  onTap: () =>
+                                                      onTapItem(entryValue),
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ],
+                                      ),
                           ),
                         ],
                       ),
