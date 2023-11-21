@@ -3,25 +3,32 @@ import 'package:flutter_context_menu/flutter_context_menu.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:markdownnotepad/components/editor/editor_desktop_header_list_item.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/helpers/date_helper.dart';
+import 'package:markdownnotepad/models/note.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class EditorDesktopHeader extends StatefulWidget {
   final String noteTitle;
+  final Note note;
   final bool isTitleEditable;
   final bool isLiveShareEnabled;
   final VoidCallback toggleLiveShare;
   final List<ContextMenuEntry> contextMenuOptions;
   final Map<ShortcutActivator, void Function()>? contextMenuShortcuts;
   final FocusNode noteTitleFocusNode;
+  final Function(String)? onNoteTitleChanged;
 
   const EditorDesktopHeader({
     super.key,
     required this.noteTitle,
+    required this.note,
     this.isTitleEditable = true,
     required this.isLiveShareEnabled,
     required this.toggleLiveShare,
     this.contextMenuOptions = const [],
     this.contextMenuShortcuts,
     required this.noteTitleFocusNode,
+    this.onNoteTitleChanged,
   });
 
   @override
@@ -29,7 +36,14 @@ class EditorDesktopHeader extends StatefulWidget {
 }
 
 class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
+  final TextEditingController noteTitleController = TextEditingController();
   Offset cursorPosition = Offset.zero;
+
+  @override
+  void initState() {
+    super.initState();
+    noteTitleController.text = widget.noteTitle;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +66,22 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
             children: [
               Expanded(
                 child: TextFormField(
+                  controller: noteTitleController,
                   focusNode: widget.noteTitleFocusNode,
-                  initialValue: widget.noteTitle,
                   readOnly: !widget.isTitleEditable,
                   maxLines: 1,
+                  onFieldSubmitted: widget.onNoteTitleChanged == null
+                      ? null
+                      : (value) => widget.onNoteTitleChanged!(value),
+                  onChanged: (newTitle) {
+                    final String registeredValue = noteTitleController.text;
+                    Future.delayed(const Duration(milliseconds: 500), () {
+                      if (widget.onNoteTitleChanged != null &&
+                          registeredValue == noteTitleController.text) {
+                        widget.onNoteTitleChanged!(newTitle);
+                      }
+                    });
+                  },
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: "Tytuł notatki",
@@ -75,9 +101,7 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
               IconButton(
                 onPressed: () => widget.toggleLiveShare(),
                 icon: Icon(
-                  widget.isLiveShareEnabled
-                      ? Icons.pause_outlined
-                      : Icons.play_arrow_outlined,
+                  widget.isLiveShareEnabled ? Symbols.share_off : Symbols.share,
                   color: Theme.of(context)
                       .extension<MarkdownNotepadTheme>()
                       ?.text
@@ -122,15 +146,16 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const EditorDesktopHeaderListItem(
+              EditorDesktopHeaderListItem(
                 icon: FeatherIcons.calendar,
                 title: 'Data stworzenia',
-                value: '23.10.2023',
+                value: DateHelper.getFormattedDate(widget.note.createdAt),
               ),
-              const EditorDesktopHeaderListItem(
+              EditorDesktopHeaderListItem(
                 icon: FeatherIcons.folder,
                 title: 'Folder',
-                value: 'Folder 1',
+                value: widget.note.folder?.title ?? 'Brak',
+                isItalic: widget.note.folder == null,
               ),
               EditorDesktopHeaderListItem(
                 icon: FeatherIcons.users,

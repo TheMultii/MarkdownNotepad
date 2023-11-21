@@ -5,9 +5,11 @@ import 'package:markdownnotepad/components/editor/editor_desktop_header.dart';
 import 'package:markdownnotepad/components/notifications/info_notify_toast.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/markdown_visual_builder/markdown_preview.dart';
+import 'package:markdownnotepad/models/note.dart';
 
 class EditorTabVisualPreview extends StatefulWidget {
   final String noteTitle;
+  final Note note;
   final String noteID;
   final String textToRender;
   final bool isLiveShareEnabled;
@@ -16,6 +18,7 @@ class EditorTabVisualPreview extends StatefulWidget {
   const EditorTabVisualPreview({
     super.key,
     required this.noteTitle,
+    required this.note,
     required this.noteID,
     required this.textToRender,
     required this.isLiveShareEnabled,
@@ -38,6 +41,7 @@ class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
       children: [
         EditorDesktopHeader(
           noteTitle: widget.noteTitle,
+          note: widget.note,
           isTitleEditable: false,
           isLiveShareEnabled: widget.isLiveShareEnabled,
           toggleLiveShare: widget.toggleLiveShare,

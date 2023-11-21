@@ -7,10 +7,12 @@ import 'package:markdownnotepad/components/editor/editor_page_live_share_user_sm
 import 'package:markdownnotepad/components/notifications/info_notify_toast.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
+import 'package:markdownnotepad/models/note.dart';
 
 class EditorTabEditor extends StatefulWidget {
   final String noteTitle;
   final String noteID;
+  final Note note;
   final CodeController controller;
   final FocusNode focusNode;
   final double sidebarWidth;
@@ -19,11 +21,14 @@ class EditorTabEditor extends StatefulWidget {
   final bool isEditorSidebarEnabled;
   final bool isLiveShareEnabled;
   final VoidCallback toggleLiveShare;
+  final Function(String)? onNoteTitleChanged;
+  final Function(String)? onNoteContentChanged;
 
   const EditorTabEditor({
     super.key,
     required this.noteTitle,
     required this.noteID,
+    required this.note,
     required this.controller,
     required this.focusNode,
     required this.sidebarWidth,
@@ -32,6 +37,8 @@ class EditorTabEditor extends StatefulWidget {
     required this.isEditorSidebarEnabled,
     required this.isLiveShareEnabled,
     required this.toggleLiveShare,
+    this.onNoteTitleChanged,
+    this.onNoteContentChanged,
   });
 
   @override
@@ -54,9 +61,11 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
         children: [
           EditorDesktopHeader(
             noteTitle: widget.noteTitle,
+            note: widget.note,
             isLiveShareEnabled: widget.isLiveShareEnabled,
             toggleLiveShare: widget.toggleLiveShare,
             noteTitleFocusNode: noteTitleFocusNode,
+            onNoteTitleChanged: widget.onNoteTitleChanged,
             contextMenuOptions: getEditorContextMenu(
               context: context,
               noteID: widget.noteID,
@@ -123,6 +132,15 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
                       focusNode: widget.focusNode,
                       wrap: true,
                       separateGutterFromEditor: true,
+                      onChanged: (newContent) async {
+                        final String registeredValue = widget.controller.text;
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                          if (widget.onNoteContentChanged != null &&
+                              registeredValue == widget.controller.text) {
+                            widget.onNoteContentChanged!(newContent);
+                          }
+                        });
+                      },
                       gutterStyle: GutterStyle(
                         width: widget.sidebarWidth,
                         margin: 0,
