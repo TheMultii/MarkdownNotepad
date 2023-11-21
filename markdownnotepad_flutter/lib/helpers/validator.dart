@@ -99,6 +99,17 @@ class MDNValidator {
         )
         .build();
   }
+
+  static String? validateNoteTitle(String? noteTitle) {
+    return ValidatorString(noteTitle)
+        .isNotEmpty(errMsg: "Tytuł notatki nie może być pusty")
+        .length(
+          min: 3,
+          max: 256,
+          errMsg: "Tytuł notatki musi mieć od 3 do 256 znaków",
+        )
+        .build();
+  }
 }
 
 class Validator {
