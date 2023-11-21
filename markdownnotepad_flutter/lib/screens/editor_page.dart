@@ -152,6 +152,15 @@ class _EditorPageState extends State<EditorPage> {
 
         saveNoteToCache(n);
 
+        /*
+        * save cursor caret position before updating note
+        * and restore it after updating note
+        * so the user can continue editing the note
+        * without losing their cursor caret position
+        * when the note loses and regains focus again
+        */
+        final TextEditingValue value = controller.value;
+        final int cursorPosition = value.selection.baseOffset;
 
         setState(() {
           isNoteSafeToEdit = true;
@@ -159,6 +168,15 @@ class _EditorPageState extends State<EditorPage> {
           noteTitle = note!.title;
         });
 
+        if ((newContent?.isNotEmpty ?? false) && forceUpdate) {
+          controller.value = value.copyWith(
+            text: note!.content,
+            selection: TextSelection.fromPosition(
+              TextPosition(offset: cursorPosition),
+            ),
+          );
+          fNode.requestFocus();
+        }
       }
 
       return true;
