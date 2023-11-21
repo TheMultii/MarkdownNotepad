@@ -5,12 +5,14 @@ class EditorDesktopHeaderListItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final String value;
+  final bool isItalic;
 
   const EditorDesktopHeaderListItem({
     super.key,
     required this.icon,
     required this.title,
     required this.value,
+    this.isItalic = false,
   });
 
   @override
@@ -43,6 +45,9 @@ class EditorDesktopHeaderListItem extends StatelessWidget {
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
+            ),
           ),
         ],
       ),
