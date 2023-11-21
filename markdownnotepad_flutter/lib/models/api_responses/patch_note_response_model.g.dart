@@ -10,12 +10,12 @@ PatchNoteResponseModel _$PatchNoteResponseModelFromJson(
         Map<String, dynamic> json) =>
     PatchNoteResponseModel(
       message: json['message'] as String,
-      note: Note.noteFromJson(json['note'] as Map<String, dynamic>),
+      note: NoteSimple.noteFromJson(json['note'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PatchNoteResponseModelToJson(
         PatchNoteResponseModel instance) =>
     <String, dynamic>{
       'message': instance.message,
-      'note': Note.noteToJson(instance.note),
+      'note': NoteSimple.noteToJson(instance.note),
     };
