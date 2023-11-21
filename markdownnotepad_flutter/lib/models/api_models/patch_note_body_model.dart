@@ -4,10 +4,10 @@ part 'patch_note_body_model.g.dart';
 
 @JsonSerializable()
 class PatchNoteBodyModel {
-  final String? title;
-  final String? content;
-  final String? folderId;
-  final List<String>? tags;
+  String? title;
+  String? content;
+  String? folderId;
+  List<String>? tags;
 
   PatchNoteBodyModel({
     this.title,
