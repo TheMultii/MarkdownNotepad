@@ -1,13 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:markdownnotepad/models/note.dart';
+import 'package:markdownnotepad/models/note_simple.dart';
 
 part 'post_note_response_model.g.dart';
 
 @JsonSerializable()
 class PostNoteResponseModel {
   String message;
-  @JsonKey(toJson: Note.noteToJson, fromJson: Note.noteFromJson)
-  Note note;
+  @JsonKey(toJson: NoteSimple.noteToJson, fromJson: NoteSimple.noteFromJson)
+  NoteSimple note;
 
   PostNoteResponseModel({
     required this.message,

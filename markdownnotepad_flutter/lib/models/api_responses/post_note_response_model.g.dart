@@ -10,12 +10,12 @@ PostNoteResponseModel _$PostNoteResponseModelFromJson(
         Map<String, dynamic> json) =>
     PostNoteResponseModel(
       message: json['message'] as String,
-      note: Note.noteFromJson(json['note'] as Map<String, dynamic>),
+      note: NoteSimple.noteFromJson(json['note'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PostNoteResponseModelToJson(
         PostNoteResponseModel instance) =>
     <String, dynamic>{
       'message': instance.message,
-      'note': Note.noteToJson(instance.note),
+      'note': NoteSimple.noteToJson(instance.note),
     };
