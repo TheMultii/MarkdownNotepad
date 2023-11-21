@@ -11,6 +11,8 @@ class CurrentLoggedInUserProvider extends ChangeNotifier {
   final _loggedInUserBox = Hive.box<LoggedInUser>('logged_in_user');
   final _serverSettingsBox = Hive.box<ServerSettings>('server_settings');
 
+  late MDNApiService apiService;
+
   LoggedInUser? _currentUser;
   LoggedInUser? get currentUser => _currentUser;
 
@@ -28,6 +30,16 @@ class CurrentLoggedInUserProvider extends ChangeNotifier {
     final DateTime tokenExpirationDate = cU.tokenExpiration;
     final DateTime now = DateTime.now();
 
+    final settings = _serverSettingsBox.get('server_settings');
+    if (settings == null) return;
+
+    apiService = MDNApiService(
+      Dio(
+        BaseOptions(contentType: "application/json"),
+      ),
+      baseUrl: "http://${settings.ipAddress}:${settings.port}",
+    );
+
     if (tokenExpirationDate.isBefore(now)) {
       logout();
       return;
@@ -37,11 +49,24 @@ class CurrentLoggedInUserProvider extends ChangeNotifier {
       debugPrint(
         "Token does not need to be refreshed. It expires in ${tokenExpirationDate.difference(now).inDays} days",
       );
+      _getUserData(cU.accessToken).then((value) async {
+        _currentUser = value; // TODO: don't update note entries where there is mismatch between local and remote updatedAt
+        updateAvatarUrl();
+        _loggedInUserBox.put('logged_in_user', value);
+        notifyListeners();
+      });
     }
 
     _currentUser = cU;
 
     updateAvatarUrl();
+  }
+
+  Future<LoggedInUser> _getUserData(String token) async {
+    return await getLoggedInUserDetails(
+      apiService,
+      "Bearer $token",
+    );
   }
 
   void setCurrentUser(LoggedInUser newUser) {
@@ -69,16 +94,6 @@ class CurrentLoggedInUserProvider extends ChangeNotifier {
       return;
     }
 
-    final settings = _serverSettingsBox.get('server_settings');
-    if (settings == null || _currentUser == null) return;
-
-    final MDNApiService apiService = MDNApiService(
-      Dio(
-        BaseOptions(contentType: "application/json"),
-      ),
-      baseUrl: "http://${settings.ipAddress}:${settings.port}",
-    );
-
     try {
       final AccessTokenResponseModel? newToken = await apiService.refreshToken(
         _currentUser!.accessToken,
@@ -86,10 +101,7 @@ class CurrentLoggedInUserProvider extends ChangeNotifier {
 
       if (newToken == null) return;
 
-      final userData = await getLoggedInUserDetails(
-        apiService,
-        "Bearer ${newToken.accessToken}",
-      );
+      final userData = await _getUserData(newToken.accessToken);
 
       final loggedInUserBox = Hive.box<LoggedInUser>('logged_in_user');
       loggedInUserBox.put("logged_in_user", userData);
