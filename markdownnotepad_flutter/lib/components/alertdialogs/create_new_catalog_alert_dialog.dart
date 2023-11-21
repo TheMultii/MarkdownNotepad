@@ -145,9 +145,7 @@ class _CreateNewCatalogAlertDialogState
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => navigatorPop(),
           child: const Text("Anuluj"),
         ),
         TextButton(
