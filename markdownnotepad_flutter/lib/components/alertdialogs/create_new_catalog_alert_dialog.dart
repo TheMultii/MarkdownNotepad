@@ -71,14 +71,12 @@ class _CreateNewCatalogAlertDialogState
       final GetAllCatalogsResponseModel? cat = await apiService.getCatalogs(
         "Bearer ${loggedInUser!.accessToken}",
       );
+
       if (cat != null) {
-        for (final c in cat.catalogs) {
-          debugPrint(c.title);
-        }
+        final newUser = loggedInUser;
+        newUser!.user.catalogs = cat.catalogs;
+        loggedInUserProvider.setCurrentUser(newUser);
       }
-      final newUser = loggedInUser;
-      newUser!.user.catalogs = cat!.catalogs;
-      loggedInUserProvider.setCurrentUser(newUser);
 
       final String destination = "/dashboard/directory/${resp.catalog.id}";
 
