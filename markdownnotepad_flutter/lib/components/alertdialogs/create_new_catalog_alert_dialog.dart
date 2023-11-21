@@ -124,9 +124,8 @@ class _CreateNewCatalogAlertDialogState
                   )
                 : TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      return MDNValidator.validateCatalogName(value);
-                    },
+                    validator: (value) =>
+                        MDNValidator.validateCatalogName(value),
                     onChanged: (value) {
                       setState(() {
                         isFieldValid =
