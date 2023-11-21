@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_highlight/themes/a11y-dark.dart';
 import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:highlight/languages/markdown.dart';
@@ -28,6 +27,7 @@ import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 class EditorPage extends StatefulWidget {
@@ -398,7 +398,7 @@ class _EditorPageState extends State<EditorPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     EditorDesktopChangeTab(
-                      icon: FeatherIcons.penTool,
+                      icon: Symbols.edit,
                       text: 'Tryb MD',
                       tab: EditorTabs.editor,
                       currentTab: selectedTab,
@@ -408,7 +408,7 @@ class _EditorPageState extends State<EditorPage> {
                       height: 16,
                     ),
                     EditorDesktopChangeTab(
-                      icon: FeatherIcons.eye,
+                      icon: Symbols.visibility,
                       text: 'Tryb Visual',
                       tab: EditorTabs.visual,
                       currentTab: selectedTab,
