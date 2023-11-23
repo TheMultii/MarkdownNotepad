@@ -54,6 +54,7 @@ class _EditorPageState extends State<EditorPage> {
     language: markdown,
   );
   final FocusNode fNode = FocusNode();
+  final NotifyToast notifyToast = NotifyToast();
 
   EditorTabs selectedTab = EditorTabs.editor;
   bool isEditorSidebarEnabled = true;
@@ -287,6 +288,52 @@ class _EditorPageState extends State<EditorPage> {
   }
 
   Future<void> deleteNote() async {
+    if (note == null) {
+      notifyToast.show(
+        context: context,
+        child: const ErrorNotifyToast(
+          title: "Wystąpił błąd",
+          body: "Nie można usunąć notatki.",
+        ),
+      );
+    }
+
+    try {
+      final resp = await apiService.deleteNote(
+        note!.id,
+        authorizationString,
+      );
+
+      if (resp == null) {
+        notifyToast.show(
+          context: context,
+          child: const ErrorNotifyToast(
+            title: "Wystąpił błąd",
+            body: "Wystąpił błąd podczas usuwania notatki.",
+          ),
+        );
+        return;
+      }
+
+      final newUser = loggedInUser;
+      newUser!.user.notes?.removeWhere(
+        (element) => element.id == note!.id,
+      );
+      newUser.user.catalogs?.forEach((catalog) {
+        catalog.notes?.removeWhere((element) => element.id == note!.id);
+      });
+      loggedInUserProvider.setCurrentUser(newUser);
+      Modular.to.navigate("/dashboard/");
+    } catch (e) {
+      notifyToast.show(
+        context: context,
+        child: const ErrorNotifyToast(
+          title: "Wystąpił błąd",
+          body: "Wystąpił błąd podczas usuwania notatki.",
+        ),
+      );
+      debugPrint(e.toString());
+    }
   }
 
   @override
