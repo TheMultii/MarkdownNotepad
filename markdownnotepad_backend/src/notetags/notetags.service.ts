@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { NoteTag as NoteTagModel, NoteTagInclude } from './notetags.model';
-import { Note, NoteTag } from '@prisma/client';
+import { NoteTag } from '@prisma/client';
 
 @Injectable()
 export class NoteTagsService {
@@ -61,46 +61,6 @@ export class NoteTagsService {
   }
 
   async deleteNoteTagById(id: string): Promise<NoteTag> {
-    const notes: Note[] = await this.prisma.note.findMany({
-      where: {
-        tags: {
-          some: {
-            id,
-          },
-        },
-      },
-    });
-
-    if (notes.length > 0) {
-      for (const note of notes) {
-        await this.prisma.note.update({
-          where: {
-            id: note.id,
-          },
-          data: {
-            tags: {
-              disconnect: {
-                id,
-              },
-            },
-          },
-        });
-      }
-
-      await this.prisma.user.update({
-        where: {
-          id: notes[0].authorId,
-        },
-        data: {
-          tags: {
-            disconnect: {
-              id,
-            },
-          },
-        },
-      });
-    }
-
     return await this.prisma.noteTag.delete({
       where: {
         id,
