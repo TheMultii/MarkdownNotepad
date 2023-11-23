@@ -73,35 +73,6 @@ export class NotesService {
   }
 
   async deleteNoteById(id: string): Promise<Note> {
-    const authorId = (await this.prisma.note.findUnique({ where: { id } }))
-      .authorId;
-
-    await this.prisma.user.update({
-      where: {
-        id: authorId,
-      },
-      data: {
-        notes: {
-          disconnect: {
-            id,
-          },
-        },
-      },
-    });
-
-    await this.prisma.catalog.update({
-      where: {
-        id: authorId,
-      },
-      data: {
-        notes: {
-          disconnect: {
-            id,
-          },
-        },
-      },
-    });
-
     return await this.prisma.note.delete({
       where: {
         id,
