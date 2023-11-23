@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/enums/extension_status.dart';
 import 'package:markdownnotepad/mdn.app.dart';
 import 'package:markdownnotepad/models/catalog.dart';
+import 'package:markdownnotepad/models/catalog_simple.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/models/note_simple.dart';
 import 'package:markdownnotepad/models/notetag.dart';
@@ -29,6 +30,7 @@ void main() async {
   Hive.registerAdapter(NoteSimpleAdapter());
   Hive.registerAdapter(NoteTagAdapter());
   Hive.registerAdapter(CatalogAdapter());
+  Hive.registerAdapter(CatalogSimpleAdapter());
   Hive.registerAdapter(LoggedInUserAdapter());
   Hive.registerAdapter(ExtensionStatusAdapter());
   Hive.registerAdapter(MDNExtensionAdapter());
