@@ -26,7 +26,7 @@ class NoteAdapter extends TypeAdapter<Note> {
       localNotePassword: fields[6] as String?,
       tags: (fields[7] as List?)?.cast<NoteTag>(),
       user: fields[8] as User?,
-      folder: fields[9] as Catalog?,
+      folder: fields[9] as CatalogSimple?,
     );
   }
 
@@ -81,7 +81,7 @@ Note _$NoteFromJson(Map<String, dynamic> json) => Note(
       localNotePassword: json['localNotePassword'] as String?,
       tags: NoteTag.noteTagsFromJson(json['tags'] as List),
       user: User.userFromJson(json['user'] as Map<String, dynamic>?),
-      folder: Catalog.catalogOptionalFromJson(
+      folder: CatalogSimple.catalogOptionalFromJson(
           json['folder'] as Map<String, dynamic>?),
     );
 
@@ -95,5 +95,5 @@ Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
       'localNotePassword': instance.localNotePassword,
       'tags': NoteTag.noteTagsToJson(instance.tags),
       'user': User.userToJson(instance.user),
-      'folder': Catalog.catalogOptionalToJson(instance.folder),
+      'folder': CatalogSimple.catalogOptionalToJson(instance.folder),
     };

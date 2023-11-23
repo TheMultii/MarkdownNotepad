@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:markdownnotepad/models/catalog.dart';
+import 'package:markdownnotepad/models/catalog_simple.dart';
 import 'package:markdownnotepad/models/notetag.dart';
 import 'package:markdownnotepad/models/user.dart';
 
@@ -39,11 +39,11 @@ class Note extends HiveObject {
   User? user;
   @HiveField(9)
   @JsonKey(
-    toJson: Catalog.catalogOptionalToJson,
-    fromJson: Catalog.catalogOptionalFromJson,
+    toJson: CatalogSimple.catalogOptionalToJson,
+    fromJson: CatalogSimple.catalogOptionalFromJson,
     defaultValue: null,
   )
-  Catalog? folder;
+  CatalogSimple? folder;
 
   Note({
     required this.id,
