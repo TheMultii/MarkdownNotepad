@@ -273,21 +273,25 @@ export class NotesController {
       const note = new NoteModel();
       if (noteDto.title) note.title = noteDto.title;
       if (noteDto.content) note.content = noteDto.content;
-      if (noteDto.folderId) {
-        const f = await this.prismaService.catalog.findUnique({
-          where: {
-            id: noteDto.folderId,
-          },
-        });
-        if (!f) {
-          return response.status(404).json({ message: 'Folder not found' });
-        }
+      if (noteDto.folderId != null) {
+        if (noteDto.folderId.length > 0) {
+          const f = await this.prismaService.catalog.findUnique({
+            where: {
+              id: noteDto.folderId,
+            },
+          });
+          if (!f) {
+            return response.status(404).json({ message: 'Folder not found' });
+          }
 
-        note.folder = {
-          connect: {
-            id: noteDto.folderId,
-          },
-        };
+          note.folder = {
+            connect: {
+              id: noteDto.folderId,
+            },
+          };
+        } else {
+          await this.notesService.disconnectFolder(request.params.id);
+        }
       }
       if (noteDto.tags) {
         noteDto.tags.forEach(async (tag) => {
