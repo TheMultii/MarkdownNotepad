@@ -79,4 +79,15 @@ export class NotesService {
       },
     });
   }
+
+  async disconnectFolder(id: string): Promise<Note> {
+    return await this.prisma.note.update({
+      where: {
+        id,
+      },
+      data: {
+        folderId: null,
+      },
+    });
+  }
 }
