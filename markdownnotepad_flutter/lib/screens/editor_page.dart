@@ -48,6 +48,7 @@ class _EditorPageState extends State<EditorPage> {
   late LoggedInUser? loggedInUser;
   late MDNApiService apiService;
   late MDNDiscordRPC mdnDiscordRPC;
+  late String authorizationString;
 
   final CodeController controller = CodeController(
     language: markdown,
@@ -74,6 +75,8 @@ class _EditorPageState extends State<EditorPage> {
     }
 
     apiService = context.read<ApiServiceProvider>().apiService;
+
+    authorizationString = "Bearer ${loggedInUser!.accessToken}";
 
     noteTitle = Modular.args.data?['noteTitle'] as String? ?? '';
     // controller.text += '\n\n## ${widget.id}';
@@ -140,7 +143,7 @@ class _EditorPageState extends State<EditorPage> {
       final resp = await apiService.patchNote(
         widget.id,
         body,
-        "Bearer ${loggedInUser!.accessToken}",
+        authorizationString,
       );
 
       if (resp != null && mounted) {
@@ -191,8 +194,8 @@ class _EditorPageState extends State<EditorPage> {
 
   Future<void> getInitialData() async {
     try {
-      GetNoteResponseModel? gnrm = await apiService.getNote(
-          widget.id, "Bearer ${loggedInUser!.accessToken}");
+      GetNoteResponseModel? gnrm =
+          await apiService.getNote(widget.id, authorizationString);
 
       await Future.delayed(1.seconds); // TODO: Remove this
 
