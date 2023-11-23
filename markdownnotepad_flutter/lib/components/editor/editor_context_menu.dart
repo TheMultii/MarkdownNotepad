@@ -11,6 +11,7 @@ List<ContextMenuEntry> getEditorContextMenu({
   required bool isLiveShareEnabled,
   required VoidCallback toggleLiveShare,
   required VoidCallback changeNoteName,
+  required VoidCallback deleteNote,
 }) {
   return [
     const MenuHeader(text: "Opcje"),
@@ -69,7 +70,7 @@ List<ContextMenuEntry> getEditorContextMenu({
     MenuItem(
       label: "Usuń",
       icon: Icons.delete,
-      onSelected: () {},
+      onSelected: () => deleteNote(),
     ),
   ];
 }

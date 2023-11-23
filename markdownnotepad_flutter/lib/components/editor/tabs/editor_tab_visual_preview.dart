@@ -14,6 +14,7 @@ class EditorTabVisualPreview extends StatefulWidget {
   final String textToRender;
   final bool isLiveShareEnabled;
   final VoidCallback toggleLiveShare;
+  final VoidCallback deleteNote;
 
   const EditorTabVisualPreview({
     super.key,
@@ -23,6 +24,7 @@ class EditorTabVisualPreview extends StatefulWidget {
     required this.textToRender,
     required this.isLiveShareEnabled,
     required this.toggleLiveShare,
+    required this.deleteNote,
   });
 
   @override
@@ -52,6 +54,7 @@ class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
             textToRender: widget.textToRender,
             isLiveShareEnabled: widget.isLiveShareEnabled,
             toggleLiveShare: widget.toggleLiveShare,
+            deleteNote: widget.deleteNote,
             changeNoteName: () => FocusScope.of(context).requestFocus(
               noteTitleFocusNode,
             ),

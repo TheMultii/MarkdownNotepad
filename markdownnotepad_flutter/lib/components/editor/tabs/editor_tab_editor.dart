@@ -23,6 +23,7 @@ class EditorTabEditor extends StatefulWidget {
   final VoidCallback toggleLiveShare;
   final Function(String)? onNoteTitleChanged;
   final Function(String)? onNoteContentChanged;
+  final VoidCallback deleteNote;
 
   const EditorTabEditor({
     super.key,
@@ -37,6 +38,7 @@ class EditorTabEditor extends StatefulWidget {
     required this.isEditorSidebarEnabled,
     required this.isLiveShareEnabled,
     required this.toggleLiveShare,
+    required this.deleteNote,
     this.onNoteTitleChanged,
     this.onNoteContentChanged,
   });
@@ -71,6 +73,7 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
               noteID: widget.noteID,
               textToRender: widget.controller.text,
               isLiveShareEnabled: widget.isLiveShareEnabled,
+              deleteNote: widget.deleteNote,
               toggleLiveShare: widget.toggleLiveShare,
               changeNoteName: () => FocusScope.of(context).requestFocus(
                 noteTitleFocusNode,

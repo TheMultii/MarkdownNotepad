@@ -283,6 +283,9 @@ class _EditorPageState extends State<EditorPage> {
     });
   }
 
+  Future<void> deleteNote() async {
+  }
+
   @override
   Widget build(BuildContext context) {
     const double sidebarWidth = 85;
@@ -341,6 +344,7 @@ class _EditorPageState extends State<EditorPage> {
                                     isEditorSidebarEnabled,
                             isLiveShareEnabled: isLiveShareEnabled,
                             toggleLiveShare: toggleLiveShare,
+                            deleteNote: deleteNote,
                             onNoteTitleChanged: (newTitle) async {
                               if (MDNValidator.validateNoteTitle(newTitle) !=
                                   null) return;
@@ -378,6 +382,7 @@ class _EditorPageState extends State<EditorPage> {
                             textToRender: controller.fullText,
                             isLiveShareEnabled: isLiveShareEnabled,
                             toggleLiveShare: toggleLiveShare,
+                            deleteNote: deleteNote,
                             noteTitle: noteTitle,
                             noteID: widget.id,
                             note: note!,
