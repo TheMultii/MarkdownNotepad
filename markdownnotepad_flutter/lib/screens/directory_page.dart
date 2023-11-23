@@ -183,6 +183,13 @@ class _DirectoryPageState extends State<DirectoryPage> {
       loggedInUserProvider.setCurrentUser(newUser);
       Modular.to.navigate("/dashboard/");
     } catch (e) {
+      notifyToast.show(
+        context: context,
+        child: const ErrorNotifyToast(
+          title: "Wystąpił błąd",
+          body: "Wystąpił błąd podczas usuwania katalogu.",
+        ),
+      );
       debugPrint(e.toString());
     }
   }
