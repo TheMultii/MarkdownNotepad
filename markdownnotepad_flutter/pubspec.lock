@@ -307,7 +307,7 @@ packages:
     source: git
     version: "0.0.3"
   dart_eval:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: dart_eval
       sha256: c3ef388d9846ed032fa0cf0a69acae40d4c15ad7ad570ac3a37fa060de93c8ec

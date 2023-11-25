@@ -56,6 +56,7 @@ dependencies:
     file_selector: ^1.0.1
     material_symbols_icons: ^4.2711.0
     skeletonizer: ^0.8.0
+    dart_eval: ^0.7.2
 
 dev_dependencies:
     flutter_test:
