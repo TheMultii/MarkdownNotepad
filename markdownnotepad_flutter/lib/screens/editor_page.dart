@@ -348,6 +348,13 @@ class _EditorPageState extends State<EditorPage> {
     }
   }
 
+  Future<void> assignCatalog(String catalogID) async {
+    await patchNoteContentToServer(
+      newCatalog: catalogID,
+      forceUpdate: false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     const double sidebarWidth = 85;
