@@ -16,10 +16,7 @@ dependencies:
     hive_flutter: ^1.1.0
     eval_annotation: ^0.7.0
     flutter_eval: ^0.7.1
-    cached_network_image:
-        git:
-            url: https://github.com/prashantsolankispaceo/cached_network_image.git
-            path: cached_network_image
+    cached_network_image: ^3.3.0
     dart_discord_rpc:
         git:
             url: "https://gitlab.mganczarczyk.pl/TheMultii/dart_discord_rpc"

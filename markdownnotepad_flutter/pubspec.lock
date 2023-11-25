@@ -148,29 +148,26 @@ packages:
   cached_network_image:
     dependency: "direct main"
     description:
-      path: cached_network_image
-      ref: HEAD
-      resolved-ref: e8165995b8c24ef57d41e45f4330c7f03fb8fc57
-      url: "https://github.com/prashantsolankispaceo/cached_network_image.git"
-    source: git
-    version: "3.0.0"
+      name: cached_network_image
+      sha256: f98972704692ba679db144261172a8e20feb145636c617af0eb4022132a6797f
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.0"
   cached_network_image_platform_interface:
     dependency: transitive
     description:
-      path: cached_network_image_platform_interface
-      ref: HEAD
-      resolved-ref: e8165995b8c24ef57d41e45f4330c7f03fb8fc57
-      url: "https://github.com/prashantsolankispaceo/cached_network_image.git"
-    source: git
-    version: "2.1.0"
+      name: cached_network_image_platform_interface
+      sha256: "56aa42a7a01e3c9db8456d9f3f999931f1e05535b5a424271e9a38cabf066613"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   cached_network_image_web:
     dependency: transitive
     description:
-      path: cached_network_image_web
-      ref: HEAD
-      resolved-ref: e8165995b8c24ef57d41e45f4330c7f03fb8fc57
-      url: "https://github.com/prashantsolankispaceo/cached_network_image.git"
-    source: git
+      name: cached_network_image_web
+      sha256: "759b9a9f8f6ccbb66c185df805fac107f05730b1dab9c64626d1008cca532257"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.1.0"
   change_app_package_name:
     dependency: "direct main"
