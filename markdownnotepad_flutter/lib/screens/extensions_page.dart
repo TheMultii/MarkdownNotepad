@@ -126,13 +126,13 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
               const SizedBox(height: 32),
               ValueListenableBuilder(
                   valueListenable:
-                      Hive.box<ImportedExtensions>('loaded_extensions')
+                      Hive.box<ImportedExtensions>('imported_extensions')
                           .listenable(
-                    keys: ['loaded_extensions'],
+                    keys: ['imported_extensions'],
                   ),
                   builder: (BuildContext ctx, Box box, Widget? child) {
                     final List<MDNExtension> importedExtensions = (box.get(
-                      'loaded_extensions',
+                      'imported_extensions',
                       defaultValue: ImportedExtensions(
                         extensions: [],
                       ),
