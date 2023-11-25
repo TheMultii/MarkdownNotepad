@@ -21,14 +21,15 @@ class MDNExtensionAdapter extends TypeAdapter<MDNExtension> {
       version: fields[1] as String,
       author: fields[2] as String,
       status: fields[3] as ExtensionStatus,
-      content: fields[4] as String,
+      activator: fields[4] as String,
+      content: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, MDNExtension obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -38,6 +39,8 @@ class MDNExtensionAdapter extends TypeAdapter<MDNExtension> {
       ..writeByte(3)
       ..write(obj.status)
       ..writeByte(4)
+      ..write(obj.activator)
+      ..writeByte(5)
       ..write(obj.content);
   }
 
@@ -51,3 +54,32 @@ class MDNExtensionAdapter extends TypeAdapter<MDNExtension> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+MDNExtension _$MDNExtensionFromJson(Map<String, dynamic> json) => MDNExtension(
+      title: json['title'] as String,
+      version: json['version'] as String,
+      author: json['author'] as String,
+      status: $enumDecode(_$ExtensionStatusEnumMap, json['status']),
+      activator: json['activator'] as String,
+      content: json['content'] as String,
+    );
+
+Map<String, dynamic> _$MDNExtensionToJson(MDNExtension instance) =>
+    <String, dynamic>{
+      'title': instance.title,
+      'version': instance.version,
+      'author': instance.author,
+      'status': _$ExtensionStatusEnumMap[instance.status]!,
+      'activator': instance.activator,
+      'content': instance.content,
+    };
+
+const _$ExtensionStatusEnumMap = {
+  ExtensionStatus.active: 'active',
+  ExtensionStatus.inactive: 'inactive',
+  ExtensionStatus.invalid: 'invalid',
+};
