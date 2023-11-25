@@ -9,7 +9,6 @@
 #include <dart_discord_rpc/dart_discord_rpc_plugin.h>
 #include <file_selector_windows/file_selector_windows.h>
 #include <url_launcher_windows/url_launcher_windows.h>
-#include <windows_taskbar/windows_taskbar_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   DartDiscordRpcPluginRegisterWithRegistrar(
@@ -18,6 +17,4 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("FileSelectorWindows"));
   UrlLauncherWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("UrlLauncherWindows"));
-  WindowsTaskbarPluginRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("WindowsTaskbarPlugin"));
 }
