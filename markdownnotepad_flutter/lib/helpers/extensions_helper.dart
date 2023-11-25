@@ -44,5 +44,16 @@ class ExtensionsHelper {
   static Future<bool> validateExtension(MDNExtension extension) async {
     return true;
   }
+
+  static Future<bool> saveExtension(MDNExtension extension) async {
+    return true;
+  }
+
+  static Future<bool> patchExtension(MDNExtension extension) async {
+    return true;
+  }
+
+  static Future<bool> removeExtension(MDNExtension extension) async {
+    return true;
   }
 }
