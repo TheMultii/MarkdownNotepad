@@ -1303,14 +1303,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
-  touchable_opacity:
-    dependency: "direct main"
-    description:
-      name: touchable_opacity
-      sha256: b3c9869c1e2f8b6fed597b3ca6a8ed68d409b8e161e56723e7ccab8ccf99a141
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
   tuple:
     dependency: transitive
     description:

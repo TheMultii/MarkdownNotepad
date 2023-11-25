@@ -31,7 +31,6 @@ dependencies:
     retrofit: ^4.0.3
     json_annotation: ^4.8.1
     dio: ^5.3.3
-    touchable_opacity: ^1.2.0
     intl: ^0.18.1
     back_button_interceptor: ^7.0.0
     cron: ^0.5.1
