@@ -265,10 +265,10 @@ class _EditorPageState extends State<EditorPage> {
       });
       loggedInUserProvider.setCurrentUser(newUser);
     } on DioException catch (e) {
-      Modular.to.navigate('/dashboard');
+      Modular.to.navigate('/dashboard/');
       debugPrint(e.toString());
     } catch (e) {
-      Modular.to.navigate('/dashboard');
+      Modular.to.navigate('/dashboard/');
       debugPrint(e.toString());
     }
   }
