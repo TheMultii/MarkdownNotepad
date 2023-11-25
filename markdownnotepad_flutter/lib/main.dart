@@ -38,6 +38,7 @@ void main() async {
   Hive.registerAdapter(UserSimpleAdapter());
   await Hive.openBox<ServerSettings>('server_settings');
   await Hive.openBox<LoggedInUser>('logged_in_user');
+  await Hive.openBox<ImportedExtensions>('loaded_extensions');
 
   setPathUrlStrategy();
   runApp(
