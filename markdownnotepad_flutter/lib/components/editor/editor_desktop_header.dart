@@ -175,13 +175,6 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
               ),
             ],
           ),
-          // const Divider(),
-          // const Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          //   children: [],
-          // ),
-          // const Divider(),
         ],
       ),
     );
