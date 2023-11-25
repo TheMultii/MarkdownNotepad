@@ -121,6 +121,7 @@ class _EditorPageState extends State<EditorPage> {
     required bool forceUpdate,
     String? newTitle,
     String? newContent,
+    String? newCatalog,
   }) async {
     if (note == null) return false;
 
@@ -139,7 +140,13 @@ class _EditorPageState extends State<EditorPage> {
         body.content = note!.content;
       }
 
-      if (body.title == null && body.content == null) return false;
+      if (newCatalog != null) {
+        body.folderId = newCatalog;
+      }
+
+      if (body.title == null && body.content == null && body.folderId == null) {
+        return false;
+      }
 
       final resp = await apiService.patchNote(
         widget.id,
@@ -153,6 +160,13 @@ class _EditorPageState extends State<EditorPage> {
         n.content = resp.note.content ?? '';
         n.updatedAt = resp.note.updatedAt;
         n.createdAt = resp.note.createdAt;
+        if (body.folderId != null) {
+          GetNoteResponseModel? gnrm =
+              await apiService.getNote(widget.id, authorizationString);
+          if (gnrm != null) {
+            n = gnrm.note;
+          }
+        }
 
         saveNoteToCache(n);
 
