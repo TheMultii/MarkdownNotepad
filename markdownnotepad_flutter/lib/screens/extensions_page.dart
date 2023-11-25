@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/components/extensions/extension_list_item.dart';
+import 'package:markdownnotepad/components/notifications/error_notify_toast.dart';
+import 'package:markdownnotepad/components/notifications/success_notify_toast.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/helpers/extensions_helper.dart';
 import 'package:markdownnotepad/helpers/pluralize_helper.dart';
 import 'package:markdownnotepad/viewmodels/extension.dart';
 import 'package:markdownnotepad/viewmodels/imported_extensions.dart';
+import 'package:markdownnotepad/viewmodels/load_extension.dart';
 
 class ExtensionsPage extends StatefulWidget {
   const ExtensionsPage({super.key});
@@ -15,6 +20,57 @@ class ExtensionsPage extends StatefulWidget {
 }
 
 class _ExtensionsPageState extends State<ExtensionsPage> {
+  final NotifyToast notifyToast = NotifyToast();
+
+  void loadExtension() async {
+    final MDNLoadExtension? mdnLoadExtension =
+        await ExtensionsHelper.loadExtension();
+    if (mdnLoadExtension == null) {
+      notifyToast.show(
+        context: context,
+        child: const ErrorNotifyToast(
+          title: "Wybrano nieprawidłowy plik",
+        ),
+      );
+      return;
+    }
+
+    final bool validated =
+        await ExtensionsHelper.validateLoadExtension(mdnLoadExtension);
+    if (!validated) {
+      notifyToast.show(
+        context: context,
+        child: const ErrorNotifyToast(
+          title: "Wybrano nieprawidłowe rozszerzenie",
+        ),
+      );
+      return;
+    }
+
+    final MDNExtension extension = MDNExtension.fromJson(
+      {
+        "status": "active",
+        ...mdnLoadExtension.toJson(),
+      },
+    );
+
+    final bool saved = await ExtensionsHelper.saveExtension(extension);
+    if (!saved) {
+      notifyToast.show(
+        context: context,
+        child: const ErrorNotifyToast(
+          title: "Nie udało się zaimportować rozszerzenia",
+        ),
+      );
+    }
+
+    notifyToast.show(
+      context: context,
+      child: const SuccessNotifyToast(
+        title: "Zaimportowano rozszerzenie",
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +98,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => ExtensionsHelper.loadExtension(),
+                    onTap: () => loadExtension(),
                     borderRadius: BorderRadius.circular(4),
                     child: const Padding(
                         padding: EdgeInsets.all(4.0),
