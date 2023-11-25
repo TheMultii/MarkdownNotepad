@@ -133,7 +133,7 @@ class Validator {
 }
 
 class ValidatorNumber extends Validator {
-  ValidatorNumber(String? value) : super(value);
+  ValidatorNumber(super.value);
 
   ValidatorNumber between(int min, int max, {required String errMsg}) {
     if (errorMessage != null) return this;
