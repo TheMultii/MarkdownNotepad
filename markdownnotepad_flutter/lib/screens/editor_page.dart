@@ -198,8 +198,6 @@ class _EditorPageState extends State<EditorPage> {
       GetNoteResponseModel? gnrm =
           await apiService.getNote(widget.id, authorizationString);
 
-      await Future.delayed(1.seconds); // TODO: Remove this
-
       if (!mounted) return;
 
       if (gnrm != null) {
