@@ -36,5 +36,13 @@ class ExtensionsHelper {
     }
     return null;
   }
+
+  static Future<bool> validateLoadExtension(MDNLoadExtension extension) async {
+    return true;
+  }
+
+  static Future<bool> validateExtension(MDNExtension extension) async {
+    return true;
+  }
   }
 }
