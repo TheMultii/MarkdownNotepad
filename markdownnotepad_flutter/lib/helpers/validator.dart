@@ -148,7 +148,7 @@ class ValidatorNumber extends Validator {
 }
 
 class ValidatorString extends Validator {
-  ValidatorString(String? value) : super(value);
+  ValidatorString(super.value);
 
   ValidatorString isNotEmpty({required String errMsg}) {
     if (errorMessage != null) return this;
