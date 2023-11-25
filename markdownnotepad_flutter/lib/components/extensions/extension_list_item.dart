@@ -3,15 +3,14 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdownnotepad/components/extensions/extension_status_chip.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/viewmodels/extension.dart';
 
 class ExtensionListItem extends StatelessWidget {
-  final List<Map<String, dynamic>> loadedExtensions;
-  final int index;
+  final MDNExtension loadedExtension;
 
   const ExtensionListItem({
     super.key,
-    required this.loadedExtensions,
-    required this.index,
+    required this.loadedExtension,
   });
 
   @override
@@ -52,7 +51,7 @@ class ExtensionListItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          loadedExtensions[index]["name"],
+                          loadedExtension.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
@@ -60,7 +59,7 @@ class ExtensionListItem extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "${loadedExtensions[index]["author"]} ・ ${loadedExtensions[index]["version"]}",
+                          "${loadedExtension.author} ・ ${loadedExtension.version}",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
@@ -83,7 +82,7 @@ class ExtensionListItem extends StatelessWidget {
             Row(
               children: [
                 ExtensionStatusChip(
-                  status: loadedExtensions[index]["status"],
+                  status: loadedExtension.status,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
