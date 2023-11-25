@@ -1,29 +1,39 @@
+import 'dart:convert';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:markdownnotepad/helpers/bytes_converter.dart';
+import 'package:markdownnotepad/viewmodels/extension.dart';
+import 'package:markdownnotepad/viewmodels/load_extension.dart';
 
 class ExtensionsHelper {
-  static void loadExtension() async {
+  static Future<MDNLoadExtension?> loadExtension() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['dart'],
+        allowedExtensions: ['json'],
         allowMultiple: false,
       );
 
       if (result == null) {
         debugPrint("User canceled the file picker");
-        return;
+        return null;
       }
 
       PlatformFile file = result.files.first;
-      debugPrint("File Name: ${file.name}");
-      debugPrint(
-        "File Size: ${file.size} bytes | ${BytesConverter.bytesToSize(file.size)}",
+      if (file.bytes == null) return null;
+
+      final String fileString = String.fromCharCodes(file.bytes!);
+      var decodedJson = jsonDecode(fileString);
+
+      MDNLoadExtension loadedExtension = MDNLoadExtension.fromJson(
+        decodedJson,
       );
-      debugPrint("File Path: ${file.path}");
+
+      return loadedExtension;
     } catch (e) {
       debugPrint("Error picking the file: $e");
     }
+    return null;
+  }
   }
 }
