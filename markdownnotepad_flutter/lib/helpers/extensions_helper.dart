@@ -12,6 +12,7 @@ class ExtensionsHelper {
         type: FileType.custom,
         allowedExtensions: ['json'],
         allowMultiple: false,
+        withData: true,
       );
 
       if (result == null) {
