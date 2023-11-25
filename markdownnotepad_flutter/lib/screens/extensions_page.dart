@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:markdownnotepad/components/extensions/extension_list_item.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
-import 'package:markdownnotepad/enums/extension_status.dart';
 import 'package:markdownnotepad/helpers/extensions_helper.dart';
 import 'package:markdownnotepad/helpers/pluralize_helper.dart';
+import 'package:markdownnotepad/viewmodels/extension.dart';
+import 'package:markdownnotepad/viewmodels/imported_extensions.dart';
 
 class ExtensionsPage extends StatefulWidget {
   const ExtensionsPage({super.key});
@@ -14,26 +15,6 @@ class ExtensionsPage extends StatefulWidget {
 }
 
 class _ExtensionsPageState extends State<ExtensionsPage> {
-  final List<Map<String, dynamic>> loadedExtensions = [
-    {
-      "name": "Ex 1",
-      "author": "Marcel Gańczarczyk",
-      "version": "1.1.0",
-      "status": ExtensionStatus.active,
-    },
-    {
-      "name": "Ex 2",
-      "author": "Marcel Gańczarczyk",
-      "version": "1.2.0",
-      "status": ExtensionStatus.inactive,
-    },
-    {
-      "name": "Ex 3",
-      "author": "Marcel Gańczarczyk",
-      "version": "1.3.0",
-      "status": ExtensionStatus.invalid,
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -87,49 +68,65 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
                 ],
               ),
               const SizedBox(height: 32),
-              if (loadedExtensions.isNotEmpty)
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: ListView.separated(
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return ExtensionListItem(
-                              loadedExtensions: loadedExtensions,
-                              index: index,
-                            );
-                          },
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 12),
-                          itemCount: loadedExtensions.length),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "Załadowano ${loadedExtensions.length} ${Pluralize.pluralizeExtensions(loadedExtensions.length)}",
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w300,
-                          color: Theme.of(context)
-                              .extension<MarkdownNotepadTheme>()
-                              ?.text
-                              ?.withOpacity(0.5),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              else
-                const Center(
-                  child: Text(
-                    "Nie znaleziono żadnych rozszerzeń",
-                    textAlign: TextAlign.center,
+              ValueListenableBuilder(
+                  valueListenable:
+                      Hive.box<ImportedExtensions>('loaded_extensions')
+                          .listenable(
+                    keys: ['loaded_extensions'],
                   ),
-                ),
+                  builder: (BuildContext ctx, Box box, Widget? child) {
+                    final List<MDNExtension> importedExtensions = (box.get(
+                      'loaded_extensions',
+                      defaultValue: ImportedExtensions(
+                        extensions: [],
+                      ),
+                    ) as ImportedExtensions)
+                        .extensions;
+
+                    if (importedExtensions.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          "Nie znaleziono żadnych rozszerzeń",
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }
+
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: ListView.separated(
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return ExtensionListItem(
+                                  loadedExtension: importedExtensions[index],
+                                );
+                              },
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 12),
+                              itemCount: importedExtensions.length),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "Załadowano ${importedExtensions.length} ${Pluralize.pluralizeExtensions(importedExtensions.length)}",
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w300,
+                              color: Theme.of(context)
+                                  .extension<MarkdownNotepadTheme>()
+                                  ?.text
+                                  ?.withOpacity(0.5),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
             ],
           ),
         ),
