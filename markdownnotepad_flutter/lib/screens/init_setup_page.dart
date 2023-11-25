@@ -295,73 +295,68 @@ class _InitSetupPageState extends State<InitSetupPage> {
                                       ? availableHosts!.sublist(0, 10)
                                       : availableHosts!)
                                   .mapIndexed(
-                                    (index, host) => Container(
-                                      margin: EdgeInsets.only(
-                                        top: index == 0 ? 8 : 0,
-                                        bottom:
-                                            index == availableHosts!.length - 1
-                                                ? 0
-                                                : 8,
+                                (index, host) => Container(
+                                  margin: EdgeInsets.only(
+                                    top: index == 0 ? 8 : 0,
+                                    bottom: index == availableHosts!.length - 1
+                                        ? 0
+                                        : 8,
+                                  ),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedHost =
+                                            selectedHost == host ? null : host;
+                                        selectedAddress = selectedHost
+                                            ?.internetAddress.address;
+                                        selectedPort = customServerPort.isEmpty
+                                            ? "3000"
+                                            : customServerPort;
+                                        hasSuccessfullyConnectedToHost =
+                                            selectedHost != null;
+                                        customServerError = "";
+                                      });
+                                    },
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 2.0,
+                                        horizontal: 8.0,
                                       ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedHost = selectedHost == host
-                                                ? null
-                                                : host;
-                                            selectedAddress = selectedHost
-                                                ?.internetAddress.address;
-                                            selectedPort =
-                                                customServerPort.isEmpty
-                                                    ? "3000"
-                                                    : customServerPort;
-                                            hasSuccessfullyConnectedToHost =
-                                                selectedHost != null;
-                                            customServerError = "";
-                                          });
-                                        },
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 2.0,
-                                            horizontal: 8.0,
-                                          ),
-                                          child: Text.rich(TextSpan(children: [
-                                            if (selectedHost
-                                                    ?.internetAddress.address ==
-                                                host.internetAddress.address)
-                                              const WidgetSpan(
-                                                alignment: PlaceholderAlignment
-                                                    .baseline,
-                                                baseline:
-                                                    TextBaseline.ideographic,
-                                                child: Baseline(
-                                                  baseline: 10,
-                                                  baselineType:
-                                                      TextBaseline.ideographic,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                      right: 6.0,
-                                                    ),
-                                                    child: Icon(
-                                                      Icons.check,
-                                                      size: 16,
-                                                      color: Colors.green,
-                                                    ),
-                                                  ),
+                                      child: Text.rich(TextSpan(children: [
+                                        if (selectedHost
+                                                ?.internetAddress.address ==
+                                            host.internetAddress.address)
+                                          const WidgetSpan(
+                                            alignment:
+                                                PlaceholderAlignment.baseline,
+                                            baseline: TextBaseline.ideographic,
+                                            child: Baseline(
+                                              baseline: 10,
+                                              baselineType:
+                                                  TextBaseline.ideographic,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                  right: 6.0,
+                                                ),
+                                                child: Icon(
+                                                  Icons.check,
+                                                  size: 16,
+                                                  color: Colors.green,
                                                 ),
                                               ),
-                                            TextSpan(
-                                                text:
-                                                    "${host.internetAddress.address} — ${host.pingTime?.inMilliseconds.toString()}ms")
-                                          ])),
-                                        ),
-                                      ),
-                                    ).animate().fadeIn(
-                                          duration: 150.ms,
-                                        ),
-                                  )
-                                  .toList()
+                                            ),
+                                          ),
+                                        TextSpan(
+                                            text:
+                                                "${host.internetAddress.address} — ${host.pingTime?.inMilliseconds.toString()}ms")
+                                      ])),
+                                    ),
+                                  ),
+                                ).animate().fadeIn(
+                                      duration: 150.ms,
+                                    ),
+                              )
                             ]
                           : kIsWeb
                               ? []
