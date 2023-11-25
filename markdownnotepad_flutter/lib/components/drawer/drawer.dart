@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:markdownnotepad/components/alertdialogs/create_new_catalog_alert_dialog.dart';
 import 'package:markdownnotepad/components/alertdialogs/create_new_note_alert_dialog.dart';
 import 'package:markdownnotepad/components/drawer/drawer_footer.dart';
@@ -122,170 +122,176 @@ class _MDNDrawerState extends State<MDNDrawer> {
                   child: SingleChildScrollView(
                     controller: _scrollController,
                     scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: ElevatedButton.icon(
-                            onPressed: () => onCreateNewNotePressed(context),
-                            icon: Icon(
-                              FeatherIcons.plus,
-                              size: 17,
-                              color: extendedTheme?.text,
-                            ),
-                            label: Text(
-                              "Nowa notatka",
-                              style: TextStyle(
-                                fontSize: 16,
+                    child: LayoutBuilder(builder: (lbcst, lbconstr) {
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        context
+                            .read<DataDrawerProvider>()
+                            .setDrawerWidth(lbconstr.maxWidth);
+                      });
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: ElevatedButton.icon(
+                              onPressed: () => onCreateNewNotePressed(context),
+                              icon: Icon(
+                                FeatherIcons.plus,
+                                size: 17,
                                 color: extendedTheme?.text,
                               ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              elevation: 0,
-                              backgroundColor: Colors.grey.shade900,
-                              foregroundColor: extendedTheme?.drawerBackground,
-                              surfaceTintColor: Theme.of(context).brightness ==
-                                      Brightness.light
-                                  ? Colors.grey.shade900
-                                  : Colors.grey.shade100,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3),
+                              label: Text(
+                                "Nowa notatka",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: extendedTheme?.text,
+                                ),
                               ),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 15,
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                backgroundColor: Colors.grey.shade900,
+                                foregroundColor:
+                                    extendedTheme?.drawerBackground,
+                                surfaceTintColor:
+                                    Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? Colors.grey.shade900
+                                        : Colors.grey.shade100,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 15,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        MDNDrawerItem(
-                          icon: FeatherIcons.pocket,
-                          title: "Dashboard",
-                          isSelected: isTabSelected("/dashboard/"),
-                          onPressed: () {
-                            const String destination = "/dashboard/";
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          MDNDrawerItem(
+                            icon: FeatherIcons.pocket,
+                            title: "Dashboard",
+                            isSelected: isTabSelected("/dashboard/"),
+                            onPressed: () {
+                              const String destination = "/dashboard/";
 
-                            notifier.setCurrentTab(destination);
-                            Modular.to.navigate(
-                              destination,
-                            );
-                          },
-                        ),
-                        MDNDrawerItemSection(
-                          title: "Ostatnie notatki",
-                          icon: Icon(
-                            FeatherIcons.plus,
-                            size: 12,
-                            color: extendedTheme?.text,
+                              notifier.setCurrentTab(destination);
+                              Modular.to.navigate(
+                                destination,
+                              );
+                            },
                           ),
-                          iconClickCallback: () =>
-                              onCreateNewNotePressed(context),
-                        ),
-                        ...notesSorted
-                            .getRange(
-                                0,
-                                notesSorted.length >= 3
-                                    ? 3
-                                    : notesSorted.length)
-                            .map(
-                          (note) {
+                          MDNDrawerItemSection(
+                            title: "Ostatnie notatki",
+                            icon: Icon(
+                              FeatherIcons.plus,
+                              size: 12,
+                              color: extendedTheme?.text,
+                            ),
+                            iconClickCallback: () =>
+                                onCreateNewNotePressed(context),
+                          ),
+                          ...notesSorted
+                              .getRange(
+                                  0,
+                                  notesSorted.length >= 3
+                                      ? 3
+                                      : notesSorted.length)
+                              .map(
+                            (note) {
+                              return MDNDrawerItem(
+                                icon: FeatherIcons.file,
+                                title: note.title,
+                                isSelected: isTabSelected("/editor/${note.id}"),
+                                onPressed: () {
+                                  final String destination =
+                                      "/editor/${note.id}";
+
+                                  notifier.setCurrentTab(destination);
+                                  Modular.to.navigate(
+                                    destination,
+                                    arguments: {
+                                      "noteTitle": note.title,
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                          MDNDrawerItemSection(
+                            title: "Foldery",
+                            icon: Icon(
+                              FeatherIcons.plus,
+                              size: 12,
+                              color: extendedTheme?.text,
+                            ),
+                            iconClickCallback: () =>
+                                onCreateNewCatalogPressed(context),
+                          ),
+                          ...catalogsSorted
+                              .getRange(
+                                  0,
+                                  catalogsSorted.length >= 3
+                                      ? 3
+                                      : catalogsSorted.length)
+                              .map((catalog) {
                             return MDNDrawerItem(
-                              icon: FeatherIcons.file,
-                              title: note.title,
-                              isSelected: isTabSelected("/editor/${note.id}"),
+                              icon: FeatherIcons.folder,
+                              title: catalog.title,
+                              isSelected: isTabSelected(
+                                  "/dashboard/directory/${catalog.id}"),
                               onPressed: () {
-                                final String destination = "/editor/${note.id}";
+                                final String destination =
+                                    "/dashboard/directory/${catalog.id}";
 
                                 notifier.setCurrentTab(destination);
                                 Modular.to.navigate(
                                   destination,
                                   arguments: {
-                                    "noteTitle": note.title,
+                                    "catalogName": catalog.title,
                                   },
                                 );
                               },
                             );
-                          },
-                        ),
-                        MDNDrawerItemSection(
-                          title: "Foldery",
-                          icon: Icon(
-                            FeatherIcons.plus,
-                            size: 12,
-                            color: extendedTheme?.text,
-                          ),
-                          iconClickCallback: () =>
-                              onCreateNewCatalogPressed(context),
-                        ),
-                        ...catalogsSorted
-                            .getRange(
-                                0,
-                                catalogsSorted.length >= 3
-                                    ? 3
-                                    : catalogsSorted.length)
-                            .map((catalog) {
-                          return MDNDrawerItem(
-                            icon: FeatherIcons.folder,
-                            title: catalog.title,
-                            isSelected: isTabSelected(
-                                "/dashboard/directory/${catalog.id}"),
+                          }).toList(),
+                          const MDNDrawerItemSection(title: "Miscellaneous"),
+                          MDNDrawerItem(
+                            icon: FeatherIcons.user,
+                            title: "Konto",
+                            isSelected: isTabSelected("/miscellaneous/account"),
                             onPressed: () {
-                              final String destination =
-                                  "/dashboard/directory/${catalog.id}";
+                              const String destination =
+                                  "/miscellaneous/account";
 
                               notifier.setCurrentTab(destination);
                               Modular.to.navigate(
                                 destination,
-                                arguments: {
-                                  "catalogName": catalog.title,
-                                },
                               );
                             },
-                          );
-                        }).toList(),
-                        const MDNDrawerItemSection(title: "Miscellaneous"),
-                        MDNDrawerItem(
-                          icon: FeatherIcons.user,
-                          title: "Konto",
-                          isSelected: isTabSelected("/miscellaneous/account"),
-                          onPressed: () {
-                            const String destination = "/miscellaneous/account";
+                          ),
+                          MDNDrawerItem(
+                            icon: FeatherIcons.package,
+                            title: "Rozszerzenia",
+                            isSelected:
+                                isTabSelected("/miscellaneous/extensions"),
+                            onPressed: () {
+                              const String destination =
+                                  "/miscellaneous/extensions";
 
-                            notifier.setCurrentTab(destination);
-                            Modular.to.navigate(
-                              destination,
-                              arguments: {
-                                "id": Random().nextInt(100000),
-                              },
-                            );
-                          },
-                        ),
-                        MDNDrawerItem(
-                          icon: FeatherIcons.package,
-                          title: "Rozszerzenia",
-                          isSelected:
-                              isTabSelected("/miscellaneous/extensions"),
-                          onPressed: () {
-                            const String destination =
-                                "/miscellaneous/extensions";
-
-                            notifier.setCurrentTab(destination);
-                            Modular.to.navigate(
-                              destination,
-                              arguments: {
-                                "id": Random().nextInt(100000),
-                              },
-                            );
-                          },
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
+                              notifier.setCurrentTab(destination);
+                              Modular.to.navigate(
+                                destination,
+                              );
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      );
+                    }),
                   ),
                 );
               });
