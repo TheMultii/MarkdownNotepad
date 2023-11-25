@@ -955,7 +955,7 @@ packages:
     source: hosted
     version: "2.0.1"
   page_transition:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: page_transition
       sha256: dee976b1f23de9bbef5cd512fe567e9f6278caee11f5eaca9a2115c19dc49ef6

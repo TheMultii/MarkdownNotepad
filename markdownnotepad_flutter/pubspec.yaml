@@ -24,7 +24,6 @@ dependencies:
         git:
             url: "https://gitlab.mganczarczyk.pl/TheMultii/dart_discord_rpc"
     equatable: ^2.0.5
-    page_transition: ^2.1.0
     change_app_package_name: ^1.1.0
     package_info_plus: ^4.1.0
     auto_size_text: ^3.0.0
