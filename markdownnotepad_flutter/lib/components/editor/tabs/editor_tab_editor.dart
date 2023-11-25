@@ -8,10 +8,10 @@ import 'package:markdownnotepad/components/notifications/info_notify_toast.dart'
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/models/note.dart';
+import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 
 class EditorTabEditor extends StatefulWidget {
   final String noteTitle;
-  final String noteID;
   final Note note;
   final CodeController controller;
   final FocusNode focusNode;
@@ -24,11 +24,12 @@ class EditorTabEditor extends StatefulWidget {
   final Function(String)? onNoteTitleChanged;
   final Function(String)? onNoteContentChanged;
   final VoidCallback deleteNote;
+  final Function(String) assignCatalog;
+  final LoggedInUser? loggedInUser;
 
   const EditorTabEditor({
     super.key,
     required this.noteTitle,
-    required this.noteID,
     required this.note,
     required this.controller,
     required this.focusNode,
@@ -39,6 +40,8 @@ class EditorTabEditor extends StatefulWidget {
     required this.isLiveShareEnabled,
     required this.toggleLiveShare,
     required this.deleteNote,
+    required this.assignCatalog,
+    required this.loggedInUser,
     this.onNoteTitleChanged,
     this.onNoteContentChanged,
   });
@@ -70,10 +73,12 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
             onNoteTitleChanged: widget.onNoteTitleChanged,
             contextMenuOptions: getEditorContextMenu(
               context: context,
-              noteID: widget.noteID,
+              note: widget.note,
               textToRender: widget.controller.text,
               isLiveShareEnabled: widget.isLiveShareEnabled,
               deleteNote: widget.deleteNote,
+              assignCatalog: widget.assignCatalog,
+              loggedInUser: widget.loggedInUser,
               toggleLiveShare: widget.toggleLiveShare,
               changeNoteName: () => FocusScope.of(context).requestFocus(
                 noteTitleFocusNode,

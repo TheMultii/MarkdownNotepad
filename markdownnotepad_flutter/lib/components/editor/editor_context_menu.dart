@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_context_menu/flutter_context_menu.dart';
+import 'package:markdownnotepad/components/alertdialogs/assign_catalog_alert_dialog.dart';
 import 'package:markdownnotepad/components/notifications/info_notify_toast.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/helpers/save_file_helper.dart';
+import 'package:markdownnotepad/models/note.dart';
+import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 
 List<ContextMenuEntry> getEditorContextMenu({
   required BuildContext context,
-  required String noteID,
+  required Note note,
   required String textToRender,
   required bool isLiveShareEnabled,
   required VoidCallback toggleLiveShare,
   required VoidCallback changeNoteName,
   required VoidCallback deleteNote,
+  required Function(String) assignCatalog,
+  required LoggedInUser? loggedInUser,
 }) {
   return [
     const MenuHeader(text: "Opcje"),
@@ -25,7 +31,7 @@ List<ContextMenuEntry> getEditorContextMenu({
           onSelected: () async {
             SaveFileHelper.saveTextFile(
               context,
-              "$noteID.md",
+              "${note.id}.md",
               textToRender,
             );
           },
@@ -41,7 +47,28 @@ List<ContextMenuEntry> getEditorContextMenu({
     MenuItem(
       label: 'Przypisz do katalogu',
       icon: Icons.create_new_folder,
-      onSelected: () {},
+      onSelected: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AssignCatalogAlertDialog(
+              loggedInUser: loggedInUser!,
+              note: note,
+              assignCatalog: assignCatalog,
+            )
+                .animate()
+                .fadeIn(
+                  duration: 100.ms,
+                )
+                .scale(
+                  duration: 100.ms,
+                  curve: Curves.easeInOut,
+                  begin: const Offset(0, 0),
+                  end: const Offset(1, 1),
+                );
+          },
+        );
+      },
     ),
     MenuItem(
       label: 'Zmień tagi',

@@ -6,25 +6,28 @@ import 'package:markdownnotepad/components/notifications/info_notify_toast.dart'
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/markdown_visual_builder/markdown_preview.dart';
 import 'package:markdownnotepad/models/note.dart';
+import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 
 class EditorTabVisualPreview extends StatefulWidget {
   final String noteTitle;
   final Note note;
-  final String noteID;
   final String textToRender;
   final bool isLiveShareEnabled;
   final VoidCallback toggleLiveShare;
   final VoidCallback deleteNote;
+  final Function(String) assignCatalog;
+  final LoggedInUser? loggedInUser;
 
   const EditorTabVisualPreview({
     super.key,
     required this.noteTitle,
     required this.note,
-    required this.noteID,
     required this.textToRender,
     required this.isLiveShareEnabled,
     required this.toggleLiveShare,
     required this.deleteNote,
+    required this.assignCatalog,
+    required this.loggedInUser,
   });
 
   @override
@@ -50,11 +53,13 @@ class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
           noteTitleFocusNode: noteTitleFocusNode,
           contextMenuOptions: getEditorContextMenu(
             context: context,
-            noteID: widget.noteID,
+            note: widget.note,
             textToRender: widget.textToRender,
             isLiveShareEnabled: widget.isLiveShareEnabled,
             toggleLiveShare: widget.toggleLiveShare,
             deleteNote: widget.deleteNote,
+            loggedInUser: widget.loggedInUser,
+            assignCatalog: widget.assignCatalog,
             changeNoteName: () => FocusScope.of(context).requestFocus(
               noteTitleFocusNode,
             ),

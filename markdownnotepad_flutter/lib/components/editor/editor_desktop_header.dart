@@ -5,7 +5,9 @@ import 'package:markdownnotepad/components/editor/editor_desktop_header_list_ite
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/helpers/date_helper.dart';
 import 'package:markdownnotepad/models/note.dart';
+import 'package:markdownnotepad/providers/data_drawer_provider.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:provider/provider.dart';
 
 class EditorDesktopHeader extends StatefulWidget {
   final String noteTitle;
@@ -37,7 +39,6 @@ class EditorDesktopHeader extends StatefulWidget {
 
 class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
   final TextEditingController noteTitleController = TextEditingController();
-  Offset cursorPosition = Offset.zero;
 
   @override
   void initState() {
@@ -98,40 +99,50 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
                   ),
                 ),
               ),
-              IconButton(
-                onPressed: () => widget.toggleLiveShare(),
-                icon: Icon(
-                  widget.isLiveShareEnabled ? Symbols.share_off : Symbols.share,
-                  color: Theme.of(context)
-                      .extension<MarkdownNotepadTheme>()
-                      ?.text
-                      ?.withOpacity(.6),
+              InkWell(
+                onTap: () => widget.toggleLiveShare(),
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(
+                    widget.isLiveShareEnabled
+                        ? Symbols.share_off
+                        : Symbols.share,
+                    color: Theme.of(context)
+                        .extension<MarkdownNotepadTheme>()
+                        ?.text
+                        ?.withOpacity(.6),
+                  ),
                 ),
               ),
-              MouseRegion(
-                onHover: (event) {
-                  setState(() {
-                    cursorPosition = event.position;
-                  });
-                },
-                child: IconButton(
-                  onPressed: () {
-                    if (widget.contextMenuOptions.isEmpty) {
-                      return;
-                    }
-                    final contextMenu = ContextMenu(
-                      entries: widget.contextMenuOptions,
-                      position: Offset(
-                        cursorPosition.dx / 2 - 200,
-                        cursorPosition.dy,
-                      ),
-                      padding: const EdgeInsets.all(8.0),
-                      shortcuts: widget.contextMenuShortcuts,
-                    );
+              InkWell(
+                borderRadius: BorderRadius.circular(9999),
+                onTapDown: (pos) {
+                  if (widget.contextMenuOptions.isEmpty) {
+                    return;
+                  }
 
-                    showContextMenu(context, contextMenu: contextMenu);
-                  },
-                  icon: Icon(
+                  final double dx = pos.globalPosition.dx -
+                      200 -
+                      (context
+                              .read<DataDrawerProvider>()
+                              .getDrawerWidth(context) *
+                          2);
+
+                  final contextMenu = ContextMenu(
+                    entries: widget.contextMenuOptions,
+                    position: Offset(
+                      dx,
+                      pos.globalPosition.dy,
+                    ),
+                    padding: const EdgeInsets.all(8.0),
+                    shortcuts: widget.contextMenuShortcuts,
+                  );
+
+                  showContextMenu(context, contextMenu: contextMenu);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(
                     Icons.more_horiz,
                     color: Theme.of(context)
                         .extension<MarkdownNotepadTheme>()

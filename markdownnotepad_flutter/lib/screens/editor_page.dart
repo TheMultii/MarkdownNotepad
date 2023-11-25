@@ -406,7 +406,6 @@ class _EditorPageState extends State<EditorPage> {
                             sidebarColor: sidebarColor,
                             editorStyle: a11yDarkTheme,
                             noteTitle: noteTitle,
-                            noteID: widget.id,
                             note: note!,
                             isEditorSidebarEnabled:
                                 !Responsive.isMobile(context) &&
@@ -414,6 +413,8 @@ class _EditorPageState extends State<EditorPage> {
                             isLiveShareEnabled: isLiveShareEnabled,
                             toggleLiveShare: toggleLiveShare,
                             deleteNote: deleteNote,
+                            loggedInUser: loggedInUser,
+                            assignCatalog: assignCatalog,
                             onNoteTitleChanged: (newTitle) async {
                               if (MDNValidator.validateNoteTitle(newTitle) !=
                                   null) return;
@@ -452,8 +453,9 @@ class _EditorPageState extends State<EditorPage> {
                             isLiveShareEnabled: isLiveShareEnabled,
                             toggleLiveShare: toggleLiveShare,
                             deleteNote: deleteNote,
+                            loggedInUser: loggedInUser,
+                            assignCatalog: assignCatalog,
                             noteTitle: noteTitle,
-                            noteID: widget.id,
                             note: note!,
                           ),
               ),
