@@ -255,7 +255,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                                 );
                               },
                             );
-                          }).toList(),
+                          }),
                           const MDNDrawerItemSection(title: "Miscellaneous"),
                           MDNDrawerItem(
                             icon: FeatherIcons.user,
