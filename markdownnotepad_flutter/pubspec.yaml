@@ -32,7 +32,6 @@ dependencies:
     json_annotation: ^4.8.1
     dio: ^5.3.3
     intl: ^0.18.1
-    back_button_interceptor: ^7.0.0
     cron: ^0.5.1
     windows_taskbar: ^1.1.2
     provider: ^6.0.5
