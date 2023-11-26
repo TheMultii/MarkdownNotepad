@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:markdownnotepad/enums/extension_status.dart';
@@ -6,7 +7,7 @@ part 'extension.g.dart';
 
 @JsonSerializable()
 @HiveType(typeId: 9)
-class MDNExtension extends HiveObject {
+class MDNExtension extends Equatable {
   @HiveField(0)
   final String title;
   @HiveField(1)
@@ -20,7 +21,7 @@ class MDNExtension extends HiveObject {
   @HiveField(5)
   final String content;
 
-  MDNExtension({
+  const MDNExtension({
     required this.title,
     required this.version,
     required this.author,
@@ -32,4 +33,14 @@ class MDNExtension extends HiveObject {
   factory MDNExtension.fromJson(Map<String, dynamic> json) =>
       _$MDNExtensionFromJson(json);
   Map<String, dynamic> toJson() => _$MDNExtensionToJson(this);
+
+  @override
+  List<Object?> get props => [
+        title,
+        version,
+        author,
+        status,
+        activator,
+        content,
+      ];
 }
