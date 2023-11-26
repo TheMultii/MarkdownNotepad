@@ -62,20 +62,6 @@ class MDNExtensionBuilder extends MarkdownElementBuilder {
       }
     }
 
-    // return SelectableText.rich(
-    //   TextSpan(
-    //     children: [
-    //       WidgetSpan(
-    //         child: Image.network(
-    //           "https://api.mganczarczyk.pl/tairiku/random/$parsedText?safety=true",
-    //           width: 50,
-    //           height: 50,
-    //           fit: BoxFit.cover,
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
     return SelectableText(parsedText);
   }
 }
