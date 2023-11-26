@@ -39,6 +39,11 @@ class _AssignCatalogAlertDialogState extends State<AssignCatalogAlertDialog> {
     List<Catalog>? catalogsToBuild = widget.loggedInUser.user.catalogs;
 
     return AlertDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+      ),
       title: const Text('Wybierz katalog'),
       content: Container(
         constraints: BoxConstraints(
