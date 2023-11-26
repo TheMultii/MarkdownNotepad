@@ -22,7 +22,7 @@ class CreateNewNoteAlertDialog extends StatefulWidget {
 }
 
 class _CreateNewNoteAlertDialogState extends State<CreateNewNoteAlertDialog> {
-  final TextEditingController catalogNameController = TextEditingController();
+  final TextEditingController noteNameController = TextEditingController();
 
   late MDNApiService apiService;
   late DrawerCurrentTabProvider drawerCurrentTabProvider;
@@ -52,7 +52,7 @@ class _CreateNewNoteAlertDialogState extends State<CreateNewNoteAlertDialog> {
 
     try {
       final PostNoteBodyModel postModel = PostNoteBodyModel(
-        title: catalogNameController.text,
+        title: noteNameController.text,
         content: "",
         tags: [],
       );
@@ -126,12 +126,12 @@ class _CreateNewNoteAlertDialogState extends State<CreateNewNoteAlertDialog> {
             validator: (value) => MDNValidator.validateNoteTitle(value),
             onChanged: (value) {
               setState(() {
-                isFieldValid = MDNValidator.validateCatalogName(value) == null;
+                isFieldValid = MDNValidator.validateNoteTitle(value) == null;
               });
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onFieldSubmitted: (value) => createNewNote(),
-            controller: catalogNameController,
+            controller: noteNameController,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: "Nazwa notatki",
