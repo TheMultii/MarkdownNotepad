@@ -79,10 +79,6 @@ class _CreateNewNoteAlertDialogState extends State<CreateNewNoteAlertDialog> {
         loggedInUserProvider.setCurrentUser(newUser);
       }
 
-      final newUser = loggedInUser;
-      newUser!.user.notes = notes!.notes;
-      loggedInUserProvider.setCurrentUser(newUser);
-
       final String destination = "/editor/${resp.note.id}";
 
       navigatorPop();
