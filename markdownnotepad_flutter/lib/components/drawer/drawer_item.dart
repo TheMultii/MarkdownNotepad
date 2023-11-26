@@ -6,6 +6,8 @@ class MDNDrawerItem extends StatefulWidget {
   final VoidCallback onPressed;
   final bool isSelected;
   final IconData icon;
+  final double? iconFill;
+  final Color? iconColor;
 
   const MDNDrawerItem({
     super.key,
@@ -13,6 +15,8 @@ class MDNDrawerItem extends StatefulWidget {
     required this.onPressed,
     required this.isSelected,
     required this.icon,
+    this.iconFill = 0,
+    this.iconColor,
   });
 
   @override
@@ -51,9 +55,10 @@ class _MDNDrawerItemState extends State<MDNDrawerItem> {
                 Icon(
                   widget.icon,
                   size: 18,
+                  fill: widget.iconFill,
                   color: widget.isSelected || isHovered
-                      ? textColor
-                      : textColor.withOpacity(.7),
+                      ? (widget.iconColor ?? textColor)
+                      : (widget.iconColor ?? textColor).withOpacity(.7),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
