@@ -158,7 +158,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 return ExtensionListItem(
-                                  loadedExtension: importedExtensions[index],
+                                  extension: importedExtensions[index],
                                 );
                               },
                               separatorBuilder: (context, index) =>
