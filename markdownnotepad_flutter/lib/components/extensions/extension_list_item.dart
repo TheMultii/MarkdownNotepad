@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:markdownnotepad/components/alertdialogs/show_extension_details_alert_dialog.dart';
 import 'package:markdownnotepad/components/extensions/extension_status_chip.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/helpers/extensions_helper.dart';
 import 'package:markdownnotepad/viewmodels/extension.dart';
 
 class ExtensionListItem extends StatelessWidget {
@@ -127,7 +128,9 @@ class ExtensionListItem extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await ExtensionsHelper.removeExtension(extension);
+                  },
                   padding: const EdgeInsets.symmetric(
                     vertical: 4.0,
                     horizontal: 8.0,
