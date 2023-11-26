@@ -269,8 +269,6 @@ class _DirectoryPageState extends State<DirectoryPage> {
   }
 
   Future<void> assignNote(String nID) async {
-    debugPrint("Assign $nID to catalog ${widget.directoryId}");
-
     try {
       final PatchNoteBodyModel pnbm =
           PatchNoteBodyModel(folderId: widget.directoryId);
@@ -300,11 +298,11 @@ class _DirectoryPageState extends State<DirectoryPage> {
         }
       });
 
-      newUser.user.catalogs?.forEach((element) {
-        if (element.id == widget.directoryId) {
-          element.notes = [
+      newUser.user.catalogs?.forEach((c) {
+        if (c.id == widget.directoryId) {
+          c.notes = [
             response.note,
-            ...element.notes ?? [],
+            ...c.notes ?? [],
           ];
         }
       });
