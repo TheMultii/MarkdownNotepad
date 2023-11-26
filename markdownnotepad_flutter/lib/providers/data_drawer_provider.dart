@@ -25,6 +25,12 @@ class DataDrawerProvider with ChangeNotifier {
 
   void setDrawerWidth(double newWidth) {
     _drawerWidth = newWidth;
-    notifyListeners();
+
+    /*
+      There is no need for notifyListeners()
+      because the current state of the widget
+      is not changed, it is only needed for
+      future rendering.
+    */
   }
 }
