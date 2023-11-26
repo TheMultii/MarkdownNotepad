@@ -318,7 +318,9 @@ export class NoteTagsController {
         return response.status(404).json({ message: 'Not found' });
       }
 
-      return response.status(200).json(result);
+      return response.status(200).json({
+        message: 'NoteTag deleted successfully',
+      });
     } catch (error) {
       return response
         .status(500)
