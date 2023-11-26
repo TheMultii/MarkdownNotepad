@@ -36,7 +36,6 @@ class MDNExtensionBuilder extends MarkdownElementBuilder {
     }
 
     if (command == 'latex') {
-      parsedText = parsedText.replaceFirst('[latex]', '');
       return SelectableMath.tex(
         parsedText,
         mathStyle: MathStyle.display,
