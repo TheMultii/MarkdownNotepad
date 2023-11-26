@@ -24,6 +24,7 @@ class MDNSearchIntent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shortcuts(
+      // ignore: prefer_const_literals_to_create_immutables
       shortcuts: {
         controlShiftF: const SearchIntent(),
       },
