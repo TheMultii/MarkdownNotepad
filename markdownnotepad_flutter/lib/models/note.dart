@@ -1,7 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:markdownnotepad/models/catalog_simple.dart';
-import 'package:markdownnotepad/models/notetag.dart';
+import 'package:markdownnotepad/models/notetag_simple.dart';
 import 'package:markdownnotepad/models/user.dart';
 
 part 'note.g.dart';
@@ -25,11 +25,11 @@ class Note extends HiveObject {
   String? localNotePassword;
   @HiveField(7)
   @JsonKey(
-    toJson: NoteTag.noteTagsToJson,
-    fromJson: NoteTag.noteTagsFromJson,
+    toJson: NoteTagSimple.noteTagsToJson,
+    fromJson: NoteTagSimple.noteTagsFromJson,
     defaultValue: null,
   )
-  List<NoteTag>? tags;
+  List<NoteTagSimple>? tags;
   @HiveField(8)
   @JsonKey(
     toJson: User.userToJson,
