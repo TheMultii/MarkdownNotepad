@@ -28,6 +28,7 @@ ThemeData themeDataDark(BuildContext context, int primaryColor) {
         text: Colors.white,
         drawerBackground: Color(0xFF181818),
         cardColor: Color(0xFF262626),
+        gutterColor: Color(0xFF191919),
       ),
     ],
   );
@@ -59,6 +60,7 @@ ThemeData themeDataLight(BuildContext context, int primaryColor) {
         text: Colors.black,
         drawerBackground: Color(0xFFFAFAFA),
         cardColor: Color(0xFFF5F5F5),
+        gutterColor: Color(0xFFFEFEFE),
       ),
     ],
   );
