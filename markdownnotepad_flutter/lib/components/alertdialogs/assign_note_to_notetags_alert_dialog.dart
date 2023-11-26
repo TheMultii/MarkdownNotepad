@@ -10,14 +10,12 @@ import 'package:material_symbols_icons/symbols.dart';
 class AssignNoteToNoteTagsAlertDialog extends StatefulWidget {
   final LoggedInUser? loggedInUser;
   final Note note;
-  final List<String> noteTagsId;
   final Function(List<String>) assignNoteTags;
 
   const AssignNoteToNoteTagsAlertDialog({
     super.key,
     required this.loggedInUser,
     required this.note,
-    required this.noteTagsId,
     required this.assignNoteTags,
   });
 
@@ -29,6 +27,14 @@ class AssignNoteToNoteTagsAlertDialog extends StatefulWidget {
 class _AssignNoteToNoteTagsAlertDialogState
     extends State<AssignNoteToNoteTagsAlertDialog> {
   List<String> selectedNoteTagsId = [];
+  List<String> noteTagsId = [];
+
+  @override
+  void initState() {
+    super.initState();
+    selectedNoteTagsId = widget.note.tags?.map((e) => e.id).toList() ?? [];
+    noteTagsId = widget.note.tags?.map((e) => e.id).toList() ?? [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +83,7 @@ class _AssignNoteToNoteTagsAlertDialogState
         ),
         TextButton(
           onPressed: const ListEquality<String>()
-                  .equals(selectedNoteTagsId, widget.noteTagsId)
+                  .equals(selectedNoteTagsId, noteTagsId)
               ? null
               : () {
                   Navigator.of(context).pop();
