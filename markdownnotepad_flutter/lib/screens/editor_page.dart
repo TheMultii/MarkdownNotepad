@@ -358,10 +358,11 @@ class _EditorPageState extends State<EditorPage> {
   @override
   Widget build(BuildContext context) {
     const double sidebarWidth = 85;
-    final Color? sidebarColor = Theme.of(context)
-        .extension<MarkdownNotepadTheme>()
-        ?.cardColor
-        ?.withOpacity(.25);
+
+    final MarkdownNotepadTheme? mdnTheme =
+        Theme.of(context).extension<MarkdownNotepadTheme>();
+    final Color? sidebarColor = mdnTheme?.cardColor?.withOpacity(.25);
+    final Color? gutterColor = mdnTheme?.gutterColor;
 
     return Stack(
       children: [
@@ -404,6 +405,7 @@ class _EditorPageState extends State<EditorPage> {
                             focusNode: fNode,
                             sidebarWidth: sidebarWidth,
                             sidebarColor: sidebarColor,
+                            gutterColor: gutterColor,
                             editorStyle: a11yDarkTheme,
                             noteTitle: noteTitle,
                             note: note!,
