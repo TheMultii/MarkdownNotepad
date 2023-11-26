@@ -181,6 +181,7 @@ export class NoteTagsController {
       const result: NoteTag = await this.notetagsService.createNoteTag(noteTag);
 
       return response.status(201).json({
+        message: 'NoteTag created successfully',
         noteTag: result,
       });
     } catch (error) {
