@@ -11,6 +11,7 @@ import 'package:markdownnotepad/models/catalog_simple.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/models/note_simple.dart';
 import 'package:markdownnotepad/models/notetag.dart';
+import 'package:markdownnotepad/models/notetag_simple.dart';
 import 'package:markdownnotepad/models/user_simple.dart';
 import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
@@ -33,6 +34,7 @@ void main() async {
   Hive.registerAdapter(NoteAdapter());
   Hive.registerAdapter(NoteSimpleAdapter());
   Hive.registerAdapter(NoteTagAdapter());
+  Hive.registerAdapter(NoteTagSimpleAdapter());
   Hive.registerAdapter(CatalogAdapter());
   Hive.registerAdapter(CatalogSimpleAdapter());
   Hive.registerAdapter(LoggedInUserAdapter());
