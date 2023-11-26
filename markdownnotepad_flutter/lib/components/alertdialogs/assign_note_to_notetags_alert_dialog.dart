@@ -46,7 +46,7 @@ class _AssignNoteToNoteTagsAlertDialogState
           Radius.circular(8.0),
         ),
       ),
-      title: const Text('Wybierz notatkę'),
+      title: const Text('Wybierz tagi'),
       content: Container(
         constraints: BoxConstraints(
           minHeight: 100,
