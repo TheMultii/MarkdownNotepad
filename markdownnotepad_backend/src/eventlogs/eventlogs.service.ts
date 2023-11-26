@@ -36,4 +36,14 @@ export class EventLogsService {
       data: eventLog,
     });
   }
+
+  async getEventLogsPageCount(userId: string, perPage: number) {
+    const count = await this.prisma.eventLogs.count({
+      where: {
+        userId,
+      },
+    });
+
+    return Math.ceil(count / perPage);
+  }
 }
