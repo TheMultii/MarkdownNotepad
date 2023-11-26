@@ -6,17 +6,21 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:markdownnotepad/components/alertdialogs/create_new_catalog_alert_dialog.dart';
 import 'package:markdownnotepad/components/alertdialogs/create_new_note_alert_dialog.dart';
+import 'package:markdownnotepad/components/alertdialogs/create_new_notetag_alert_dialog.dart';
 import 'package:markdownnotepad/components/drawer/drawer_footer.dart';
 import 'package:markdownnotepad/components/drawer/drawer_header.dart';
 import 'package:markdownnotepad/components/drawer/drawer_item.dart';
 import 'package:markdownnotepad/components/drawer/drawer_item_section.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/helpers/color_converter.dart';
 import 'package:markdownnotepad/models/catalog.dart';
 import 'package:markdownnotepad/models/note.dart';
+import 'package:markdownnotepad/models/notetag.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
 import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 class MDNDrawer extends StatefulWidget {
@@ -70,6 +74,15 @@ class _MDNDrawerState extends State<MDNDrawer> {
     );
   }
 
+  void onCreateNewNoteTagPressed(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const CreateNewNoteTagAlertDialog();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final dataDrawerProvider = Provider.of<DataDrawerProvider>(context);
@@ -116,6 +129,14 @@ class _MDNDrawerState extends State<MDNDrawer> {
                     : loggedInUser.user.notes!
                   ..sort(
                     (a, b) => b.updatedAt.compareTo(a.updatedAt),
+                  );
+
+                final List<NoteTag> noteTagsSorted = loggedInUser.user.tags ==
+                        null
+                    ? []
+                    : loggedInUser.user.tags!
+                  ..sort(
+                    (a, b) => a.title.compareTo(b.title),
                   );
 
                 return Expanded(
@@ -256,7 +277,39 @@ class _MDNDrawerState extends State<MDNDrawer> {
                               },
                             );
                           }),
-                          const MDNDrawerItemSection(title: "Miscellaneous"),
+                          MDNDrawerItemSection(
+                            title: "Tagi",
+                            icon: Icon(
+                              FeatherIcons.plus,
+                              size: 12,
+                              color: extendedTheme?.text,
+                            ),
+                            iconClickCallback: () =>
+                                onCreateNewNoteTagPressed(context),
+                          ),
+                          ...noteTagsSorted.map((tag) {
+                            return MDNDrawerItem(
+                              icon: Symbols.label,
+                              iconFill: 1,
+                              iconColor: ColorConverter.parseFromHex(tag.color),
+                              title: tag.title,
+                              isSelected: isTabSelected("/tag/${tag.id}"),
+                              onPressed: () {
+                                final String destination = "/tag/${tag.id}";
+
+                                notifier.setCurrentTab(destination);
+                                Modular.to.navigate(
+                                  destination,
+                                  arguments: {
+                                    "tagName": tag.title,
+                                  },
+                                );
+                              },
+                            );
+                          }),
+                          const MDNDrawerItemSection(
+                            title: "Miscellaneous",
+                          ),
                           MDNDrawerItem(
                             icon: FeatherIcons.user,
                             title: "Konto",
