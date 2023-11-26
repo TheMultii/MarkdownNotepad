@@ -197,7 +197,10 @@ class _DirectoryPageState extends State<DirectoryPage> {
         (element) => element.id == widget.directoryId,
       );
       loggedInUserProvider.setCurrentUser(newUser);
-      Modular.to.navigate("/dashboard/");
+
+      const String destination = "/dashboard/";
+      context.read<DrawerCurrentTabProvider>().setCurrentTab(destination);
+      Modular.to.navigate(destination);
     } catch (e) {
       notifyToast.show(
         context: context,
