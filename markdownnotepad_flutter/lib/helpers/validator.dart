@@ -110,6 +110,17 @@ class MDNValidator {
         )
         .build();
   }
+
+  static String? validateNoteTagTitle(String? noteTagTitle) {
+    return ValidatorString(noteTagTitle)
+        .isNotEmpty(errMsg: "Tytuł tagu nie może być pusty")
+        .length(
+          min: 2,
+          max: 10,
+          errMsg: "Tytuł tagu musi mieć od 2 do 10 znaków",
+        )
+        .build();
+  }
 }
 
 class Validator {
