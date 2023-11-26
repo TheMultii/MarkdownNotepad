@@ -294,7 +294,7 @@ export class NotesController {
         }
       }
       if (noteDto.tags) {
-        noteDto.tags.forEach(async (tag) => {
+        for (const tag of noteDto.tags) {
           const t = await this.prismaService.noteTag.findUnique({
             where: {
               id: tag,
@@ -303,7 +303,7 @@ export class NotesController {
           if (!t) {
             return response.status(404).json({ message: 'Tag not found' });
           }
-        });
+        }
         note.tags = {
           connect: noteDto.tags.map((tag) => {
             return { id: tag };
