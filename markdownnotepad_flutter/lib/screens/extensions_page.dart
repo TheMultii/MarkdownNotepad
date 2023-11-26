@@ -176,7 +176,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
                     if (importedExtensions.isEmpty) {
                       return const Center(
                         child: Text(
-                          "Nie znaleziono żadnych rozszerzeń",
+                          "Nie znaleziono żadnych rozszerzeń.",
                           textAlign: TextAlign.center,
                         ),
                       );
