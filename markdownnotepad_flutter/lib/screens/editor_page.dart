@@ -23,6 +23,7 @@ import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_note_response_model.dart';
 import 'package:markdownnotepad/models/note.dart';
+import 'package:markdownnotepad/models/notetag.dart';
 import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
@@ -98,7 +99,7 @@ class _EditorPageState extends State<EditorPage> {
     super.dispose();
   }
 
-  void saveNoteToCache(Note? noteToSave) {
+  void saveNoteToCache(Note? noteToSave, {List<NoteTag>? tagsToSave}) {
     final toSave = noteToSave ?? note;
     if (toSave == null) return;
 
@@ -114,6 +115,10 @@ class _EditorPageState extends State<EditorPage> {
       }
     }
 
+    if (tagsToSave != null) {
+      newUser.user.tags = tagsToSave;
+    }
+
     loggedInUserProvider.setCurrentUser(newUser);
   }
 
@@ -122,6 +127,7 @@ class _EditorPageState extends State<EditorPage> {
     String? newTitle,
     String? newContent,
     String? newCatalog,
+    List<String>? newTags,
   }) async {
     if (note == null) return false;
 
@@ -144,7 +150,14 @@ class _EditorPageState extends State<EditorPage> {
         body.folderId = newCatalog;
       }
 
-      if (body.title == null && body.content == null && body.folderId == null) {
+      if (newTags != null) {
+        body.tags = newTags;
+      }
+
+      if (body.title == null &&
+          body.content == null &&
+          body.folderId == null &&
+          body.tags == null) {
         return false;
       }
 
@@ -160,7 +173,7 @@ class _EditorPageState extends State<EditorPage> {
         n.content = resp.note.content ?? '';
         n.updatedAt = resp.note.updatedAt;
         n.createdAt = resp.note.createdAt;
-        if (body.folderId != null) {
+        if (body.folderId != null || body.tags != null) {
           GetNoteResponseModel? gnrm =
               await apiService.getNote(widget.id, authorizationString);
           if (gnrm != null) {
@@ -168,7 +181,15 @@ class _EditorPageState extends State<EditorPage> {
           }
         }
 
-        saveNoteToCache(n);
+        List<NoteTag>? tagsToSave;
+        if (body.tags != null) {
+          final respTags = await apiService.getNoteTags(authorizationString);
+          if (respTags != null) {
+            tagsToSave = respTags.noteTags;
+          }
+        }
+
+        saveNoteToCache(n, tagsToSave: tagsToSave);
 
         /*
         * save cursor caret position before updating note
