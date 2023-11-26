@@ -1,13 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:markdownnotepad/models/notetag.dart';
+import 'package:markdownnotepad/models/notetag_simple.dart';
 
 part 'patch_note_tag_response_model.g.dart';
 
 @JsonSerializable()
 class PatchNoteTagResponseModel {
   String message;
-  @JsonKey(toJson: NoteTag.noteTagToJson, fromJson: NoteTag.noteTagFromJson)
-  NoteTag noteTag;
+  @JsonKey(
+    toJson: NoteTagSimple.noteTagToJson,
+    fromJson: NoteTagSimple.noteTagFromJson,
+  )
+  NoteTagSimple noteTag;
 
   PatchNoteTagResponseModel({
     required this.message,
