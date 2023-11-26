@@ -33,6 +33,11 @@ class _AssignNoteToCatalogAlertDialogState
         .toList();
 
     return AlertDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+      ),
       title: const Text('Wybierz notatkę'),
       content: Container(
         constraints: BoxConstraints(
