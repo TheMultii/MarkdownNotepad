@@ -17,6 +17,7 @@ class EditorTabEditor extends StatefulWidget {
   final FocusNode focusNode;
   final double sidebarWidth;
   final Color? sidebarColor;
+  final Color? gutterColor;
   final Map<String, TextStyle> editorStyle;
   final bool isEditorSidebarEnabled;
   final bool isLiveShareEnabled;
@@ -35,6 +36,7 @@ class EditorTabEditor extends StatefulWidget {
     required this.focusNode,
     required this.sidebarWidth,
     required this.sidebarColor,
+    required this.gutterColor,
     required this.editorStyle,
     required this.isEditorSidebarEnabled,
     required this.isLiveShareEnabled,
@@ -153,13 +155,16 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
                         width: widget.sidebarWidth,
                         margin: 0,
                         textAlign: TextAlign.right,
-                        background: widget.sidebarColor,
+                        background: widget.gutterColor,
                         showErrors: widget.isEditorSidebarEnabled,
                         showFoldingHandles: widget.isEditorSidebarEnabled,
                         showLineNumbers: widget.isEditorSidebarEnabled,
                       ),
                       lineNumberBuilder: (index, style) {
                         final int lineNumber = index + 1;
+                        style?.apply(
+                          color: widget.sidebarColor,
+                        );
 
                         return TextSpan(
                           children: [
