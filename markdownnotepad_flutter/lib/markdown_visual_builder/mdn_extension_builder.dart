@@ -1,15 +1,25 @@
 import 'dart:math';
 
+import 'package:dart_eval/dart_eval.dart';
+import 'package:dart_eval/dart_eval_bridge.dart';
+import 'package:dart_eval/stdlib/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:color_parser/color_parser.dart';
+import 'package:markdownnotepad/viewmodels/imported_extensions.dart';
 
 class MDNExtensionBuilder extends MarkdownElementBuilder {
   final BuildContext context;
+  final ImportedExtensions importedExtensions;
+  final Runtime pluginsRuntime;
 
-  MDNExtensionBuilder({required this.context});
+  MDNExtensionBuilder({
+    required this.context,
+    required this.importedExtensions,
+    required this.pluginsRuntime,
+  });
 
   @override
   Widget visitElementAfter(md.Element element, TextStyle? preferredStyle) {
