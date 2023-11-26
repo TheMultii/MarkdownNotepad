@@ -28,7 +28,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
     if (mdnLoadExtension == null) return;
 
     final bool validated =
-        await ExtensionsHelper.validateLoadExtension(mdnLoadExtension);
+        ExtensionsHelper.validateLoadExtension(mdnLoadExtension);
     if (!validated) {
       notifyToast.show(
         context: context,
