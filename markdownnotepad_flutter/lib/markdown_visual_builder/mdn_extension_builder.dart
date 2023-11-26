@@ -62,7 +62,6 @@ class MDNExtensionBuilder extends MarkdownElementBuilder {
       }
     }
 
-    return Text(parsedText);
     // return SelectableText.rich(
     //   TextSpan(
     //     children: [
@@ -77,5 +76,6 @@ class MDNExtensionBuilder extends MarkdownElementBuilder {
     //     ],
     //   ),
     // );
+    return SelectableText(parsedText);
   }
 }
