@@ -4,12 +4,12 @@ part 'patch_note_tag_body_model.g.dart';
 
 @JsonSerializable()
 class PatchNoteTagBodyModel {
-  final String title;
-  final String color;
+  String? title;
+  String? color;
 
   PatchNoteTagBodyModel({
-    required this.title,
-    required this.color,
+    this.title,
+    this.color,
   });
 
   factory PatchNoteTagBodyModel.fromJson(Map<String, dynamic> json) =>

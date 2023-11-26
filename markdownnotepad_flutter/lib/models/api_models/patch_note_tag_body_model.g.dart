@@ -9,8 +9,8 @@ part of 'patch_note_tag_body_model.dart';
 PatchNoteTagBodyModel _$PatchNoteTagBodyModelFromJson(
         Map<String, dynamic> json) =>
     PatchNoteTagBodyModel(
-      title: json['title'] as String,
-      color: json['color'] as String,
+      title: json['title'] as String?,
+      color: json['color'] as String?,
     );
 
 Map<String, dynamic> _$PatchNoteTagBodyModelToJson(
