@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -21,6 +24,7 @@ import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
 import 'package:markdownnotepad/router_modules/app_module.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'package:window_manager/window_manager.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -39,6 +43,20 @@ void main() async {
   await Hive.openBox<ServerSettings>('server_settings');
   await Hive.openBox<LoggedInUser>('logged_in_user');
   await Hive.openBox<ImportedExtensions>('imported_extensions');
+
+  WidgetsFlutterBinding.ensureInitialized();
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    await windowManager.ensureInitialized();
+
+    const WindowOptions windowOptions = WindowOptions(
+      size: Size(1280, 720),
+      center: true,
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
 
   setPathUrlStrategy();
   runApp(
