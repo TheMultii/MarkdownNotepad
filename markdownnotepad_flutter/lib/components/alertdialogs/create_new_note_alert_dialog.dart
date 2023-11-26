@@ -110,6 +110,11 @@ class _CreateNewNoteAlertDialogState extends State<CreateNewNoteAlertDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+      ),
       title: const Text(
         "Nowa notatka",
         textAlign: TextAlign.center,
