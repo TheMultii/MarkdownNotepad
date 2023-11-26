@@ -6,11 +6,11 @@ import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/viewmodels/extension.dart';
 
 class ExtensionListItem extends StatelessWidget {
-  final MDNExtension loadedExtension;
+  final MDNExtension extension;
 
   const ExtensionListItem({
     super.key,
-    required this.loadedExtension,
+    required this.extension,
   });
 
   @override
@@ -51,7 +51,7 @@ class ExtensionListItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          loadedExtension.title,
+                          extension.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
@@ -59,7 +59,7 @@ class ExtensionListItem extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "${loadedExtension.author} ・ ${loadedExtension.version}",
+                          "${extension.author} ・ ${extension.version}",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.inter(
@@ -82,7 +82,7 @@ class ExtensionListItem extends StatelessWidget {
             Row(
               children: [
                 ExtensionStatusChip(
-                  status: loadedExtension.status,
+                  status: extension.status,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
