@@ -26,6 +26,7 @@ class EditorTabEditor extends StatefulWidget {
   final Function(String)? onNoteContentChanged;
   final VoidCallback deleteNote;
   final Function(String) assignCatalog;
+  final Function(List<String>) assignNoteTags;
   final LoggedInUser? loggedInUser;
 
   const EditorTabEditor({
@@ -43,6 +44,7 @@ class EditorTabEditor extends StatefulWidget {
     required this.toggleLiveShare,
     required this.deleteNote,
     required this.assignCatalog,
+    required this.assignNoteTags,
     required this.loggedInUser,
     this.onNoteTitleChanged,
     this.onNoteContentChanged,
@@ -80,6 +82,7 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
               isLiveShareEnabled: widget.isLiveShareEnabled,
               deleteNote: widget.deleteNote,
               assignCatalog: widget.assignCatalog,
+              assignNoteTags: widget.assignNoteTags,
               loggedInUser: widget.loggedInUser,
               toggleLiveShare: widget.toggleLiveShare,
               changeNoteName: () => FocusScope.of(context).requestFocus(

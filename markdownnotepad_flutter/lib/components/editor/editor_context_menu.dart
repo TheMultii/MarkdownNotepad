@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_context_menu/flutter_context_menu.dart';
 import 'package:markdownnotepad/components/alertdialogs/assign_catalog_alert_dialog.dart';
+import 'package:markdownnotepad/components/alertdialogs/assign_note_to_notetags_alert_dialog.dart';
 import 'package:markdownnotepad/components/notifications/info_notify_toast.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/helpers/save_file_helper.dart';
@@ -17,6 +18,7 @@ List<ContextMenuEntry> getEditorContextMenu({
   required VoidCallback changeNoteName,
   required VoidCallback deleteNote,
   required Function(String) assignCatalog,
+  required Function(List<String>) assignNoteTags,
   required LoggedInUser? loggedInUser,
 }) {
   return [
@@ -73,7 +75,28 @@ List<ContextMenuEntry> getEditorContextMenu({
     MenuItem(
       label: 'Zmień tagi',
       icon: Icons.tag,
-      onSelected: () {},
+      onSelected: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AssignNoteToNoteTagsAlertDialog(
+              loggedInUser: loggedInUser!,
+              note: note,
+              assignNoteTags: assignNoteTags,
+            )
+                .animate()
+                .fadeIn(
+                  duration: 100.ms,
+                )
+                .scale(
+                  duration: 100.ms,
+                  curve: Curves.easeInOut,
+                  begin: const Offset(0, 0),
+                  end: const Offset(1, 1),
+                );
+          },
+        );
+      },
     ),
     const MenuDivider(),
     MenuItem(

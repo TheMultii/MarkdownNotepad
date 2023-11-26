@@ -16,6 +16,7 @@ class EditorTabVisualPreview extends StatefulWidget {
   final VoidCallback toggleLiveShare;
   final VoidCallback deleteNote;
   final Function(String) assignCatalog;
+  final Function(List<String>) assignNoteTags;
   final LoggedInUser? loggedInUser;
 
   const EditorTabVisualPreview({
@@ -27,6 +28,7 @@ class EditorTabVisualPreview extends StatefulWidget {
     required this.toggleLiveShare,
     required this.deleteNote,
     required this.assignCatalog,
+    required this.assignNoteTags,
     required this.loggedInUser,
   });
 
@@ -60,6 +62,7 @@ class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
             deleteNote: widget.deleteNote,
             loggedInUser: widget.loggedInUser,
             assignCatalog: widget.assignCatalog,
+            assignNoteTags: widget.assignNoteTags,
             changeNoteName: () => FocusScope.of(context).requestFocus(
               noteTitleFocusNode,
             ),

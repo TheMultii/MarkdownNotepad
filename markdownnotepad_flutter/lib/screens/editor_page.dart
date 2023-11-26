@@ -445,6 +445,7 @@ class _EditorPageState extends State<EditorPage> {
                             deleteNote: deleteNote,
                             loggedInUser: loggedInUser,
                             assignCatalog: assignCatalog,
+                            assignNoteTags: assignNoteTags,
                             onNoteTitleChanged: (newTitle) async {
                               if (MDNValidator.validateNoteTitle(newTitle) !=
                                   null) return;
@@ -485,6 +486,7 @@ class _EditorPageState extends State<EditorPage> {
                             deleteNote: deleteNote,
                             loggedInUser: loggedInUser,
                             assignCatalog: assignCatalog,
+                            assignNoteTags: assignNoteTags,
                             noteTitle: noteTitle,
                             note: note!,
                           ),
