@@ -138,8 +138,9 @@ abstract class MDNApiService {
     @Header("Authorization") String authorization,
   );
 
-  @PATCH("/notetags")
+  @PATCH("/notetags/{id}")
   Future<PatchNoteTagResponseModel>? patchNoteTag(
+    @Path("id") String id,
     @Body() PatchNoteTagBodyModel body,
     @Header("Authorization") String authorization,
   );

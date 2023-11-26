@@ -562,6 +562,7 @@ class _MDNApiService implements MDNApiService {
 
   @override
   Future<PatchNoteTagResponseModel>? patchNoteTag(
+    String id,
     PatchNoteTagBodyModel body,
     String authorization,
   ) async {
@@ -579,7 +580,7 @@ class _MDNApiService implements MDNApiService {
     )
             .compose(
               _dio.options,
-              '/notetags',
+              '/notetags/${id}',
               queryParameters: queryParameters,
               data: _data,
             )
