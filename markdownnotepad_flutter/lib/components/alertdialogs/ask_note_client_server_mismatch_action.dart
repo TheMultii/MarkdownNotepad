@@ -25,6 +25,11 @@ class AskNoteClientServerMismatchAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+      ),
       title: const Text('Uwaga!'),
       content: Text(
         'Istnieje różnica w dacie edycji notatki znajdującej się w pamięci podręcznej i na serwerze.\nData ostatniej edycji notatki, znajdującej się w pamięci podręcznej: ${DateHelper.getFormattedDateTime(cacheLastUpdate)}\nData ostatniej edycji notatki, znajdującej się na serwerze: ${DateHelper.getFormattedDateTime(serverLastUpdate)}\nCzy chcesz nadpisać notatkę w pamięci podręcznej?',
