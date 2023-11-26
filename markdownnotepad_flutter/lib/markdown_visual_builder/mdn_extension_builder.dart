@@ -8,6 +8,9 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:color_parser/color_parser.dart';
+import 'package:markdownnotepad/enums/extension_status.dart';
+import 'package:markdownnotepad/helpers/snake_case_converter.dart';
+import 'package:markdownnotepad/viewmodels/extension.dart';
 import 'package:markdownnotepad/viewmodels/imported_extensions.dart';
 
 class MDNExtensionBuilder extends MarkdownElementBuilder {
@@ -69,6 +72,18 @@ class MDNExtensionBuilder extends MarkdownElementBuilder {
         debugPrint(e.toString());
 
         return Text(parsedText);
+      }
+    }
+
+    for (MDNExtension extension in importedExtensions.extensions) {
+      if (extension.activator == command &&
+          extension.status == ExtensionStatus.active) {
+        return (pluginsRuntime.executeLib(
+          'package:mdn_extension_${SnakeCaseConverter.convert(extension.title)}/main.dart',
+          'MDNExtension.',
+          [$String(parsedText)],
+        ) as $Value)
+            .$value;
       }
     }
 
