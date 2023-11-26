@@ -376,6 +376,13 @@ class _EditorPageState extends State<EditorPage> {
     );
   }
 
+  Future<void> assignNoteTags(List<String> noteTagID) async {
+    await patchNoteContentToServer(
+      newTags: noteTagID,
+      forceUpdate: false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     const double sidebarWidth = 85;
