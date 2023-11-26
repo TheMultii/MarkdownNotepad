@@ -46,22 +46,64 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
       },
     );
 
-    final bool saved = await ExtensionsHelper.saveExtension(extension);
-    if (!saved) {
+    final MDNExtensionUniqueness uniqueness =
+        await ExtensionsHelper.checkExtensionUniqueness(extension);
+    if (uniqueness == MDNExtensionUniqueness.notUnique) {
       notifyToast.show(
         context: context,
         child: const ErrorNotifyToast(
-          title: "Nie udało się zaimportować rozszerzenia",
+          title: "Nie można zapisać rozszerzenia",
+          body: "Rozszerzenie nie jest unikalne.",
+        ),
+      );
+      return;
+    }
+
+    if (uniqueness == MDNExtensionUniqueness.newExtension) {
+      final bool saved = await ExtensionsHelper.saveExtension(extension);
+      if (!saved) {
+        notifyToast.show(
+          context: context,
+          child: const ErrorNotifyToast(
+            title: "Nie udało się zaimportować rozszerzenia",
+          ),
+        );
+        return;
+      }
+
+      notifyToast.show(
+        context: context,
+        child: const SuccessNotifyToast(
+          title: "Zaimportowano rozszerzenie",
+        ),
+      );
+    } else if (uniqueness == MDNExtensionUniqueness.editableExtension) {
+      final bool patched = await ExtensionsHelper.patchExtension(extension);
+      if (!patched) {
+        notifyToast.show(
+          context: context,
+          child: const ErrorNotifyToast(
+            title: "Nie udało się zaktualizować rozszerzenia",
+          ),
+        );
+        return;
+      }
+
+      notifyToast.show(
+        context: context,
+        child: const SuccessNotifyToast(
+          title: "Zaktualizowano rozszerzenie",
+        ),
+      );
+    } else if (uniqueness == MDNExtensionUniqueness.nonModified) {
+      notifyToast.show(
+        context: context,
+        child: const ErrorNotifyToast(
+          title: "Rozszerzenie nie zostało zaktualizowane",
+          body: "Brak zmian względem już zaimportowanego",
         ),
       );
     }
-
-    notifyToast.show(
-      context: context,
-      child: const SuccessNotifyToast(
-        title: "Zaimportowano rozszerzenie",
-      ),
-    );
   }
 
   @override
