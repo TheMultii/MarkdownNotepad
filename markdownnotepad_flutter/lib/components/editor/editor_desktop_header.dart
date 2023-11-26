@@ -100,13 +100,15 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
                 ),
               ),
               InkWell(
+                borderRadius: BorderRadius.circular(9999),
                 onTap: () => widget.toggleLiveShare(),
                 child: Padding(
-                  padding: const EdgeInsets.all(4.0),
+                  padding: const EdgeInsets.all(6.0),
                   child: Icon(
                     widget.isLiveShareEnabled
                         ? Symbols.share_off
                         : Symbols.share,
+                    size: 20,
                     color: Theme.of(context)
                         .extension<MarkdownNotepadTheme>()
                         ?.text
