@@ -5,7 +5,7 @@ export class NoteTagOptionalDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  @Length(4, 10)
+  @Length(2, 10)
   title: string;
 
   @ApiProperty()

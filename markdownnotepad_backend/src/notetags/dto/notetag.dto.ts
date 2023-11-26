@@ -4,7 +4,7 @@ import { IsHexColor, IsString, Length } from 'class-validator';
 export class NoteTagDto {
   @ApiProperty()
   @IsString()
-  @Length(4, 10)
+  @Length(2, 10)
   title: string;
 
   @ApiProperty()
