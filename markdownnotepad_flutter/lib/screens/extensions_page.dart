@@ -25,15 +25,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
   void loadExtension() async {
     final MDNLoadExtension? mdnLoadExtension =
         await ExtensionsHelper.loadExtension();
-    if (mdnLoadExtension == null) {
-      notifyToast.show(
-        context: context,
-        child: const ErrorNotifyToast(
-          title: "Wybrano nieprawidłowy plik",
-        ),
-      );
-      return;
-    }
+    if (mdnLoadExtension == null) return;
 
     final bool validated =
         await ExtensionsHelper.validateLoadExtension(mdnLoadExtension);
