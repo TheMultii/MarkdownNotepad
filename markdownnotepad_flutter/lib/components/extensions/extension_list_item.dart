@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:markdownnotepad/components/alertdialogs/show_extension_details_alert_dialog.dart';
 import 'package:markdownnotepad/components/extensions/extension_status_chip.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/viewmodels/extension.dart';
@@ -92,7 +96,22 @@ class ExtensionListItem extends StatelessWidget {
                         ?.cardColor,
                     child: InkWell(
                       onTap: () {
-                        //
+                        showDialog(
+                          context: context,
+                          builder: (c) => ShowExtensionDetailsAlertDialog(
+                            extension: extension,
+                          )
+                              .animate()
+                              .fadeIn(
+                                duration: 100.ms,
+                              )
+                              .scale(
+                                duration: 100.ms,
+                                curve: Curves.easeInOut,
+                                begin: const Offset(0, 0),
+                                end: const Offset(1, 1),
+                              ),
+                        );
                       },
                       borderRadius: BorderRadius.circular(4),
                       child: const Padding(
