@@ -105,6 +105,11 @@ class _CreateNewCatalogAlertDialogState
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(8.0),
+        ),
+      ),
       title: const Text(
         "Nowy folder",
         textAlign: TextAlign.center,
