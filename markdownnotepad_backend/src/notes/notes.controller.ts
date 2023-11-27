@@ -459,6 +459,19 @@ export class NotesController {
 
       this.notesService.deleteNoteById(params.id);
 
+      const requestIP =
+        request.headers['x-forwarded-for'].toString() ||
+        request.ip ||
+        request.socket.remoteAddress;
+
+      await this.eventLogsService.addEventLog({
+        userId: user.id,
+        type: 'delete_note',
+        noteId: noteToRemove.id,
+        message: `User deleted note ${noteToRemove.title}`,
+        ip: requestIP,
+      });
+
       return response.status(200).json({
         message: 'Note deleted successfully',
       });
