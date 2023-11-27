@@ -57,6 +57,11 @@ export class EventLogsController {
         return response.status(400).json({ error: 'Bad request' });
       }
 
+      const totalPages = await this.eventLogsService.getEventLogsPageCount(
+        decodedJWT.username,
+        10,
+      );
+
       const result = await this.eventLogsService.getUsersEventLogs(
         decodedJWT.username,
         page.page,
@@ -64,7 +69,7 @@ export class EventLogsController {
 
       return response.status(200).json({
         page: parseInt(page.page.toString()),
-        totalPages: 9999999, //TODO: change this
+        totalPages: totalPages,
         eventLogs: result,
       });
     } catch (error) {
