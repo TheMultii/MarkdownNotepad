@@ -110,14 +110,21 @@ export class UserController {
       const result: UserPasswordless = await this.userService.getUserById(
         uuidDTO.id,
       );
-
-      // TODO: remove notes, catalogs and notetags from result
+      const resultWithout = new UserPasswordless();
+      resultWithout.id = result.id;
+      resultWithout.username = result.username;
+      resultWithout.email = result.email;
+      resultWithout.name = result.name;
+      resultWithout.surname = result.surname;
+      resultWithout.bio = result.bio;
+      resultWithout.createdAt = result.createdAt;
+      resultWithout.updatedAt = result.updatedAt;
 
       if (!result) {
         return response.status(404).json({ message: 'User not found' });
       }
 
-      return response.status(200).json(result);
+      return response.status(200).json(resultWithout);
     } catch (error) {
       return response
         .status(500)
