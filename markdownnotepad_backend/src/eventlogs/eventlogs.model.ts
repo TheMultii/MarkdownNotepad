@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 
 export class EventLog implements Prisma.EventLogsCreateInput {
-  id: string;
+  id?: string;
   type: string;
   message: string;
   userId?: string;
