@@ -215,9 +215,10 @@ export class NotesController {
       }
 
       const requestIP =
-        request.headers['x-forwarded-for'].toString() ||
-        request.ip ||
-        request.socket.remoteAddress;
+        request.ip ??
+        request.headers['x-forwarded-for']?.toString() ??
+        request.socket.remoteAddress ??
+        'unknown';
 
       await this.eventLogsService.addEventLog({
         userId: user.id,
@@ -318,9 +319,10 @@ export class NotesController {
       }
 
       const requestIP =
-        request.headers['x-forwarded-for'].toString() ||
-        request.ip ||
-        request.socket.remoteAddress;
+        request.ip ??
+        request.headers['x-forwarded-for']?.toString() ??
+        request.socket.remoteAddress ??
+        'unknown';
       const tagsEditedMaps = [];
       if (noteDto.tags) {
         for (const tag of noteDto.tags) {
@@ -476,9 +478,10 @@ export class NotesController {
       this.notesService.deleteNoteById(params.id);
 
       const requestIP =
-        request.headers['x-forwarded-for'].toString() ||
-        request.ip ||
-        request.socket.remoteAddress;
+        request.ip ??
+        request.headers['x-forwarded-for']?.toString() ??
+        request.socket.remoteAddress ??
+        'unknown';
 
       await this.eventLogsService.addEventLog({
         userId: user.id,
