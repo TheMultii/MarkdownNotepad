@@ -308,6 +308,12 @@ export class NotesController {
           await this.notesService.disconnectFolder(request.params.id);
         }
       }
+
+      const requestIP =
+        request.headers['x-forwarded-for'].toString() ||
+        request.ip ||
+        request.socket.remoteAddress;
+      const tagsEditedMaps = [];
       if (noteDto.tags) {
         for (const tag of noteDto.tags) {
           const t = await this.prismaService.noteTag.findUnique({
@@ -319,6 +325,37 @@ export class NotesController {
             return response.status(404).json({ message: 'Tag not found' });
           }
         }
+
+        const added = noteincludeCheck.tags.filter(
+          (x) => !noteDto.tags.includes(x.id),
+        );
+        const addedString = added.map((x) => x.id).join(', ');
+
+        const removed = noteDto.tags.filter(
+          (x) => !noteincludeCheck.tags.map((y) => y.id).includes(x),
+        );
+        const removedString = removed.join(', ');
+
+        if (added.length > 0) {
+          tagsEditedMaps.push({
+            userId: user.id,
+            type: 'add_notetags',
+            noteId: noteincludeCheck.id,
+            message: `User added ${addedString} tags to the ${noteincludeCheck.title} note`,
+            ip: requestIP,
+          });
+        }
+
+        if (removed.length > 0) {
+          tagsEditedMaps.push({
+            userId: user.id,
+            type: 'remove_notetags',
+            noteId: noteincludeCheck.id,
+            message: `User removed ${removedString} tags from the ${noteincludeCheck.title} note`,
+            ip: requestIP,
+          });
+        }
+
         note.tags = {
           connect: noteDto.tags.map((tag) => {
             return { id: tag };
@@ -340,6 +377,26 @@ export class NotesController {
       if (!noteCheck) {
         return response.status(500).json({ message: 'Note not updated' });
       }
+
+      const nel = await this.eventLogsService.getNewestUsersEventLog(
+        user.username,
+      );
+      if (
+        nel &&
+        nel.noteId === noteCheck.id &&
+        nel.createdAt.getTime() + 300000 <= Date.now()
+      ) {
+        await this.eventLogsService.addEventLog({
+          userId: user.id,
+          type: 'update_note',
+          noteId: noteCheck.id,
+          message: `User updated note ${noteCheck.title}`,
+          ip: requestIP,
+        });
+      }
+
+      for (const el of tagsEditedMaps)
+        await this.eventLogsService.addEventLog(el);
 
       return response
         .status(200)
