@@ -241,6 +241,8 @@ export class NotesController {
   @ApiOperation({ summary: 'Update a note' })
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ description: 'Update a note', type: NoteResponse })
+  @ApiBadRequestResponse({ description: 'Bad request', type: Error400 })
+  @ApiForbiddenResponse({ description: 'Missing permissions', type: Error403 })
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error',
     type: Error500,
