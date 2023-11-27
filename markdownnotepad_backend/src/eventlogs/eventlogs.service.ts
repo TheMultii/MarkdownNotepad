@@ -31,6 +31,30 @@ export class EventLogsService {
     });
   }
 
+  async getNewestUsersEventLog(username: string) {
+    const userId = await this.prisma.user.findUnique({
+      where: {
+        username,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!userId) {
+      return null;
+    }
+
+    return await this.prisma.eventLogs.findFirst({
+      where: {
+        userId: userId.id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
   async addEventLog(eventLog: EventLogModel) {
     return await this.prisma.eventLogs.create({
       data: eventLog,
