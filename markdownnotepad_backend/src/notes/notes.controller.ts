@@ -451,6 +451,14 @@ export class NotesController {
         return response.status(404).json({ message: 'Note not found' });
       }
 
+      const user: UserPasswordless = await this.userService.getUserByUsername(
+        decodedJWT.username,
+      );
+
+      if (!user) {
+        return response.status(500).json({ message: 'User not found' });
+      }
+
       if (noteToRemove.author.username !== decodedJWT.username) {
         return response
           .status(403)
