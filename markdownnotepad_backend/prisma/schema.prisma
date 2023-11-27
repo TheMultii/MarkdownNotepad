@@ -66,7 +66,7 @@ model EventLogs {
   message   String
   userId    String?
   noteId    String?
-  tagId     String?
+  tagsId    String[]
   catalogId String?
   ip        String?
   createdAt DateTime @default(now())
