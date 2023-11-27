@@ -62,6 +62,14 @@ export class EventLogsController {
         10,
       );
 
+      if (page.page < 1 || page.page > totalPages) {
+        return response.status(200).json({
+          page: parseInt(page.page.toString()),
+          totalPages: totalPages,
+          eventLogs: [],
+        });
+      }
+
       const result = await this.eventLogsService.getUsersEventLogs(
         decodedJWT.username,
         page.page,
