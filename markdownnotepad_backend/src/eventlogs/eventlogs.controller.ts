@@ -62,7 +62,7 @@ export class EventLogsController {
         10,
       );
 
-      if (page.page < 1 || page.page > totalPages) {
+      if (page.page > totalPages) {
         return response.status(200).json({
           page: parseInt(page.page.toString()),
           totalPages: totalPages,
