@@ -285,6 +285,12 @@ export class NotesController {
         return response.status(404).json({ message: 'Note not found' });
       }
 
+      if (noteincludeCheck.author.username !== decodedJWT.username) {
+        return response.status(403).json({
+          message: 'You do not have permission to access this note',
+        });
+      }
+
       const note = new NoteModel();
       if (noteDto.title) note.title = noteDto.title;
       if (noteDto.content) note.content = noteDto.content;
