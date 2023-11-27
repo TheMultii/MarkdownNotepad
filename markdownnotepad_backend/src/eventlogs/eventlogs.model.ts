@@ -6,7 +6,7 @@ export class EventLog implements Prisma.EventLogsCreateInput {
   message: string;
   userId?: string;
   noteId?: string;
-  tagId?: string;
+  tagsId?: string[];
   catalogId?: string;
   ip?: string;
   createdAt?: string | Date;
