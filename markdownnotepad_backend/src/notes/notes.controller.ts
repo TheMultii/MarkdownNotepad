@@ -47,6 +47,7 @@ import { UserPasswordless } from 'src/user/user.model';
 import { PrismaService } from 'src/prisma.service';
 import { NoteDtoOptional } from './dto/note.optional.dto';
 import { UUIDDto } from 'src/dto';
+import { EventLogsService } from 'src/eventlogs/eventlogs.service';
 
 @Controller('notes')
 @ApiBearerAuth()
@@ -55,6 +56,7 @@ export class NotesController {
   constructor(
     private readonly notesService: NotesService,
     private readonly userService: UserService,
+    private readonly eventLogsService: EventLogsService,
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
@@ -211,6 +213,19 @@ export class NotesController {
       if (!noteCheck) {
         return response.status(500).json({ message: 'Note not created' });
       }
+
+      const requestIP =
+        request.headers['x-forwarded-for'].toString() ||
+        request.ip ||
+        request.socket.remoteAddress;
+
+      await this.eventLogsService.addEventLog({
+        userId: user.id,
+        type: 'create_note',
+        noteId: noteCheck.id,
+        message: `User created note ${noteCheck.title}`,
+        ip: requestIP,
+      });
 
       return response
         .status(201)
