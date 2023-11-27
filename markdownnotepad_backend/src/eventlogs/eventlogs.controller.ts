@@ -15,6 +15,8 @@ import { Error400, Error500 } from 'src/http_response_models';
 import { EventLogsDto } from './dto/eventlogs.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
+import { UserPasswordless } from 'src/user/user.model';
+import { UserService } from 'src/user/user.service';
 
 @Controller('eventlogs')
 @ApiBearerAuth()
@@ -22,6 +24,7 @@ import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
 export class EventLogsController {
   constructor(
     private readonly eventLogsService: EventLogsService,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -57,8 +60,16 @@ export class EventLogsController {
         return response.status(400).json({ error: 'Bad request' });
       }
 
-      const totalPages = await this.eventLogsService.getEventLogsPageCount(
+      const user: UserPasswordless = await this.userService.getUserByUsername(
         decodedJWT.username,
+      );
+
+      if (!user) {
+        return response.status(500).json({ message: 'User not found' });
+      }
+
+      const totalPages = await this.eventLogsService.getEventLogsPageCount(
+        user.id,
         10,
       );
 
