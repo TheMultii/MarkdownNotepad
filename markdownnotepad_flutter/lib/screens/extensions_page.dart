@@ -6,6 +6,7 @@ import 'package:markdownnotepad/components/extensions/extension_list_item.dart';
 import 'package:markdownnotepad/components/notifications/error_notify_toast.dart';
 import 'package:markdownnotepad/components/notifications/success_notify_toast.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/helpers/extensions_helper.dart';
@@ -23,6 +24,13 @@ class ExtensionsPage extends StatefulWidget {
 
 class _ExtensionsPageState extends State<ExtensionsPage> {
   final NotifyToast notifyToast = NotifyToast();
+
+  @override
+  void initState() {
+    super.initState();
+
+    MDNDiscordRPC().clearPresence();
+  }
 
   void loadExtension() async {
     final MDNLoadExtension? mdnLoadExtension =
