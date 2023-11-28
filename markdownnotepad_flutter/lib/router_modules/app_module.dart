@@ -5,7 +5,7 @@ import 'package:markdownnotepad/router_modules/miscellaneous_module.dart';
 import 'package:markdownnotepad/router_modules/dashboard_module.dart';
 import 'package:markdownnotepad/router_modules/editor_module.dart';
 import 'package:markdownnotepad/router_modules/notetag_module.dart';
-import 'package:markdownnotepad/screens/home_page.dart';
+import 'package:markdownnotepad/screens/router_outlet/home_page.dart';
 
 class MDNAppModule extends Module {
   @override
