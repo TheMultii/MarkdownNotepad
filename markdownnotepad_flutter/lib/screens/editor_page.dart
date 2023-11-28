@@ -81,7 +81,6 @@ class _EditorPageState extends State<EditorPage> {
     authorizationString = "Bearer ${loggedInUser!.accessToken}";
 
     noteTitle = Modular.args.data?['noteTitle'] as String? ?? '';
-    // controller.text += '\n\n## ${widget.id}';
 
     mdnDiscordRPC = MDNDiscordRPC();
     mdnDiscordRPC.setPresence(
