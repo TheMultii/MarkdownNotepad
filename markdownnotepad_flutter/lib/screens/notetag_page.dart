@@ -12,6 +12,7 @@ import 'package:markdownnotepad/components/notetag/notetag_page_empty.dart';
 import 'package:markdownnotepad/components/notifications/error_notify_toast.dart';
 import 'package:markdownnotepad/components/notifications/success_notify_toast.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/helpers/color_converter.dart';
@@ -60,6 +61,8 @@ class _NoteTagPageState extends State<NoteTagPage> {
   @override
   void initState() {
     super.initState();
+
+    MDNDiscordRPC().clearPresence();
 
     noteTagName = Modular.args.data?['tagName'] as String? ?? '';
     newNoteTagNameController.text = noteTagName;
