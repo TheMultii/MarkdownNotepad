@@ -5,10 +5,17 @@ import { PrismaService } from 'src/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { EventLogsService } from 'src/eventlogs/eventlogs.service';
+import { NoteTagsService } from 'src/notetags/notetags.service';
 
 @Module({
   controllers: [NotesController],
-  providers: [NotesService, UserService, EventLogsService, PrismaService],
+  providers: [
+    NotesService,
+    UserService,
+    NoteTagsService,
+    EventLogsService,
+    PrismaService,
+  ],
   imports: [
     JwtModule.register({
       secret: process.env.JWT_SECRET,
