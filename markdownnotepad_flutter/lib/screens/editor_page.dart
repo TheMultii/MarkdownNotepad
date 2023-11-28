@@ -145,6 +145,29 @@ class _EditorPageState extends State<EditorPage> {
     }
   }
 
+  void closeLiveShare() {
+    if (loggedInUser?.user.id != note?.user?.id) return;
+
+    try {
+      liveShareSocket.disconnect();
+      setState(() => isLiveShareEnabled = false);
+
+      if (note?.user?.id != loggedInUser?.user.id) {
+        Modular.to.navigate('/dashboard/');
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+
+      notifyToast.show(
+        context: context,
+        child: const ErrorNotifyToast(
+          title: "Wystąpił błąd",
+          body: "Nie można rozłączyć się z serwerem LiveShare.",
+        ),
+      );
+    }
+  }
+
   void saveNoteToCache(Note? noteToSave, {List<NoteTag>? tagsToSave}) {
     final toSave = noteToSave ?? note;
     if (toSave == null) return;
