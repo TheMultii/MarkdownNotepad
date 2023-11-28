@@ -25,8 +25,11 @@ import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 import 'package:provider/provider.dart';
 
 class AccountEditProfileSection extends StatefulWidget {
+  final LoggedInUser loggedInUser;
+
   const AccountEditProfileSection({
     super.key,
+    required this.loggedInUser,
   });
 
   @override
@@ -211,82 +214,71 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CurrentLoggedInUserProvider>(
-      builder: (context, notifier, child) {
-        if (notifier.currentUser == null) {
-          Modular.to.navigate('/auth/login');
-          return const SizedBox.shrink();
-        }
-
-        final loggedInUser = notifier.currentUser!;
-
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 32.0),
-          child: IntrinsicHeight(
-            child: Responsive.isMobile(context)
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AccountEditProfileSectionColumn1(
-                        loggedInUser: loggedInUser,
-                        emailInputController: emailInputController,
-                        firstNameInputController: firstNameInputController,
-                        lastNameInputController: lastNameInputController,
-                        bioInputController: bioInputController,
-                        passwordInputController: passwordInputController,
-                        passwordRepeatInputController:
-                            passwordRepeatInputController,
-                        updateUserProfile: updateUserProfile,
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      AccountEditProfileSectionColumn2(
-                        loggedInUser: loggedInUser,
-                        setUploadedImage: setUploadedImage,
-                        uploadedImage: uploadedImage,
-                        uploadedImageBytes: uploadedImageBytes,
-                        updateUserProfile: updateUserProfile,
-                        randomAvatarString: randomAvatarString,
-                      ),
-                    ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: AccountEditProfileSectionColumn1(
-                          loggedInUser: loggedInUser,
-                          emailInputController: emailInputController,
-                          firstNameInputController: firstNameInputController,
-                          lastNameInputController: lastNameInputController,
-                          bioInputController: bioInputController,
-                          passwordInputController: passwordInputController,
-                          passwordRepeatInputController:
-                              passwordRepeatInputController,
-                          updateUserProfile: updateUserProfile,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 16,
-                      ),
-                      Expanded(
-                        child: AccountEditProfileSectionColumn2(
-                          loggedInUser: loggedInUser,
-                          setUploadedImage: setUploadedImage,
-                          uploadedImage: uploadedImage,
-                          uploadedImageBytes: uploadedImageBytes,
-                          updateUserProfile: updateUserProfile,
-                          randomAvatarString: randomAvatarString,
-                        ),
-                      ),
-                    ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 32.0),
+      child: IntrinsicHeight(
+        child: Responsive.isMobile(context)
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AccountEditProfileSectionColumn1(
+                    loggedInUser: widget.loggedInUser,
+                    emailInputController: emailInputController,
+                    firstNameInputController: firstNameInputController,
+                    lastNameInputController: lastNameInputController,
+                    bioInputController: bioInputController,
+                    passwordInputController: passwordInputController,
+                    passwordRepeatInputController:
+                        passwordRepeatInputController,
+                    updateUserProfile: updateUserProfile,
                   ),
-          ),
-        );
-      },
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  AccountEditProfileSectionColumn2(
+                    loggedInUser: widget.loggedInUser,
+                    setUploadedImage: setUploadedImage,
+                    uploadedImage: uploadedImage,
+                    uploadedImageBytes: uploadedImageBytes,
+                    updateUserProfile: updateUserProfile,
+                    randomAvatarString: randomAvatarString,
+                  ),
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: AccountEditProfileSectionColumn1(
+                      loggedInUser: widget.loggedInUser,
+                      emailInputController: emailInputController,
+                      firstNameInputController: firstNameInputController,
+                      lastNameInputController: lastNameInputController,
+                      bioInputController: bioInputController,
+                      passwordInputController: passwordInputController,
+                      passwordRepeatInputController:
+                          passwordRepeatInputController,
+                      updateUserProfile: updateUserProfile,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
+                    child: AccountEditProfileSectionColumn2(
+                      loggedInUser: widget.loggedInUser,
+                      setUploadedImage: setUploadedImage,
+                      uploadedImage: uploadedImage,
+                      uploadedImageBytes: uploadedImageBytes,
+                      updateUserProfile: updateUserProfile,
+                      randomAvatarString: randomAvatarString,
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 }
