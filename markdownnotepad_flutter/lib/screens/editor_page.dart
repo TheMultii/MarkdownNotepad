@@ -128,6 +128,23 @@ class _EditorPageState extends State<EditorPage> {
     super.dispose();
   }
 
+  void connectToLiveShare() {
+    try {
+      liveShareSocket.connect();
+      setState(() => isLiveShareEnabled = true);
+    } catch (e) {
+      debugPrint(e.toString());
+
+      notifyToast.show(
+        context: context,
+        child: const ErrorNotifyToast(
+          title: "Wystąpił błąd",
+          body: "Nie można połączyć się z serwerem LiveShare.",
+        ),
+      );
+    }
+  }
+
   void saveNoteToCache(Note? noteToSave, {List<NoteTag>? tagsToSave}) {
     final toSave = noteToSave ?? note;
     if (toSave == null) return;
