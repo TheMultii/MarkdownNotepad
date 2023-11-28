@@ -115,6 +115,7 @@ class _EditorPageState extends State<EditorPage> {
             .build());
 
     liveShareSocket.onConnect(liveShareSocketOnConnect);
+    liveShareSocket.onDisconnect(liveShareSocketOnDisconnect);
     getInitialData();
   }
 
@@ -132,6 +133,25 @@ class _EditorPageState extends State<EditorPage> {
   void liveShareSocketOnConnect(_) {
     debugPrint('Connected to LiveShare server');
     debugPrint('Data from onConnect: $_');
+  }
+
+  void liveShareSocketOnDisconnect(_) {
+    debugPrint('Disconnected from LiveShare server');
+    debugPrint('Data from onDisconnect: $_');
+
+    setState(() => isLiveShareEnabled = false);
+
+    if (note?.user?.id != loggedInUser?.user.id) {
+      notifyToast.show(
+        context: context,
+        child: const ErrorNotifyToast(
+          title: "Wystąpił błąd",
+          body: "Użytkownik, który udostępnił Ci tę notatkę, rozłączył się.",
+        ),
+      );
+
+      Modular.to.navigate('/dashboard/');
+    }
   }
 
   void connectToLiveShare() {
