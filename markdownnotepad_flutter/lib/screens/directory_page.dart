@@ -13,6 +13,7 @@ import 'package:markdownnotepad/components/directory/directory_page_empty.dart';
 import 'package:markdownnotepad/components/notifications/error_notify_toast.dart';
 import 'package:markdownnotepad/components/notifications/success_notify_toast.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
@@ -62,6 +63,8 @@ class _DirectoryPageState extends State<DirectoryPage> {
   @override
   void initState() {
     super.initState();
+
+    MDNDiscordRPC().clearPresence();
 
     directoryName = Modular.args.data?['catalogName'] as String? ?? '';
     newDirectoryNameController.text = directoryName;
