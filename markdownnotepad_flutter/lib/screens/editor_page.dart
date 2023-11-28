@@ -7,6 +7,7 @@ import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:flutter_highlight/themes/a11y-dark.dart';
 import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:highlight/languages/markdown.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/components/alertdialogs/ask_note_client_server_mismatch_action.dart';
 import 'package:markdownnotepad/components/editor/editor_desktop_change_tab.dart';
 import 'package:markdownnotepad/components/editor/editor_desktop_disable_sidebar.dart';
@@ -27,9 +28,12 @@ import 'package:markdownnotepad/models/notetag.dart';
 import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
+import 'package:markdownnotepad/viewmodels/connected_live_share_user.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
+import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class EditorPage extends StatefulWidget {
   final String id;
@@ -59,10 +63,13 @@ class _EditorPageState extends State<EditorPage> {
 
   EditorTabs selectedTab = EditorTabs.editor;
   bool isEditorSidebarEnabled = true;
-  bool isLiveShareEnabled = false;
 
   Note? note;
   bool isNoteSafeToEdit = false;
+
+  bool isLiveShareEnabled = false;
+  late io.Socket liveShareSocket;
+  List<ConnectedLiveShareUser> connectedLiveShareUsers = [];
 
   @override
   void initState() {
@@ -87,6 +94,22 @@ class _EditorPageState extends State<EditorPage> {
       state: "Editing a $noteTitle file",
       forceUpdate: false,
     );
+    final serverSettingsBox = Hive.box<ServerSettings>('server_settings');
+    final ServerSettings? serverSettings =
+        serverSettingsBox.get('server_settings');
+
+    if (serverSettings == null) {
+      Modular.to.navigate('/auth/login');
+      return;
+    }
+
+    liveShareSocket = io.io(
+        'http://${serverSettings.ipAddress}:${serverSettings.port}/notes?id=${widget.id}',
+        io.OptionBuilder()
+            .setTransports(['websocket'])
+            .disableAutoConnect()
+            .setExtraHeaders({'Authorization': authorizationString})
+            .build());
 
     getInitialData();
   }
@@ -95,6 +118,10 @@ class _EditorPageState extends State<EditorPage> {
   void dispose() {
     controller.dispose();
     fNode.dispose();
+    if (isLiveShareEnabled) {
+      liveShareSocket.disconnect();
+    }
+    liveShareSocket.dispose();
     super.dispose();
   }
 
