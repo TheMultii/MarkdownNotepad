@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:markdownnotepad/components/auth/auth_button.dart';
 import 'package:markdownnotepad/components/cached_network_image.dart';
 import 'package:markdownnotepad/components/input_input.dart';
+import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
@@ -25,6 +26,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   void initState() {
     super.initState();
 
+    MDNDiscordRPC().clearPresence();
     apiService = context.read<ApiServiceProvider>().apiService;
   }
 
