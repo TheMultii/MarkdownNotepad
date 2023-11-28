@@ -1,33 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_history_list_item.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_last_viewed_cards.dart';
-import 'package:markdownnotepad/enums/dashboard_history_item_actions.dart';
 import 'package:markdownnotepad/models/note.dart';
+import 'package:markdownnotepad/viewmodels/event_log_vm.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 
-class DashboardLastViewedSection extends StatefulWidget {
+class DashboardLastViewedSection extends StatelessWidget {
   final LoggedInUser loggedInUser;
+  final List<EventLogVM>? eventLogs;
 
   const DashboardLastViewedSection({
     super.key,
     required this.loggedInUser,
+    required this.eventLogs,
   });
 
   @override
-  State<DashboardLastViewedSection> createState() =>
-      _DashboardLastViewedSectionState();
-}
-
-class _DashboardLastViewedSectionState
-    extends State<DashboardLastViewedSection> {
-  @override
   Widget build(BuildContext context) {
-    final List<Note> notesSorted = widget.loggedInUser.user.notes == null
-        ? []
-        : widget.loggedInUser.user.notes!
-      ..sort(
-        (a, b) => b.updatedAt.compareTo(a.updatedAt),
-      );
+    const int maxEventLogs = 5;
+    final List<Note> notesSorted =
+        loggedInUser.user.notes == null ? [] : loggedInUser.user.notes!
+          ..sort(
+            (a, b) => b.updatedAt.compareTo(a.updatedAt),
+          );
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,88 +73,35 @@ class _DashboardLastViewedSectionState
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DashboardHistoryListItem(
-                  isLast: false,
-                  userName: widget.loggedInUser.user.name.isNotEmpty
-                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
-                      : widget.loggedInUser.user.username,
-                  actionDateTime: DateTime.now(),
-                  note: const {
-                    "id": 1,
-                    "title": "Sample title",
-                  },
-                  action: DashboardHistoryItemActions.editedNote,
-                ),
-                DashboardHistoryListItem(
-                  isLast: false,
-                  userName: widget.loggedInUser.user.name.isNotEmpty
-                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
-                      : widget.loggedInUser.user.username,
-                  actionDateTime: DateTime.now(),
-                  note: const {
-                    "id": 1,
-                    "title": "Sample title",
-                  },
-                  action: DashboardHistoryItemActions.addedTag,
-                  tags: const ["TAG 1"],
-                ),
-                DashboardHistoryListItem(
-                  isLast: false,
-                  userName: widget.loggedInUser.user.name.isNotEmpty
-                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
-                      : widget.loggedInUser.user.username,
-                  actionDateTime: DateTime.now(),
-                  note: const {
-                    "id": 1,
-                    "title": "Sample title",
-                  },
-                  action: DashboardHistoryItemActions.removedTag,
-                  tags: const ["TAG 2", "TAG 3"],
-                ),
-                DashboardHistoryListItem(
-                  isLast: false,
-                  userName: widget.loggedInUser.user.name.isNotEmpty
-                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
-                      : widget.loggedInUser.user.username,
-                  actionDateTime: DateTime.now().subtract(
-                    const Duration(hours: 3),
-                  ),
-                  note: const {
-                    "id": 1,
-                    "title": "Sample title",
-                  },
-                  action: DashboardHistoryItemActions.createdNote,
-                ),
-                DashboardHistoryListItem(
-                  isLast: false,
-                  userName: widget.loggedInUser.user.name.isNotEmpty
-                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
-                      : widget.loggedInUser.user.username,
-                  actionDateTime: DateTime.now().subtract(
-                    const Duration(days: 7),
-                  ),
-                  note: const {
-                    "id": 1,
-                    "title": "Sample title",
-                  },
-                  action: DashboardHistoryItemActions.deletedNote,
-                ),
-                DashboardHistoryListItem(
-                  isLast: false,
-                  userName: widget.loggedInUser.user.name.isNotEmpty
-                      ? "${widget.loggedInUser.user.name} ${widget.loggedInUser.user.surname}"
-                      : widget.loggedInUser.user.username,
-                  actionDateTime: DateTime.now().subtract(
-                    const Duration(days: 400),
-                  ),
-                  note: const {
-                    "id": 1,
-                    "title": "Sample title",
-                  },
-                  action: DashboardHistoryItemActions.editedNote,
-                ),
-              ],
+              children: eventLogs
+                      ?.take(maxEventLogs)
+                      .map(
+                        (entry) => DashboardHistoryListItem(
+                          userName: loggedInUser.user.name.isNotEmpty
+                              ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
+                              : loggedInUser.user.username,
+                          actionDateTime: entry.createdAt,
+                          note: {
+                            "id": entry.noteId,
+                            "title": entry.noteTitle ?? "Nieznana notatka",
+                            "exists": entry.exists,
+                          },
+                          action: entry.action,
+                          tags: entry.tagsId.asMap().entries.map(
+                            (e) {
+                              final int id = e.key;
+                              return {
+                                "title": entry.tagsTitles[id],
+                                "color": entry.tagsColors[id],
+                              };
+                            },
+                          ).toList(),
+                        ),
+                      )
+                      .toList() ??
+                  [
+                    const Text("Brak historii zdarzeń"),
+                  ],
             ),
           ],
         ),
