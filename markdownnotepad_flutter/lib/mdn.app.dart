@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -29,6 +30,16 @@ class _MDNAppState extends State<MDNApp> {
     if (savedSettings?.ipAddress == null || savedSettings!.ipAddress.isEmpty) {
       redirectToInitialPage = true;
     }
+
+    LicenseRegistry.addLicense(() => Stream<LicenseEntry>.value(
+          const LicenseEntryWithLineBreaks(
+            <String>['dart_discord_rpc'],
+            '''
+Changes:
+
+- Added support for the newer version of Flutter and used dependencies''',
+          ),
+        ));
   }
 
   @override
