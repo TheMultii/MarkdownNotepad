@@ -114,6 +114,7 @@ class _EditorPageState extends State<EditorPage> {
             .setExtraHeaders({'Authorization': authorizationString})
             .build());
 
+    liveShareSocket.onConnect(liveShareSocketOnConnect);
     getInitialData();
   }
 
@@ -126,6 +127,11 @@ class _EditorPageState extends State<EditorPage> {
     }
     liveShareSocket.dispose();
     super.dispose();
+  }
+
+  void liveShareSocketOnConnect(_) {
+    debugPrint('Connected to LiveShare server');
+    debugPrint('Data from onConnect: $_');
   }
 
   void connectToLiveShare() {
