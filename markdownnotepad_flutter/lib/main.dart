@@ -51,6 +51,7 @@ void main() async {
   await Hive.openBox<ServerSettings>('server_settings');
   await Hive.openBox<LoggedInUser>('logged_in_user');
   await Hive.openBox<ImportedExtensions>('imported_extensions');
+  await Hive.openBox<EventLogVMList>('event_logs');
 
   WidgetsFlutterBinding.ensureInitialized();
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
