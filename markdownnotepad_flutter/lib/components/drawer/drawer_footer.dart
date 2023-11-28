@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:markdownnotepad/components/avatar_with_status.dart';
@@ -35,11 +36,18 @@ class MDNDrawerFooter extends StatelessWidget {
                   ?.drawerBackground,
               statusSize: 13,
               child: ClipOval(
-                child: Image.network(
-                  notifier.avatarUrl,
+                child: CachedNetworkImage(
+                  imageUrl: notifier.avatarUrl,
                   width: 38,
                   height: 38,
                   fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(
+                    strokeWidth: 3.0,
+                  ),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error,
+                  ),
                 ),
               ),
             ),
