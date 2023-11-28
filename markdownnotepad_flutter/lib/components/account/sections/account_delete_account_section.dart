@@ -8,6 +8,7 @@ import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 class AccountDeleteAccountSection extends StatefulWidget {
@@ -77,7 +78,8 @@ class _AccountDeleteAccountSectionState
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Icon(
-                Icons.delete_forever,
+                Symbols.delete_forever,
+                fill: 1,
                 size: 28,
               ),
               const SizedBox(
