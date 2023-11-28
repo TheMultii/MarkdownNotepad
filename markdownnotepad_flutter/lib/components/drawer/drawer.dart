@@ -207,7 +207,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                           MDNDrawerItemSection(
                             title: "Ostatnie notatki",
                             icon: Icon(
-                              FeatherIcons.plus,
+                              Symbols.add,
                               size: 12,
                               color: extendedTheme?.text,
                             ),
@@ -223,7 +223,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                               .map(
                             (note) {
                               return MDNDrawerItem(
-                                icon: FeatherIcons.file,
+                                icon: Symbols.note,
                                 title: note.title,
                                 isSelected: isTabSelected("/editor/${note.id}"),
                                 onPressed: () {
@@ -244,7 +244,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                           MDNDrawerItemSection(
                             title: "Foldery",
                             icon: Icon(
-                              FeatherIcons.plus,
+                              Symbols.add,
                               size: 12,
                               color: extendedTheme?.text,
                             ),
@@ -259,7 +259,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                                       : catalogsSorted.length)
                               .map((catalog) {
                             return MDNDrawerItem(
-                              icon: FeatherIcons.folder,
+                              icon: Symbols.folder,
                               title: catalog.title,
                               isSelected: isTabSelected(
                                   "/dashboard/directory/${catalog.id}"),
@@ -280,7 +280,7 @@ class _MDNDrawerState extends State<MDNDrawer> {
                           MDNDrawerItemSection(
                             title: "Tagi",
                             icon: Icon(
-                              FeatherIcons.plus,
+                              Symbols.add,
                               size: 12,
                               color: extendedTheme?.text,
                             ),
