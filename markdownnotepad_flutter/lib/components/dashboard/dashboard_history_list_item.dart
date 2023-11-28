@@ -162,11 +162,22 @@ class DashboardHistoryListItem extends StatelessWidget {
                     getActionTextSpan(context),
                     WidgetSpan(
                       child: MouseRegion(
-                        cursor: SystemMouseCursors.click,
+                        cursor: exists
+                            ? SystemMouseCursors.click
+                            : SystemMouseCursors.basic,
                         child: GestureDetector(
-                          onTap: () {
-                            debugPrint("Go to note: ${note['id']}");
-                          },
+                          onTap: exists
+                              ? () {
+                                  final String destination =
+                                      "/editor/${note['id']}";
+                                  context
+                                      .read<DrawerCurrentTabProvider>()
+                                      .setCurrentTab(
+                                        destination,
+                                      );
+                                  Modular.to.navigate(destination);
+                                }
+                              : null,
                           child: Text(
                             note['title'],
                             style: TextStyle(
