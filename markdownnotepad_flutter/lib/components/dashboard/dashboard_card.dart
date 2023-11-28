@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/helpers/date_helper.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class DashboardCard extends StatelessWidget {
   final String title;
@@ -64,33 +65,45 @@ class DashboardCard extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      height: subtitle?.isEmpty ?? true ? 130 : 140,
-                      decoration: BoxDecoration(
-                        image: isDisabled
-                            ? null
-                            : isLocalImage
-                                ? DecorationImage(
-                                    alignment: imageAlignment,
-                                    image: AssetImage(backgroundImage),
-                                    fit: imageFit,
-                                  )
-                                : DecorationImage(
-                                    alignment: imageAlignment,
-                                    image: NetworkImage(backgroundImage),
-                                    fit: imageFit,
-                                  ),
-                        color: isDisabled
-                            ? Theme.of(context)
-                                .extension<MarkdownNotepadTheme>()
-                                ?.text!
-                                .withOpacity(.1)
-                            : null,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(3),
-                          topRight: Radius.circular(3),
+                    Stack(
+                      children: [
+                        Skeletonizer(
+                          enabled: true,
+                          child: Container(
+                            width: double.infinity,
+                            height: subtitle?.isEmpty ?? true ? 130 : 140,
+                            color: Colors.cyan,
+                          ),
                         ),
-                      ),
+                        Container(
+                          height: subtitle?.isEmpty ?? true ? 130 : 140,
+                          decoration: BoxDecoration(
+                            image: isDisabled
+                                ? null
+                                : isLocalImage
+                                    ? DecorationImage(
+                                        alignment: imageAlignment,
+                                        image: AssetImage(backgroundImage),
+                                        fit: imageFit,
+                                      )
+                                    : DecorationImage(
+                                        alignment: imageAlignment,
+                                        image: NetworkImage(backgroundImage),
+                                        fit: imageFit,
+                                      ),
+                            color: isDisabled
+                                ? Theme.of(context)
+                                    .extension<MarkdownNotepadTheme>()
+                                    ?.text!
+                                    .withOpacity(.1)
+                                : null,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(3),
+                              topRight: Radius.circular(3),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8),
