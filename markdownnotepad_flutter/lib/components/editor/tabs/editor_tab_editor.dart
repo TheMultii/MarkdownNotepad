@@ -7,6 +7,7 @@ import 'package:markdownnotepad/components/editor/editor_page_live_share_user_sm
 import 'package:markdownnotepad/components/notifications/info_notify_toast.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
+import 'package:markdownnotepad/intents/editor_shortcuts.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 
@@ -206,57 +207,78 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
                     },
                   ),
                   child: SingleChildScrollView(
-                    child: CodeField(
-                      controller: widget.controller,
-                      focusNode: widget.focusNode,
-                      wrap: true,
-                      separateGutterFromEditor: true,
-                      onChanged: (newContent) async {
-                        final String registeredValue = widget.controller.text;
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          if (widget.onNoteContentChanged != null &&
-                              registeredValue == widget.controller.text) {
-                            widget.onNoteContentChanged!(newContent);
-                          }
-                        });
-                      },
-                      gutterStyle: GutterStyle(
-                        width: widget.sidebarWidth,
-                        margin: 0,
-                        textAlign: TextAlign.right,
-                        background: widget.gutterColor,
-                        showErrors: widget.isEditorSidebarEnabled,
-                        showFoldingHandles: widget.isEditorSidebarEnabled,
-                        showLineNumbers: widget.isEditorSidebarEnabled,
-                      ),
-                      lineNumberBuilder: (index, style) {
-                        final int lineNumber = index + 1;
-                        style?.apply(
-                          color: widget.sidebarColor,
-                        );
+                    child: MDNEditorIntent(
+                      invokeFunction: (Intent intent) {
+                        final String intentName = intent.runtimeType
+                            .toString()
+                            .replaceAll('Intent', '')
+                            .replaceAll('Editor', '');
 
-                        return TextSpan(
-                          children: [
-                            if (lineNumber % 100 == 0)
-                              WidgetSpan(
-                                alignment: PlaceholderAlignment.middle,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 2.0),
-                                  child: EditorPageLiveShareUserSmallAvatar(
-                                    lineNumber: lineNumber,
-                                    onTap: () {
-                                      debugPrint('$lineNumber tapped');
-                                    },
+                        if (!widget.focusNode.hasFocus) return;
+
+                        changeLineIndentation(
+                          getLineNumber(),
+                          intentName,
+                        );
+                      },
+                      child: CodeField(
+                        controller: widget.controller,
+                        focusNode: widget.focusNode,
+                        wrap: true,
+                        separateGutterFromEditor: true,
+                        onChanged: (newContent) async {
+                          final String registeredValue = widget.controller.text;
+                          Future.delayed(const Duration(milliseconds: 500), () {
+                            if (widget.onNoteContentChanged != null &&
+                                registeredValue == widget.controller.text) {
+                              widget.onNoteContentChanged!(newContent);
+                            }
+                          });
+                        },
+                        gutterStyle: GutterStyle(
+                          width: widget.sidebarWidth,
+                          margin: 0,
+                          textAlign: TextAlign.right,
+                          background: widget.gutterColor,
+                          showErrors: widget.isEditorSidebarEnabled,
+                          showFoldingHandles: widget.isEditorSidebarEnabled,
+                          showLineNumbers: widget.isEditorSidebarEnabled,
+                        ),
+                        lineNumberBuilder: (index, style) {
+                          final int lineNumber = index + 1;
+                          style?.apply(
+                            color: widget.sidebarColor,
+                          );
+
+                          return TextSpan(
+                            children: [
+                              if (lineNumber % 100 == 0)
+                                WidgetSpan(
+                                  alignment: PlaceholderAlignment.middle,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      right: 2.0,
+                                    ),
+                                    child: EditorPageLiveShareUserSmallAvatar(
+                                      lineNumber: lineNumber,
+                                      onTap: () {
+                                        debugPrint('$lineNumber tapped');
+                                      },
+                                    ),
                                   ),
                                 ),
+                              WidgetSpan(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 2),
+                                  child: Text('$lineNumber'),
+                                ),
                               ),
-                            TextSpan(
-                              text: "$lineNumber",
-                            ),
-                          ],
-                          style: style,
-                        );
-                      },
+                            ],
+                            style: style,
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
