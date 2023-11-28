@@ -17,8 +17,9 @@ import { validate } from 'class-validator';
 import { Note as NoteModel, NoteInclude } from 'src/notes/notes.model';
 import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
 import { UserService } from 'src/user/user.service';
-import { UserBasic } from 'src/user/user.model';
 import { NoteDtoOptional } from 'src/notes/dto/note.optional.dto';
+import { UserBasicWithCurrentLine } from './userbasic.model';
+import { LineNumberDto } from './dto/line_number.dto';
 
 @Injectable()
 @WebSocketGateway({ namespace: 'notes' })
@@ -34,7 +35,8 @@ export class NotesGateway
   @WebSocketServer()
   private server: Server;
 
-  private connectedUsers: Map<string, Set<UserBasic>> = new Map();
+  private connectedUsers: Map<string, Set<UserBasicWithCurrentLine>> =
+    new Map();
   private readonly logger = new Logger(NotesGateway.name);
 
   private noteMutex: Map<string, boolean> = new Map();
@@ -100,9 +102,8 @@ export class NotesGateway
       this.connectedUsers.set(uuidDto.id, new Set());
     }
 
-    const user: UserBasic = await this.userService.getUserByUsernameBasic(
-      decodedJWT.username,
-    );
+    const user: UserBasicWithCurrentLine =
+      await this.userService.getUserByUsernameBasic(decodedJWT.username);
 
     if (!user) {
       this.sendErrorToClient(client, 'User not found');
@@ -184,9 +185,8 @@ export class NotesGateway
       return;
     }
 
-    const user: UserBasic = await this.userService.getUserByUsernameBasic(
-      decodedJWT.username,
-    );
+    const user: UserBasicWithCurrentLine =
+      await this.userService.getUserByUsernameBasic(decodedJWT.username);
 
     if (!user) {
       this.sendErrorToClient(client, 'User not found');
@@ -227,9 +227,8 @@ export class NotesGateway
         return;
       }
 
-      const user: UserBasic = await this.userService.getUserByUsernameBasic(
-        decodedJWT.username,
-      );
+      const user: UserBasicWithCurrentLine =
+        await this.userService.getUserByUsernameBasic(decodedJWT.username);
 
       if (!user) {
         return;
@@ -277,7 +276,7 @@ export class NotesGateway
 
   notifyClientsAboutConnectedClientsChange = (
     noteID: string,
-    user: UserBasic,
+    user: UserBasicWithCurrentLine,
   ): void => {
     if (!this.connectedUsers.get(noteID)?.size) return;
 
@@ -291,7 +290,10 @@ export class NotesGateway
       .emit('user-list', JSON.stringify(message));
   };
 
-  notifyClientsAboutNoteChange = (note: NoteInclude, user: UserBasic): void => {
+  notifyClientsAboutNoteChange = (
+    note: NoteInclude,
+    user: UserBasicWithCurrentLine,
+  ): void => {
     const message = {
       note,
       user,
@@ -306,7 +308,10 @@ export class NotesGateway
     client.disconnect();
   };
 
-  removeUserFromConnectedUsers = (noteID: string, user: UserBasic): void => {
+  removeUserFromConnectedUsers = (
+    noteID: string,
+    user: UserBasicWithCurrentLine,
+  ): void => {
     this.connectedUsers.get(noteID)?.forEach((u) => {
       if (u.username === user.username) {
         this.connectedUsers.get(noteID).delete(u);
@@ -314,7 +319,10 @@ export class NotesGateway
     });
   };
 
-  checkIfUserIsConnected = (noteID: string, user: UserBasic): boolean => {
+  checkIfUserIsConnected = (
+    noteID: string,
+    user: UserBasicWithCurrentLine,
+  ): boolean => {
     let alreadyConnected = false;
     this.connectedUsers.get(noteID)?.forEach((u) => {
       if (u.username === user.username) {
