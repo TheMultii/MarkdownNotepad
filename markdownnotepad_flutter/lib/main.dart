@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:markdownnotepad/enums/dashboard_history_item_actions.dart';
 import 'package:markdownnotepad/enums/extension_status.dart';
 import 'package:markdownnotepad/mdn.app.dart';
 import 'package:markdownnotepad/models/catalog.dart';
@@ -42,6 +43,7 @@ void main() async {
   Hive.registerAdapter(MDNExtensionAdapter());
   Hive.registerAdapter(ImportedExtensionsAdapter());
   Hive.registerAdapter(UserSimpleAdapter());
+  Hive.registerAdapter(DashboardHistoryItemActionsAdapter());
   await Hive.openBox<ServerSettings>('server_settings');
   await Hive.openBox<LoggedInUser>('logged_in_user');
   await Hive.openBox<ImportedExtensions>('imported_extensions');
