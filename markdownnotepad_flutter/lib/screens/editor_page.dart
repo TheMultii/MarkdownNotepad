@@ -159,6 +159,9 @@ class _EditorPageState extends State<EditorPage> {
     List<String>? newTags,
   }) async {
     if (note == null) return false;
+    if (isLiveShareEnabled) {
+      return false; // TODO: remove a way to change folder and tags when live share is enabled
+    }
 
     try {
       final PatchNoteBodyModel body = PatchNoteBodyModel();
