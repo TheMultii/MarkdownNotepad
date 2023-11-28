@@ -130,6 +130,79 @@ export class NotesGateway
     this.notifyClientsAboutNoteChange(note, user);
   }
 
+  @SubscribeMessage('lineChange')
+  async handleLineChange(
+    @MessageBody() data: LineNumberDto,
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    const authToken: string | null = client.handshake.headers.authorization;
+    if (!authToken) {
+      this.sendErrorToClient(client, 'Missing authorization header');
+      return;
+    }
+
+    let decodedJWT: JwtPayload;
+    try {
+      decodedJWT = await decodeJwt(
+        this.jwtService,
+        client.handshake.headers.authorization,
+      );
+    } catch (error) {
+      this.sendErrorToClient(client, 'Invalid token');
+      return;
+    }
+
+    if (!client.handshake.query?.id) {
+      this.sendErrorToClient(client, 'Missing ID');
+      return;
+    }
+
+    const uuidDto = new UUIDDto(client.handshake.query?.id as string);
+
+    let errors = await validate(uuidDto);
+    if (errors.length > 0) {
+      this.sendErrorToClient(client, 'Invalid ID');
+      return;
+    }
+
+    if (typeof data !== 'object') {
+      data = JSON.parse(data);
+    }
+    data = data as LineNumberDto;
+    errors = await validate(data);
+    if (errors.length > 0) {
+      this.sendErrorToClient(client, 'Invalid data');
+      return;
+    }
+
+    const note: NoteInclude = await this.notesService.getNoteById(uuidDto.id);
+    if (!note) {
+      this.sendErrorToClient(client, 'Note not found');
+      return;
+    }
+
+    const user: UserBasicWithCurrentLine =
+      await this.userService.getUserByUsernameBasic(decodedJWT.username);
+
+    if (!user) {
+      this.sendErrorToClient(client, 'User not found');
+      return;
+    }
+
+    if (note.author.username !== decodedJWT.username && !note.shared) {
+      this.sendErrorToClient(client, 'Missing permissions');
+      return;
+    }
+
+    this.connectedUsers.get(uuidDto.id).forEach((u) => {
+      if (u.username === user.username) {
+        u.currentLine = data.lineNumber;
+      }
+    });
+
+    this.notifyClientsAboutConnectedClientsChange(uuidDto.id, user);
+  }
+
   @SubscribeMessage('noteUpdate')
   async handleMessage(
     @MessageBody() data: NoteDtoOptional,
