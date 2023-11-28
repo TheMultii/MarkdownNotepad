@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -10,6 +12,7 @@ import 'package:markdownnotepad/components/cached_network_image.dart';
 import 'package:markdownnotepad/components/input_input.dart';
 import 'package:markdownnotepad/components/notifications/error_notify_toast.dart';
 import 'package:markdownnotepad/components/notifications/success_notify_toast.dart';
+import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
@@ -43,6 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
   void initState() {
     super.initState();
 
+    MDNDiscordRPC().clearPresence();
     apiService = context.read<ApiServiceProvider>().apiService;
   }
 
@@ -93,7 +97,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
       loggedInUserBox.put("logged_in_user", loggedInUser);
 
-      // ignore: use_build_context_synchronously
       notifyToast.show(
         context: context,
         child: const SuccessNotifyToast(
@@ -115,7 +118,6 @@ class _RegisterPageState extends State<RegisterPage> {
         final errMsg = MessageFailureModel.fromJson(
           e.response?.data ?? {"message": "Błąd"},
         );
-        // ignore: use_build_context_synchronously
         notifyToast.show(
           context: context,
           child: ErrorNotifyToast(
@@ -126,7 +128,6 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       } catch (e) {
         debugPrint(e.toString());
-        // ignore: use_build_context_synchronously
         notifyToast.show(
           context: context,
           child: const ErrorNotifyToast(
