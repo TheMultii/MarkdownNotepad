@@ -70,7 +70,7 @@ class MDNDiscordRPC {
   void clearPresence() {
     if (kIsWeb) return;
     if (!Platform.isLinux && !Platform.isWindows) return;
-    setPresence(state: 'Idle');
+    setPresence(state: 'Idle', forceUpdate: false);
   }
 
   DiscordPresence? getPresence() => currentPresence;
