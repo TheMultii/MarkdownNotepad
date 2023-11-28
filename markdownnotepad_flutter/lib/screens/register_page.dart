@@ -95,6 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
 
+      loggedInUserBox.clear();
       loggedInUserBox.put("logged_in_user", loggedInUser);
 
       notifyToast.show(
