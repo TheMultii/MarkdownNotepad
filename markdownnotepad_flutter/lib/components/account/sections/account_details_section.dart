@@ -119,6 +119,41 @@ class AccountDetailsSection extends StatelessWidget {
                           color: const Color.fromARGB(255, 28, 28, 28),
                         ),
                       ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: eventLogs
+                                ?.take(maxEventLogs)
+                                .map(
+                                  (entry) => DashboardHistoryListItem(
+                                    isLast:
+                                        eventLogs!.take(maxEventLogs).last ==
+                                            entry,
+                                    userName: loggedInUser.user.name.isNotEmpty
+                                        ? "${loggedInUser.user.name} ${loggedInUser.user.surname}"
+                                        : loggedInUser.user.username,
+                                    actionDateTime: entry.createdAt,
+                                    note: {
+                                      "id": entry.noteId,
+                                      "title":
+                                          entry.noteTitle ?? "Nieznana notatka",
+                                      "exists": entry.exists,
+                                    },
+                                    action: entry.action,
+                                    tags: entry.tagsId.asMap().entries.map(
+                                      (e) {
+                                        final int id = e.key;
+                                        return {
+                                          "title": entry.tagsTitles[id],
+                                          "color": entry.tagsColors[id],
+                                        };
+                                      },
+                                    ).toList(),
+                                  ),
+                                )
+                                .toList() ??
+                            [
+                              const Text("Brak historii zdarzeń"),
                             ],
                       ),
                     ],
