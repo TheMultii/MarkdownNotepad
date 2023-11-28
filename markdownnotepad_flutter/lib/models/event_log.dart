@@ -8,9 +8,12 @@ class EventLog {
   final String type;
   final String message;
   final String userId;
-  final String noteId;
-  final String tagId;
-  final String catalogId;
+  final String? noteId;
+  final String? noteTitle;
+  final List<String> tagsId;
+  final List<String> tagsTitles;
+  final String? catalogId;
+  final String? catalogTitle;
   final String ip;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -21,8 +24,11 @@ class EventLog {
     required this.message,
     required this.userId,
     required this.noteId,
-    required this.tagId,
+    required this.noteTitle,
+    required this.tagsId,
+    required this.tagsTitles,
     required this.catalogId,
+    required this.catalogTitle,
     required this.ip,
     required this.createdAt,
     required this.updatedAt,
