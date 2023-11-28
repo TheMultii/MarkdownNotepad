@@ -26,6 +26,9 @@ export class EventLogsService {
       where: {
         userId: userId.id,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
       skip,
       take: 10,
     });
