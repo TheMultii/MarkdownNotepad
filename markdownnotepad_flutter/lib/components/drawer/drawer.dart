@@ -340,6 +340,18 @@ class _MDNDrawerState extends State<MDNDrawer> {
                             },
                           ),
                           MDNDrawerItem(
+                            icon: Symbols.policy,
+                            title: "Licencje",
+                            isSelected: isTabSelected("/miscellaneous/legal"),
+                            onPressed: () {
+                              const String destination = "/miscellaneous/legal";
+
+                              notifier.setCurrentTab(destination);
+                              Modular.to.navigate(
+                                destination,
+                              );
+                            },
+                          ),
                           const SizedBox(
                             height: 10,
                           ),
