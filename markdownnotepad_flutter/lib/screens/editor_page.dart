@@ -275,6 +275,10 @@ class _EditorPageState extends State<EditorPage> {
             noteTitle = note!.title;
             controller.text = note!.content;
           });
+
+          if (gnrm.note.shared && gnrm.note.user?.id != loggedInUser!.user.id) {
+            connectToLiveShare();
+          }
         } else {
           isNoteSafeToEdit = false;
 
