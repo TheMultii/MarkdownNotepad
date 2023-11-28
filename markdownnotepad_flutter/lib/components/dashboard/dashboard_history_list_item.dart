@@ -5,6 +5,7 @@ import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/enums/dashboard_history_item_actions.dart';
 import 'package:markdownnotepad/helpers/date_helper.dart';
 import 'package:markdownnotepad/helpers/pluralize_helper.dart';
+import 'package:markdownnotepad/helpers/get_relative_time_text_span.dart';
 import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -25,39 +26,6 @@ class DashboardHistoryListItem extends StatelessWidget {
     required this.action,
     this.tags = const [],
   });
-
-  TextSpan getRelativeTimeTextSpan() {
-    String relativeTime = "";
-
-    final timeDifference = DateTime.now().difference(actionDateTime);
-
-    if (timeDifference.inDays >= 365) {
-      final yearsAgo = timeDifference.inDays ~/ 365;
-      relativeTime = "$yearsAgo ${Pluralize.pluralizeYears(yearsAgo)} temu";
-    } else if (timeDifference.inDays >= 1) {
-      final daysAgo = timeDifference.inDays;
-      relativeTime = "$daysAgo ${Pluralize.pluralizeDays(daysAgo)} temu";
-    } else if (timeDifference.inHours >= 1) {
-      final hoursAgo = timeDifference.inHours;
-      relativeTime = "$hoursAgo ${Pluralize.pluralizeHours(hoursAgo)} temu";
-    } else if (timeDifference.inMinutes >= 1) {
-      final minutesAgo = timeDifference.inMinutes;
-      relativeTime =
-          "$minutesAgo ${Pluralize.pluralizeMinutes(minutesAgo)} temu";
-    } else {
-      relativeTime = "Przed chwilą";
-    }
-
-    String dateString = DateHelper.getFormattedDate(actionDateTime);
-
-    return TextSpan(
-      text: relativeTime,
-      children: [
-        const TextSpan(text: " ・ "),
-        TextSpan(text: dateString),
-      ],
-    );
-  }
 
   TextSpan getActionTextSpan(BuildContext context) {
     final TextStyle textStyle = TextStyle(
@@ -210,7 +178,7 @@ class DashboardHistoryListItem extends StatelessWidget {
                 ),
               ),
               Text.rich(
-                getRelativeTimeTextSpan(),
+                getRelativeTimeTextSpan(actionDateTime),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
