@@ -66,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
         "Bearer ${loginData!.accessToken}",
       );
 
+      loggedInUserBox.clear();
       loggedInUserBox.put("logged_in_user", loggedInUser);
 
       notifyToast.show(
