@@ -326,13 +326,15 @@ class _EditorPageState extends State<EditorPage> {
         forceUpdate: false,
       );
 
-      final newUser = loggedInUserProvider.currentUser;
-      newUser!.user.notes?.forEach((element) {
-        if (element.id == widget.id) {
-          element = note!;
-        }
-      });
-      loggedInUserProvider.setCurrentUser(newUser);
+      if (loggedInUserProvider.currentUser?.user.id == gnrm?.note.user?.id) {
+        final newUser = loggedInUserProvider.currentUser;
+        newUser!.user.notes?.forEach((element) {
+          if (element.id == widget.id) {
+            element = note!;
+          }
+        });
+        loggedInUserProvider.setCurrentUser(newUser);
+      }
     } on DioException catch (e) {
       Modular.to.navigate('/dashboard/');
       debugPrint(e.toString());
