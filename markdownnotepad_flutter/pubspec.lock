@@ -338,6 +338,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.8"
+  diff_match_patch2:
+    dependency: "direct main"
+    description:
+      name: diff_match_patch2
+      sha256: "8ab8f0f294d22a738d7c11cea95d015f212bd4ef9eb5080064695c6a1ca6c63d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   dio:
     dependency: "direct main"
     description:
@@ -1126,6 +1134,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.0.4"
+  rikulo_commons:
+    dependency: transitive
+    description:
+      name: rikulo_commons
+      sha256: "532ca015038feebf177e0da3361c6f3a698e4e997ae6b9d23e8ed532661b1b0c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.0"
   rxdart:
     dependency: transitive
     description:
