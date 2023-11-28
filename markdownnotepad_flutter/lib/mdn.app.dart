@@ -40,6 +40,18 @@ Changes:
 - Added support for the newer version of Flutter and used dependencies''',
           ),
         ));
+
+    LicenseRegistry.addLicense(() => Stream<LicenseEntry>.value(
+          const LicenseEntryWithLineBreaks(
+            <String>['flutter_code_editor'],
+            '''
+Changes:
+
+- Added support for live share indicators in the gutter
+
+- Fixed issue with code suggestion popup position''',
+          ),
+        ));
   }
 
   @override
