@@ -116,6 +116,8 @@ class _EditorPageState extends State<EditorPage> {
 
     liveShareSocket.onConnect(liveShareSocketOnConnect);
     liveShareSocket.onDisconnect(liveShareSocketOnDisconnect);
+
+    liveShareSocket.on('noteUpdate', liveShareSocketOnNoteUpdate);
     getInitialData();
   }
 
@@ -152,6 +154,68 @@ class _EditorPageState extends State<EditorPage> {
 
       Modular.to.navigate('/dashboard/');
     }
+  }
+
+  void liveShareSocketOnNoteUpdate(data) {
+    debugPrint(data.toString());
+    // if (data['note'] == null) return;
+
+    // final Note? newNote = Note.fromJson(data['note']);
+
+    // if (newNote == null) return;
+
+    // if (note?.updatedAt == newNote.updatedAt) return;
+
+    // if (note?.user?.id != newNote.user?.id) return;
+
+    // if (note?.user?.id == loggedInUser?.user.id) return;
+
+    // if (isNoteSafeToEdit) {
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return AskNoteClientServerMismatchAction(
+    //         cacheLastUpdate: note!.updatedAt,
+    //         serverLastUpdate: newNote.updatedAt,
+    //         overrideNoteFunction: () async {
+    //           final bool hasSaved = await patchNoteContentToServer(
+    //             forceUpdate: true,
+    //           );
+    //           if (hasSaved) {
+    //             Navigator.of(context).pop();
+    //           } else {
+    //             NotifyToast().show(
+    //               context: context,
+    //               child: const ErrorNotifyToast(
+    //                 title:
+    //                     "Błąd podczas nadpisywania notatki w pamięci podręcznej.",
+    //                 body: "Spróbuj ponownie później.",
+    //               ),
+    //             );
+    //           }
+    //         },
+    //         saveNoteToCache: () {
+    //           saveNoteToCache(newNote);
+    //           Navigator.of(context).pop();
+    //           setState(() {
+    //             isNoteSafeToEdit = true;
+    //             note = newNote;
+    //             noteTitle = note!.title;
+    //             controller.text = note!.content;
+    //           });
+    //         },
+    //       );
+    //     },
+    //   );
+    // } else {
+    //   saveNoteToCache(newNote);
+    //   setState(() {
+    //     isNoteSafeToEdit = true;
+    //     note = newNote;
+    //     noteTitle = note!.title;
+    //     controller.text = note!.content;
+    //   });
+    // }
   }
 
   void connectToLiveShare() {
