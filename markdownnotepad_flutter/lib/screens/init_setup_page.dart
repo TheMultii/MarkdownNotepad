@@ -212,6 +212,7 @@ class _InitSetupPageState extends State<InitSetupPage> {
     }
 
     final serverSettingsBox = Hive.box<ServerSettings>('server_settings');
+    serverSettingsBox.clear();
     serverSettingsBox.put(
       'server_settings',
       ServerSettings(
