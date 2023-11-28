@@ -48,6 +48,8 @@ import { PrismaService } from 'src/prisma.service';
 import { NoteDtoOptional } from './dto/note.optional.dto';
 import { UUIDDto } from 'src/dto';
 import { EventLogsService } from 'src/eventlogs/eventlogs.service';
+import { EventLog } from 'src/eventlogs/eventlogs.model';
+import { NoteTagsService } from 'src/notetags/notetags.service';
 
 @Controller('notes')
 @ApiBearerAuth()
@@ -57,6 +59,7 @@ export class NotesController {
     private readonly notesService: NotesService,
     private readonly userService: UserService,
     private readonly eventLogsService: EventLogsService,
+    private readonly noteTagsService: NoteTagsService,
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
@@ -224,6 +227,7 @@ export class NotesController {
         userId: user.id,
         type: 'create_note',
         noteId: noteCheck.id,
+        noteTitle: noteCheck.title,
         message: `User created note ${noteCheck.title}`,
         ip: requestIP,
       });
@@ -323,7 +327,7 @@ export class NotesController {
         request.headers['x-forwarded-for']?.toString() ??
         request.socket.remoteAddress ??
         'unknown';
-      const tagsEditedMaps = [];
+      const tagsEditedMaps: EventLog[] = [];
       if (noteDto.tags) {
         for (const tag of noteDto.tags) {
           const t = await this.prismaService.noteTag.findUnique({
@@ -336,31 +340,51 @@ export class NotesController {
           }
         }
 
-        const added = noteincludeCheck.tags.filter(
-          (x) => !noteDto.tags.includes(x.id),
-        );
-        const addedString = added.map((x) => x.id).join(', ');
-
-        const removed = noteDto.tags.filter(
-          (x) => !noteincludeCheck.tags.map((y) => y.id).includes(x),
-        );
+        const removed = noteincludeCheck.tags
+          .filter((x) => !noteDto.tags.includes(x.id))
+          .map((x) => x.id);
         const removedString = removed.join(', ');
 
+        const added = noteDto.tags.filter(
+          (x) => !noteincludeCheck.tags.map((y) => y.id).includes(x),
+        );
+        const addedString = added.join(', ');
+
         if (added.length > 0) {
+          const addedTitles = [];
+          for (const tag of added) {
+            addedTitles.push(
+              (await this.noteTagsService.getNoteTagById(tag)).title,
+            );
+          }
+
           tagsEditedMaps.push({
             userId: user.id,
             type: 'add_notetags',
             noteId: noteincludeCheck.id,
+            noteTitle: noteincludeCheck.title,
+            tagsId: added,
+            tagsTitles: addedTitles,
             message: `User added ${addedString} tags to the ${noteincludeCheck.title} note`,
             ip: requestIP,
           });
         }
 
         if (removed.length > 0) {
+          const removedTitles = [];
+          for (const tag of removed) {
+            removedTitles.push(
+              (await this.noteTagsService.getNoteTagById(tag)).title,
+            );
+          }
+
           tagsEditedMaps.push({
             userId: user.id,
             type: 'remove_notetags',
             noteId: noteincludeCheck.id,
+            noteTitle: noteincludeCheck.title,
+            tagsId: removed,
+            tagsTitles: removedTitles,
             message: `User removed ${removedString} tags from the ${noteincludeCheck.title} note`,
             ip: requestIP,
           });
@@ -391,15 +415,23 @@ export class NotesController {
       const nel = await this.eventLogsService.getNewestUsersEventLog(
         user.username,
       );
-      if (
-        nel &&
-        nel.noteId === noteCheck.id &&
-        nel.createdAt.getTime() + 300000 <= Date.now()
-      ) {
+
+      let addEventLog = false;
+      if (!nel) addEventLog = true;
+      else if (nel.noteId !== noteCheck.id || nel.type !== 'update_note')
+        addEventLog = true;
+      else if (nel.createdAt.getTime() + 300000 <= Date.now())
+        addEventLog = true;
+
+      if (!noteDto.content && !noteDto.title && !noteDto.folderId)
+        addEventLog = false;
+
+      if (addEventLog) {
         await this.eventLogsService.addEventLog({
           userId: user.id,
           type: 'update_note',
           noteId: noteCheck.id,
+          noteTitle: noteCheck.title,
           message: `User updated note ${noteCheck.title}`,
           ip: requestIP,
         });
