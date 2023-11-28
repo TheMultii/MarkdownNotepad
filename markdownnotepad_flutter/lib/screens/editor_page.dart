@@ -50,6 +50,7 @@ class EditorPage extends StatefulWidget {
 class _EditorPageState extends State<EditorPage> {
   late String noteTitle;
   late CurrentLoggedInUserProvider loggedInUserProvider;
+  late ServerSettings? serverSettings;
   late LoggedInUser? loggedInUser;
   late MDNApiService apiService;
   late MDNDiscordRPC mdnDiscordRPC;
@@ -98,16 +99,31 @@ class _EditorPageState extends State<EditorPage> {
     }
 
     final serverSettingsBox = Hive.box<ServerSettings>('server_settings');
-    final ServerSettings? serverSettings =
-        serverSettingsBox.get('server_settings');
+    serverSettings = serverSettingsBox.get('server_settings');
 
     if (serverSettings == null) {
       Modular.to.navigate('/auth/login');
       return;
     }
 
+    initializeLiveShareVariable();
+
+    getInitialData();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    fNode.dispose();
+    liveShareSocket.dispose();
+    super.dispose();
+  }
+
+  void initializeLiveShareVariable() {
+    if (serverSettings == null) return;
+
     liveShareSocket = io.io(
-        'http://${serverSettings.ipAddress}:${serverSettings.port}/notes?id=${widget.id}',
+        'http://${serverSettings!.ipAddress}:${serverSettings!.port}/notes?id=${widget.id}',
         io.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()
@@ -119,19 +135,6 @@ class _EditorPageState extends State<EditorPage> {
 
     liveShareSocket.on('noteUpdate', liveShareSocketOnNoteUpdate);
     liveShareSocket.on('lineChange', liveShareSocketOnLineChange);
-
-    getInitialData();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    fNode.dispose();
-    if (isLiveShareEnabled) {
-      liveShareSocket.disconnect();
-    }
-    liveShareSocket.dispose();
-    super.dispose();
   }
 
   void liveShareSocketOnConnect(_) {
@@ -235,6 +238,7 @@ class _EditorPageState extends State<EditorPage> {
 
   void connectToLiveShare() {
     try {
+      initializeLiveShareVariable();
       liveShareSocket.connect();
       setState(() => isLiveShareEnabled = true);
     } catch (e) {
@@ -254,7 +258,7 @@ class _EditorPageState extends State<EditorPage> {
     if (loggedInUser?.user.id != note?.user?.id) return;
 
     try {
-      liveShareSocket.disconnect();
+      liveShareSocket.dispose();
       setState(() => isLiveShareEnabled = false);
 
       if (note?.user?.id != loggedInUser?.user.id) {
