@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:markdownnotepad/components/account/account_header_menu_button.dart';
@@ -72,11 +73,18 @@ class _AccountPageState extends State<AccountPage> {
                         alignment: Alignment.center,
                         children: [
                           ClipOval(
-                            child: Image.network(
-                              notifier.avatarUrl,
+                            child: CachedNetworkImage(
+                              imageUrl: notifier.avatarUrl,
                               width: 77,
                               height: 77,
                               fit: BoxFit.cover,
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(
+                                strokeWidth: 3.0,
+                              ),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.error,
+                              ),
                             ),
                           ),
                           CustomPaint(
