@@ -90,10 +90,13 @@ class _EditorPageState extends State<EditorPage> {
     noteTitle = Modular.args.data?['noteTitle'] as String? ?? '';
 
     mdnDiscordRPC = MDNDiscordRPC();
-    mdnDiscordRPC.setPresence(
-      state: "Editing a $noteTitle file",
-      forceUpdate: false,
-    );
+    if (noteTitle.isNotEmpty) {
+      mdnDiscordRPC.setPresence(
+        state: "Editing a $noteTitle file",
+        forceUpdate: false,
+      );
+    }
+
     final serverSettingsBox = Hive.box<ServerSettings>('server_settings');
     final ServerSettings? serverSettings =
         serverSettingsBox.get('server_settings');
