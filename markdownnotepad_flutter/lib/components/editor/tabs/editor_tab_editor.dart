@@ -72,6 +72,57 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
 
     return line;
   }
+
+  void changeLineIndentation(
+    int lineNumber,
+    String intentName,
+  ) {
+    final int ctrlIntentName =
+        int.tryParse(intentName.replaceAll("Ctrl", "")) ?? -1;
+    if (ctrlIntentName == -1) return;
+
+    final String text = widget.controller.text;
+    final List<String> lines = text.split('\n');
+    final String line = lines[lineNumber];
+    final int oldCaretPosition = widget.controller.selection.baseOffset;
+
+    int amountOfHashes = 0;
+    for (int i = 0; i < line.length; i++) {
+      if (line[i] == '#') {
+        amountOfHashes++;
+      } else {
+        break;
+      }
+    }
+
+    String newLine = line.replaceFirst("${'#' * amountOfHashes} ", "");
+    bool shouldAddNewHashes = true;
+
+    if (ctrlIntentName == amountOfHashes) {
+      shouldAddNewHashes = false;
+    }
+
+    if (shouldAddNewHashes) {
+      newLine = "${'#' * ctrlIntentName} $newLine";
+    }
+
+    lines[lineNumber] = newLine;
+
+    final String newContent = lines.join('\n');
+    widget.controller.text = newContent;
+
+    int newCaretPosition = oldCaretPosition + (newContent.length - text.length);
+    if (newCaretPosition < 0) newCaretPosition = 0;
+
+    widget.controller.selection = TextSelection.fromPosition(
+      TextPosition(
+        offset: oldCaretPosition + (newContent.length - text.length),
+      ),
+    );
+
+    widget.onNoteContentChanged!(newContent);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
