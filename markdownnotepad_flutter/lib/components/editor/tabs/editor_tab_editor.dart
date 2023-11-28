@@ -57,6 +57,21 @@ class EditorTabEditor extends StatefulWidget {
 class _EditorTabEditorState extends State<EditorTabEditor> {
   final FocusNode noteTitleFocusNode = FocusNode();
 
+  int getLineNumber() {
+    final cursorPosition = widget.controller.selection.baseOffset;
+    final text = widget.controller.text;
+
+    if (cursorPosition == 0) return 0;
+
+    int line = 0;
+    for (int i = 0; i < cursorPosition; i++) {
+      if (text[i] == '\n') {
+        line++;
+      }
+    }
+
+    return line;
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
