@@ -8,6 +8,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lan_scanner/lan_scanner.dart';
+import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/viewmodels/server_settings.dart';
@@ -40,6 +41,7 @@ class _InitSetupPageState extends State<InitSetupPage> {
   void initState() {
     super.initState();
 
+    MDNDiscordRPC().clearPresence();
     scan();
   }
 
