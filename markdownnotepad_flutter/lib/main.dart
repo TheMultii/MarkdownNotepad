@@ -17,6 +17,7 @@ import 'package:markdownnotepad/models/user_simple.dart';
 import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/viewmodels/event_log_vm.dart';
+import 'package:markdownnotepad/viewmodels/event_log_vm_list.dart';
 import 'package:markdownnotepad/viewmodels/extension.dart';
 import 'package:markdownnotepad/viewmodels/imported_extensions.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
@@ -46,6 +47,7 @@ void main() async {
   Hive.registerAdapter(UserSimpleAdapter());
   Hive.registerAdapter(DashboardHistoryItemActionsAdapter());
   Hive.registerAdapter(EventLogVMAdapter());
+  Hive.registerAdapter(EventLogVMListAdapter());
   await Hive.openBox<ServerSettings>('server_settings');
   await Hive.openBox<LoggedInUser>('logged_in_user');
   await Hive.openBox<ImportedExtensions>('imported_extensions');
