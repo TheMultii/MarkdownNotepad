@@ -407,7 +407,10 @@ class _InitSetupPageState extends State<InitSetupPage> {
                                 Responsive.isMobile(context)
                             ? double.infinity
                             : 300.0,
-                        child: Form(
+                        child: Padding(
+                          padding: Responsive.isMobile(context)
+                              ? const EdgeInsets.symmetric(horizontal: 8.0)
+                              : const EdgeInsets.all(0),
                           child: Column(
                             children: [
                               TextFormField(
