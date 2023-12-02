@@ -228,7 +228,6 @@ class _EditorPageState extends State<EditorPage> {
     try {
       initializeLiveShareVariable();
       liveShareSocket.connect();
-      setState(() => isLiveShareEnabled = true);
     } catch (e) {
       debugPrint(e.toString());
 
