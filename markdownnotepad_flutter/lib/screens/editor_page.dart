@@ -571,12 +571,6 @@ class _EditorPageState extends State<EditorPage> {
     });
   }
 
-  void toggleLiveShare() {
-    setState(() {
-      isLiveShareEnabled = !isLiveShareEnabled;
-    });
-  }
-
   Future<void> deleteNote() async {
     if (note == null) {
       notifyToast.show(
@@ -714,11 +708,13 @@ class _EditorPageState extends State<EditorPage> {
                                 !Responsive.isMobile(context) &&
                                     isEditorSidebarEnabled,
                             isLiveShareEnabled: isLiveShareEnabled,
-                            toggleLiveShare: toggleLiveShare,
                             deleteNote: deleteNote,
                             loggedInUser: loggedInUser,
                             assignCatalog: assignCatalog,
                             assignNoteTags: assignNoteTags,
+                            connectToLiveShare: connectToLiveShare,
+                            closeLiveShare: closeLiveShare,
+                            connectedLiveShareUsers: connectedLiveShareUsers,
                             onNoteTitleChanged: (newTitle) async {
                               if (MDNValidator.validateNoteTitle(newTitle) !=
                                   null) return;
@@ -755,13 +751,15 @@ class _EditorPageState extends State<EditorPage> {
                         : EditorTabVisualPreview(
                             textToRender: controller.fullText,
                             isLiveShareEnabled: isLiveShareEnabled,
-                            toggleLiveShare: toggleLiveShare,
+                            connectToLiveShare: connectToLiveShare,
+                            closeLiveShare: closeLiveShare,
                             deleteNote: deleteNote,
                             loggedInUser: loggedInUser,
                             assignCatalog: assignCatalog,
                             assignNoteTags: assignNoteTags,
                             noteTitle: noteTitle,
                             note: note!,
+                            connectedLiveShareUsers: connectedLiveShareUsers,
                           ),
               ),
             ),

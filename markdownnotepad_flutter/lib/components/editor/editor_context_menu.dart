@@ -14,12 +14,13 @@ List<ContextMenuEntry> getEditorContextMenu({
   required Note note,
   required String textToRender,
   required bool isLiveShareEnabled,
-  required VoidCallback toggleLiveShare,
   required VoidCallback changeNoteName,
   required VoidCallback deleteNote,
   required Function(String) assignCatalog,
   required Function(List<String>) assignNoteTags,
   required LoggedInUser? loggedInUser,
+  required Function() connectToLiveShare,
+  required Function() closeLiveShare,
 }) {
   return [
     const MenuHeader(text: "Opcje"),
@@ -40,69 +41,79 @@ List<ContextMenuEntry> getEditorContextMenu({
         ),
       ],
     ),
-    const MenuDivider(),
-    MenuItem(
-      label: 'Zmień nazwę',
-      icon: Icons.edit,
-      onSelected: changeNoteName,
-    ),
-    MenuItem(
-      label: 'Przypisz do katalogu',
-      icon: Icons.create_new_folder,
-      onSelected: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AssignCatalogAlertDialog(
-              loggedInUser: loggedInUser!,
-              note: note,
-              assignCatalog: assignCatalog,
-            )
-                .animate()
-                .fadeIn(
-                  duration: 100.ms,
-                )
-                .scale(
-                  duration: 100.ms,
-                  curve: Curves.easeInOut,
-                  begin: const Offset(0, 0),
-                  end: const Offset(1, 1),
+    ...isLiveShareEnabled
+        ? []
+        : [
+            const MenuDivider(),
+            MenuItem(
+              label: 'Zmień nazwę',
+              icon: Icons.edit,
+              onSelected: changeNoteName,
+            ),
+            MenuItem(
+              label: 'Przypisz do katalogu',
+              icon: Icons.create_new_folder,
+              onSelected: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AssignCatalogAlertDialog(
+                      loggedInUser: loggedInUser!,
+                      note: note,
+                      assignCatalog: assignCatalog,
+                    )
+                        .animate()
+                        .fadeIn(
+                          duration: 100.ms,
+                        )
+                        .scale(
+                          duration: 100.ms,
+                          curve: Curves.easeInOut,
+                          begin: const Offset(0, 0),
+                          end: const Offset(1, 1),
+                        );
+                  },
                 );
-          },
-        );
-      },
-    ),
-    MenuItem(
-      label: 'Zmień tagi',
-      icon: Icons.tag,
-      onSelected: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AssignNoteToNoteTagsAlertDialog(
-              loggedInUser: loggedInUser!,
-              note: note,
-              assignNoteTags: assignNoteTags,
-            )
-                .animate()
-                .fadeIn(
-                  duration: 100.ms,
-                )
-                .scale(
-                  duration: 100.ms,
-                  curve: Curves.easeInOut,
-                  begin: const Offset(0, 0),
-                  end: const Offset(1, 1),
+              },
+            ),
+            MenuItem(
+              label: 'Zmień tagi',
+              icon: Icons.tag,
+              onSelected: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AssignNoteToNoteTagsAlertDialog(
+                      loggedInUser: loggedInUser!,
+                      note: note,
+                      assignNoteTags: assignNoteTags,
+                    )
+                        .animate()
+                        .fadeIn(
+                          duration: 100.ms,
+                        )
+                        .scale(
+                          duration: 100.ms,
+                          curve: Curves.easeInOut,
+                          begin: const Offset(0, 0),
+                          end: const Offset(1, 1),
+                        );
+                  },
                 );
-          },
-        );
-      },
-    ),
+              },
+            ),
+          ],
     const MenuDivider(),
     MenuItem(
       label: isLiveShareEnabled ? 'Wyłącz live share' : 'Włącz live share',
       icon: Icons.share,
-      onSelected: toggleLiveShare,
+      onSelected: () {
+        if (isLiveShareEnabled) {
+          closeLiveShare();
+        } else {
+          connectToLiveShare();
+        }
+      },
     ),
     MenuItem(
       label: 'Zapisz',
@@ -117,10 +128,14 @@ List<ContextMenuEntry> getEditorContextMenu({
         );
       },
     ),
-    MenuItem(
-      label: "Usuń",
-      icon: Icons.delete,
-      onSelected: () => deleteNote(),
-    ),
+    ...isLiveShareEnabled
+        ? []
+        : [
+            MenuItem(
+              label: "Usuń",
+              icon: Icons.delete,
+              onSelected: () => deleteNote(),
+            ),
+          ]
   ];
 }

@@ -6,6 +6,7 @@ import 'package:markdownnotepad/components/notifications/info_notify_toast.dart'
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/markdown_visual_builder/markdown_preview.dart';
 import 'package:markdownnotepad/models/note.dart';
+import 'package:markdownnotepad/viewmodels/connected_live_share_user.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 
 class EditorTabVisualPreview extends StatefulWidget {
@@ -13,11 +14,13 @@ class EditorTabVisualPreview extends StatefulWidget {
   final Note note;
   final String textToRender;
   final bool isLiveShareEnabled;
-  final VoidCallback toggleLiveShare;
   final VoidCallback deleteNote;
   final Function(String) assignCatalog;
   final Function(List<String>) assignNoteTags;
   final LoggedInUser? loggedInUser;
+  final Function()? connectToLiveShare;
+  final Function()? closeLiveShare;
+  final List<ConnectedLiveShareUser> connectedLiveShareUsers;
 
   const EditorTabVisualPreview({
     super.key,
@@ -25,11 +28,13 @@ class EditorTabVisualPreview extends StatefulWidget {
     required this.note,
     required this.textToRender,
     required this.isLiveShareEnabled,
-    required this.toggleLiveShare,
     required this.deleteNote,
     required this.assignCatalog,
     required this.assignNoteTags,
     required this.loggedInUser,
+    required this.connectToLiveShare,
+    required this.closeLiveShare,
+    required this.connectedLiveShareUsers,
   });
 
   @override
@@ -51,14 +56,19 @@ class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
           note: widget.note,
           isTitleEditable: false,
           isLiveShareEnabled: widget.isLiveShareEnabled,
-          toggleLiveShare: widget.toggleLiveShare,
           noteTitleFocusNode: noteTitleFocusNode,
+          connectToLiveShare: () {
+            widget.connectToLiveShare?.call();
+          },
+          closeLiveShare: () {
+            widget.closeLiveShare?.call();
+          },
+          connectedLiveShareUsers: widget.connectedLiveShareUsers,
           contextMenuOptions: getEditorContextMenu(
             context: context,
             note: widget.note,
             textToRender: widget.textToRender,
             isLiveShareEnabled: widget.isLiveShareEnabled,
-            toggleLiveShare: widget.toggleLiveShare,
             deleteNote: widget.deleteNote,
             loggedInUser: widget.loggedInUser,
             assignCatalog: widget.assignCatalog,
@@ -66,6 +76,12 @@ class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
             changeNoteName: () => FocusScope.of(context).requestFocus(
               noteTitleFocusNode,
             ),
+            connectToLiveShare: () {
+              widget.connectToLiveShare?.call();
+            },
+            closeLiveShare: () {
+              widget.closeLiveShare?.call();
+            },
           ),
           contextMenuShortcuts: {
             LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyS):

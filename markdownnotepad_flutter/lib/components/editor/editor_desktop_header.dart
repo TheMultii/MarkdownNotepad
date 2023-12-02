@@ -6,6 +6,7 @@ import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/helpers/date_helper.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
+import 'package:markdownnotepad/viewmodels/connected_live_share_user.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
@@ -14,11 +15,13 @@ class EditorDesktopHeader extends StatefulWidget {
   final Note note;
   final bool isTitleEditable;
   final bool isLiveShareEnabled;
-  final VoidCallback toggleLiveShare;
+  final VoidCallback connectToLiveShare;
+  final VoidCallback closeLiveShare;
   final List<ContextMenuEntry> contextMenuOptions;
   final Map<ShortcutActivator, void Function()>? contextMenuShortcuts;
   final FocusNode noteTitleFocusNode;
   final Function(String)? onNoteTitleChanged;
+  final List<ConnectedLiveShareUser> connectedLiveShareUsers;
 
   const EditorDesktopHeader({
     super.key,
@@ -26,11 +29,13 @@ class EditorDesktopHeader extends StatefulWidget {
     required this.note,
     this.isTitleEditable = true,
     required this.isLiveShareEnabled,
-    required this.toggleLiveShare,
+    required this.connectToLiveShare,
+    required this.closeLiveShare,
     this.contextMenuOptions = const [],
     this.contextMenuShortcuts,
     required this.noteTitleFocusNode,
     this.onNoteTitleChanged,
+    required this.connectedLiveShareUsers,
   });
 
   @override
@@ -101,7 +106,13 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
               ),
               InkWell(
                 borderRadius: BorderRadius.circular(9999),
-                onTap: () => widget.toggleLiveShare(),
+                onTap: () {
+                  if (widget.isLiveShareEnabled) {
+                    widget.closeLiveShare();
+                  } else {
+                    widget.connectToLiveShare();
+                  }
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: Icon(
@@ -173,7 +184,8 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
               EditorDesktopHeaderListItem(
                 icon: FeatherIcons.users,
                 title: 'Kolaboracja',
-                value: 'W${widget.isLiveShareEnabled ? '' : 'y'}łączona',
+                value:
+                    'W${widget.isLiveShareEnabled ? '' : 'y'}łączona${widget.connectedLiveShareUsers.isNotEmpty ? ' (${widget.connectedLiveShareUsers.length})' : ''}',
               ),
             ],
           ),

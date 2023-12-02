@@ -9,6 +9,7 @@ import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/intents/editor_shortcuts.dart';
 import 'package:markdownnotepad/models/note.dart';
+import 'package:markdownnotepad/viewmodels/connected_live_share_user.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 
 class EditorTabEditor extends StatefulWidget {
@@ -22,13 +23,15 @@ class EditorTabEditor extends StatefulWidget {
   final Map<String, TextStyle> editorStyle;
   final bool isEditorSidebarEnabled;
   final bool isLiveShareEnabled;
-  final VoidCallback toggleLiveShare;
   final Function(String)? onNoteTitleChanged;
   final Function(String)? onNoteContentChanged;
   final VoidCallback deleteNote;
   final Function(String) assignCatalog;
   final Function(List<String>) assignNoteTags;
   final LoggedInUser? loggedInUser;
+  final Function()? connectToLiveShare;
+  final Function()? closeLiveShare;
+  final List<ConnectedLiveShareUser> connectedLiveShareUsers;
 
   const EditorTabEditor({
     super.key,
@@ -42,11 +45,13 @@ class EditorTabEditor extends StatefulWidget {
     required this.editorStyle,
     required this.isEditorSidebarEnabled,
     required this.isLiveShareEnabled,
-    required this.toggleLiveShare,
     required this.deleteNote,
     required this.assignCatalog,
     required this.assignNoteTags,
     required this.loggedInUser,
+    required this.connectedLiveShareUsers,
+    this.connectToLiveShare,
+    this.closeLiveShare,
     this.onNoteTitleChanged,
     this.onNoteContentChanged,
   });
@@ -139,9 +144,15 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
             noteTitle: widget.noteTitle,
             note: widget.note,
             isLiveShareEnabled: widget.isLiveShareEnabled,
-            toggleLiveShare: widget.toggleLiveShare,
+            connectToLiveShare: () {
+              widget.connectToLiveShare?.call();
+            },
+            closeLiveShare: () {
+              widget.closeLiveShare?.call();
+            },
             noteTitleFocusNode: noteTitleFocusNode,
             onNoteTitleChanged: widget.onNoteTitleChanged,
+            connectedLiveShareUsers: widget.connectedLiveShareUsers,
             contextMenuOptions: getEditorContextMenu(
               context: context,
               note: widget.note,
@@ -151,10 +162,15 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
               assignCatalog: widget.assignCatalog,
               assignNoteTags: widget.assignNoteTags,
               loggedInUser: widget.loggedInUser,
-              toggleLiveShare: widget.toggleLiveShare,
               changeNoteName: () => FocusScope.of(context).requestFocus(
                 noteTitleFocusNode,
               ),
+              connectToLiveShare: () {
+                widget.connectToLiveShare?.call();
+              },
+              closeLiveShare: () {
+                widget.closeLiveShare?.call();
+              },
             ),
             contextMenuShortcuts: {
               LogicalKeySet(
@@ -252,18 +268,18 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
 
                           return TextSpan(
                             children: [
-                              if (lineNumber % 100 == 0)
+                              if (widget.connectedLiveShareUsers.any(
+                                  (user) => user.currentLine == lineNumber))
                                 WidgetSpan(
                                   alignment: PlaceholderAlignment.middle,
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                      right: 2.0,
+                                      right: 5.0,
                                     ),
                                     child: EditorPageLiveShareUserSmallAvatar(
-                                      lineNumber: lineNumber,
-                                      onTap: () {
-                                        debugPrint('$lineNumber tapped');
-                                      },
+                                      user: widget.connectedLiveShareUsers
+                                          .firstWhere((user) =>
+                                              user.currentLine == lineNumber),
                                     ),
                                   ),
                                 ),

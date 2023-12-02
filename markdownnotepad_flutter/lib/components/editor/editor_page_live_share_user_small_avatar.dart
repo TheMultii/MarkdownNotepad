@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/viewmodels/connected_live_share_user.dart';
 
 class EditorPageLiveShareUserSmallAvatar extends StatelessWidget {
-  final int lineNumber;
-  final void Function() onTap;
+  final ConnectedLiveShareUser user;
+  final void Function()? onTap;
 
   const EditorPageLiveShareUserSmallAvatar({
     super.key,
-    required this.lineNumber,
-    required this.onTap,
+    required this.user,
+    this.onTap,
   });
 
   @override
@@ -17,8 +18,7 @@ class EditorPageLiveShareUserSmallAvatar extends StatelessWidget {
         Theme.of(context).extension<MarkdownNotepadTheme>();
 
     return Tooltip(
-      message:
-          "https://api.mganczarczyk.pl/tairiku/random/streetmoe?safety=true&seed=${lineNumber % 5}",
+      message: user.username,
       excludeFromSemantics: true,
       waitDuration: const Duration(
         milliseconds: 60,
@@ -31,12 +31,13 @@ class EditorPageLiveShareUserSmallAvatar extends StatelessWidget {
         color: theme?.text,
       ),
       child: MouseRegion(
-        cursor: SystemMouseCursors.click,
+        cursor:
+            onTap == null ? SystemMouseCursors.basic : SystemMouseCursors.click,
         child: GestureDetector(
-          onTap: () => onTap(),
+          onTap: onTap == null ? null : () => onTap!(),
           child: ClipOval(
             child: Image.network(
-              "https://api.mganczarczyk.pl/tairiku/random/streetmoe?safety=true&seed=${lineNumber % 5}",
+              "http://localhost:3000/avatar/${user.id}",
               width: 18,
               height: 18,
               fit: BoxFit.cover,
