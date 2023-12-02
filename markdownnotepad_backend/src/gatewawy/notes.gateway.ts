@@ -105,6 +105,8 @@ export class NotesGateway
     const user: UserBasicWithCurrentLine =
       await this.userService.getUserByUsernameBasic(decodedJWT.username);
 
+    user.currentLine = 0;
+
     if (!user) {
       this.sendErrorToClient(client, 'User not found');
       return;
@@ -266,6 +268,18 @@ export class NotesGateway
       return;
     }
 
+    user.currentLine = 0;
+
+    const connectedUsersArray = Array.from(
+      this.connectedUsers.get(uuidDto.id) || [],
+    );
+    const userToFind = connectedUsersArray.find(
+      (u) => u.username === user.username,
+    );
+    if (userToFind) {
+      user.currentLine = userToFind.currentLine;
+    }
+
     if (note.author.username !== decodedJWT.username && !note.shared) {
       this.sendErrorToClient(client, 'Missing permissions');
       return;
@@ -305,6 +319,19 @@ export class NotesGateway
 
       if (!user) {
         return;
+      }
+
+      user.currentLine = 0;
+
+      const connectedUsersArray = Array.from(
+        this.connectedUsers.get(noteID) || [],
+      );
+      const userToFind = connectedUsersArray.find(
+        (u) => u.username === user.username,
+      );
+
+      if (userToFind) {
+        user.currentLine = userToFind.currentLine;
       }
 
       this.removeUserFromConnectedUsers(noteID, user);
