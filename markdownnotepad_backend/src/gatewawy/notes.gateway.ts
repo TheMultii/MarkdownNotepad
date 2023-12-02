@@ -20,6 +20,7 @@ import { UserService } from 'src/user/user.service';
 import { NoteDtoOptional } from 'src/notes/dto/note.optional.dto';
 import { UserBasicWithCurrentLine } from './userbasic.model';
 import { LineNumberDto } from './dto/line_number.dto';
+import { EventLogsService } from 'src/eventlogs/eventlogs.service';
 
 @Injectable()
 @WebSocketGateway({ namespace: 'notes' })
@@ -29,6 +30,7 @@ export class NotesGateway
   constructor(
     private readonly notesService: NotesService,
     private readonly userService: UserService,
+    private readonly eventLogsService: EventLogsService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -299,6 +301,32 @@ export class NotesGateway
     await this.notesService.updateNoteById(note.id, noteModel);
     this.notifyClientsAboutNoteChange(note, user);
     this.noteMutex.set(note.id, false);
+
+    if (note.author.username !== decodedJWT.username) {
+      const nel = await this.eventLogsService.getNewestUsersEventLog(
+        user.username,
+      );
+
+      let addEventLog = false;
+      if (!nel) addEventLog = true;
+      else if (nel.noteId !== note.id || nel.type !== 'update_note')
+        addEventLog = true;
+      else if (nel.createdAt.getTime() + 300000 <= Date.now())
+        addEventLog = true;
+
+      const requestIP = client.handshake.address || '';
+
+      if (addEventLog) {
+        await this.eventLogsService.addEventLog({
+          userId: user.id,
+          type: 'update_note',
+          noteId: note.id,
+          noteTitle: note.title,
+          message: `User updated note ${data.title ?? note.title}`,
+          ip: requestIP,
+        });
+      }
+    }
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
