@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -24,6 +26,8 @@ import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_note_response_model.dart';
 import 'package:markdownnotepad/models/note.dart';
+import 'package:markdownnotepad/models/note_socket_on_note_change.dart';
+import 'package:markdownnotepad/models/note_socket_on_user_list_change.dart';
 import 'package:markdownnotepad/models/notetag.dart';
 import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
@@ -131,8 +135,9 @@ class _EditorPageState extends State<EditorPage> {
             .setExtraHeaders({'Authorization': authorizationString})
             .build());
 
+    liveShareSocket.on('note-change', liveShareSocketOnNoteUpdate);
+    liveShareSocket.on('user-list', liveShareSocketOnUserList);
 
-    liveShareSocket.on('noteUpdate', liveShareSocketOnNoteUpdate);
     liveShareSocket.on('connect', liveShareSocketOnConnect);
     liveShareSocket.on('disconnect', liveShareSocketOnDisconnect);
   }
@@ -162,8 +167,39 @@ class _EditorPageState extends State<EditorPage> {
     }
   }
 
+  void liveShareSocketOnUserList(data) {
+    debugPrint('Received user list from LiveShare server - $data');
+
+    final NoteSocketOnUserListChange newNoteSocketOnUserListChange =
+        NoteSocketOnUserListChange.fromJson(
+      jsonDecode(data),
+    );
+
+    debugPrint(
+      newNoteSocketOnUserListChange.user.username,
+    );
+
+    setState(() {
+      connectedLiveShareUsers = newNoteSocketOnUserListChange.connectedUsers;
+    });
+  }
+
   void liveShareSocketOnNoteUpdate(data) {
-    debugPrint(data.toString());
+    debugPrint("onNote: $data");
+
+    final NoteSocketOnNotechange newNoteSocketOnNotechange =
+        NoteSocketOnNotechange.fromJson(
+      jsonDecode(data),
+    );
+
+    debugPrint(
+      "${newNoteSocketOnNotechange.note.author?.username} changed note to ${newNoteSocketOnNotechange.note.title}",
+    );
+    debugPrint("newContent: ${newNoteSocketOnNotechange.note.content}");
+
+    setState(() {
+      note = newNoteSocketOnNotechange.note;
+    });
     // if (data['note'] == null) return;
 
     // final Note? newNote = Note.fromJson(data['note']);
@@ -285,6 +321,50 @@ class _EditorPageState extends State<EditorPage> {
     loggedInUserProvider.setCurrentUser(newUser);
   }
 
+  Future<void> socketPatchNoteContentToServer(
+    String? newTitle,
+    String? newContent,
+  ) {
+    if (note == null) return Future.value();
+
+    final PatchNoteBodyModel body = PatchNoteBodyModel();
+
+    if (newTitle?.isNotEmpty ?? false) {
+      body.title = newTitle;
+    } else {
+      body.title = note!.title;
+    }
+
+    if (newContent?.isNotEmpty ?? false) {
+      body.content = newContent;
+    } else {
+      body.content = note!.content;
+    }
+
+    if (body.title == null && body.content == null) return Future.value();
+
+    liveShareSocket.emit('noteUpdate', body.toJson());
+    return Future.value();
+  }
+
+  Future<void> socketPatchCurrentLineToServer() {
+    if (note == null) return Future.value();
+
+    final int currentLine = getLineNumber() + 1;
+
+    if (currentLine == lastLine) return Future.value();
+
+    final body = {
+      'lineNumber': currentLine,
+    };
+
+    liveShareSocket.emit('lineChange', body);
+    setState(() {
+      lastLine = currentLine;
+    });
+    return Future.value();
+  }
+
   Future<bool> patchNoteContentToServer({
     required bool forceUpdate,
     String? newTitle,
@@ -294,7 +374,11 @@ class _EditorPageState extends State<EditorPage> {
   }) async {
     if (note == null) return false;
     if (isLiveShareEnabled) {
-      return false; // TODO: remove a way to change folder and tags when live share is enabled
+      await socketPatchNoteContentToServer(newTitle, newContent);
+      if (newContent != null) {
+        await socketPatchCurrentLineToServer();
+      }
+      return false;
     }
 
     try {
@@ -554,6 +638,22 @@ class _EditorPageState extends State<EditorPage> {
       newTags: noteTagID,
       forceUpdate: false,
     );
+  }
+
+  int getLineNumber() {
+    final cursorPosition = controller.selection.baseOffset;
+    final text = controller.text;
+
+    if (cursorPosition == 0) return 0;
+
+    int line = 0;
+    for (int i = 0; i < cursorPosition; i++) {
+      if (text[i] == '\n') {
+        line++;
+      }
+    }
+
+    return line;
   }
 
   @override
