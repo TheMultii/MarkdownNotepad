@@ -242,8 +242,6 @@ class _EditorPageState extends State<EditorPage> {
   }
 
   void closeLiveShare() {
-    if (loggedInUser?.user.id != note?.user?.id) return;
-
     try {
       liveShareSocket.dispose();
       setState(() => isLiveShareEnabled = false);
