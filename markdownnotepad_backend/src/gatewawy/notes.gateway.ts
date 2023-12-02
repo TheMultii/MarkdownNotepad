@@ -286,8 +286,8 @@ export class NotesGateway
     }
 
     const noteModel = new NoteModel();
-    if (data.title) note.title = data.title;
-    if (data.content) note.content = data.content;
+    if (data.title != null) noteModel.title = data.title;
+    if (data.content != null) noteModel.content = data.content;
 
     if (this.noteMutex.get(note.id)) {
       this.sendErrorToClient(client, 'Note is being edited');
