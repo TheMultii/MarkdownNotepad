@@ -148,7 +148,7 @@ class _EditorPageState extends State<EditorPage> {
 
     setState(() => isLiveShareEnabled = false);
 
-    if (note?.user?.id != loggedInUser?.user.id) {
+    if (note?.author?.id != loggedInUser?.user.id) {
       notifyToast.show(
         context: context,
         child: const ErrorNotifyToast(
@@ -261,7 +261,7 @@ class _EditorPageState extends State<EditorPage> {
       liveShareSocket.dispose();
       setState(() => isLiveShareEnabled = false);
 
-      if (note?.user?.id != loggedInUser?.user.id) {
+      if (note?.author?.id != loggedInUser?.user.id) {
         Modular.to.navigate('/dashboard/');
       }
     } catch (e) {
@@ -425,7 +425,8 @@ class _EditorPageState extends State<EditorPage> {
             controller.text = note!.content;
           });
 
-          if (gnrm.note.shared && gnrm.note.user?.id != loggedInUser!.user.id) {
+          if (gnrm.note.shared &&
+              gnrm.note.author?.id != loggedInUser!.user.id) {
             connectToLiveShare();
           }
         } else {
@@ -475,7 +476,7 @@ class _EditorPageState extends State<EditorPage> {
         forceUpdate: false,
       );
 
-      if (loggedInUserProvider.currentUser?.user.id == gnrm?.note.user?.id) {
+      if (loggedInUserProvider.currentUser?.user.id == gnrm?.note.author?.id) {
         final newUser = loggedInUserProvider.currentUser;
         newUser!.user.notes?.forEach((element) {
           if (element.id == widget.id) {

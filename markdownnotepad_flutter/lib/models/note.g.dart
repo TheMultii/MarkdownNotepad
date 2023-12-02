@@ -25,7 +25,7 @@ class NoteAdapter extends TypeAdapter<Note> {
       updatedAt: fields[5] as DateTime,
       localNotePassword: fields[6] as String?,
       tags: (fields[7] as List?)?.cast<NoteTagSimple>(),
-      user: fields[8] as User?,
+      author: fields[8] as UserSimple?,
       folder: fields[9] as CatalogSimple?,
     );
   }
@@ -51,7 +51,7 @@ class NoteAdapter extends TypeAdapter<Note> {
       ..writeByte(7)
       ..write(obj.tags)
       ..writeByte(8)
-      ..write(obj.user)
+      ..write(obj.author)
       ..writeByte(9)
       ..write(obj.folder);
   }
@@ -80,7 +80,7 @@ Note _$NoteFromJson(Map<String, dynamic> json) => Note(
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       localNotePassword: json['localNotePassword'] as String?,
       tags: NoteTagSimple.noteTagsFromJson(json['tags'] as List),
-      user: User.userFromJson(json['user'] as Map<String, dynamic>?),
+      author: UserSimple.userFromJson(json['author'] as Map<String, dynamic>?),
       folder: CatalogSimple.catalogOptionalFromJson(
           json['folder'] as Map<String, dynamic>?),
     );
@@ -94,6 +94,6 @@ Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
       'updatedAt': instance.updatedAt.toIso8601String(),
       'localNotePassword': instance.localNotePassword,
       'tags': NoteTagSimple.noteTagsToJson(instance.tags),
-      'user': User.userToJson(instance.user),
+      'author': UserSimple.userToJson(instance.author),
       'folder': CatalogSimple.catalogOptionalToJson(instance.folder),
     };
