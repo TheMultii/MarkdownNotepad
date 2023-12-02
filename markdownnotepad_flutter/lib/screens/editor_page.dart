@@ -71,6 +71,7 @@ class _EditorPageState extends State<EditorPage> {
   bool isLiveShareEnabled = false;
   late io.Socket liveShareSocket;
   List<ConnectedLiveShareUser> connectedLiveShareUsers = [];
+  int lastLine = 0;
 
   @override
   void initState() {
@@ -130,23 +131,24 @@ class _EditorPageState extends State<EditorPage> {
             .setExtraHeaders({'Authorization': authorizationString})
             .build());
 
-    liveShareSocket.onConnect(liveShareSocketOnConnect);
-    liveShareSocket.onDisconnect(liveShareSocketOnDisconnect);
 
     liveShareSocket.on('noteUpdate', liveShareSocketOnNoteUpdate);
     liveShareSocket.on('lineChange', liveShareSocketOnLineChange);
+    liveShareSocket.on('connect', liveShareSocketOnConnect);
+    liveShareSocket.on('disconnect', liveShareSocketOnDisconnect);
   }
 
   void liveShareSocketOnConnect(_) {
-    debugPrint('Connected to LiveShare server');
-    debugPrint('Data from onConnect: $_');
+    setState(() => isLiveShareEnabled = true);
   }
 
   void liveShareSocketOnDisconnect(_) {
-    debugPrint('Disconnected from LiveShare server');
-    debugPrint('Data from onDisconnect: $_');
-
-    setState(() => isLiveShareEnabled = false);
+    setState(() {
+      isLiveShareEnabled = false;
+      connectedLiveShareUsers = [];
+      lastLine = 0;
+    });
+    liveShareSocket.dispose();
 
     if (note?.author?.id != loggedInUser?.user.id) {
       notifyToast.show(
