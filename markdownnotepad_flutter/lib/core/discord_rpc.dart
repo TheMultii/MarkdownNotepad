@@ -40,8 +40,7 @@ class MDNDiscordRPC {
     required DiscordPresence presence,
     bool forceUpdate = true,
   }) {
-    if (kIsWeb) return;
-    if (!Platform.isLinux && !Platform.isWindows) return;
+    if (!isDiscordRPCSupported()) return;
     if (currentPresence?.state == presence.state && !forceUpdate) return;
 
     _discordRPCInstance?.start(autoRegister: true);
@@ -56,8 +55,7 @@ class MDNDiscordRPC {
     int? endTimeStamp,
     bool forceUpdate = true,
   }) {
-    if (kIsWeb) return;
-    if (!Platform.isLinux && !Platform.isWindows) return;
+    if (!isDiscordRPCSupported()) return;
     if (currentPresence?.state == state && !forceUpdate) return;
 
     _discordRPCInstance?.start(autoRegister: true);
@@ -77,8 +75,7 @@ class MDNDiscordRPC {
   }
 
   void clearPresence() {
-    if (kIsWeb) return;
-    if (!Platform.isLinux && !Platform.isWindows) return;
+    if (!isDiscordRPCSupported()) return;
     setPresence(state: 'Idle', forceUpdate: false);
   }
 
