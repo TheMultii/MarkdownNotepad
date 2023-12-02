@@ -9,7 +9,7 @@ class MDNDiscordRPC {
   static DiscordRPC? _discordRPCInstance;
 
   factory MDNDiscordRPC() {
-    if (_discordRPCInstance == null) {
+    if (_discordRPCInstance == null && isDiscordRPCSupported()) {
       DiscordRPC.initialize();
       _discordRPCInstance = DiscordRPC(
         applicationId: '1123939840669519903',
@@ -18,10 +18,19 @@ class MDNDiscordRPC {
     return _singleton;
   }
 
+  static bool isDiscordRPCSupported() {
+    return !(kIsWeb ||
+        Platform.isAndroid ||
+        Platform.isIOS ||
+        Platform.isMacOS);
+  }
+
   MDNDiscordRPC._internal() {
-    _discordRPCInstance ??= DiscordRPC(
-      applicationId: '1123939840669519903',
-    );
+    _discordRPCInstance ??= isDiscordRPCSupported()
+        ? DiscordRPC(
+            applicationId: '1123939840669519903',
+          )
+        : null;
   }
 
   static DiscordRPC get discordRPCInstance => _discordRPCInstance!;
