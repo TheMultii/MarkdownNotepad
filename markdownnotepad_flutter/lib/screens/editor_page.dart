@@ -133,7 +133,6 @@ class _EditorPageState extends State<EditorPage> {
 
 
     liveShareSocket.on('noteUpdate', liveShareSocketOnNoteUpdate);
-    liveShareSocket.on('lineChange', liveShareSocketOnLineChange);
     liveShareSocket.on('connect', liveShareSocketOnConnect);
     liveShareSocket.on('disconnect', liveShareSocketOnDisconnect);
   }
@@ -223,19 +222,6 @@ class _EditorPageState extends State<EditorPage> {
     //     controller.text = note!.content;
     //   });
     // }
-  }
-
-  void liveShareSocketOnLineChange(data) {
-    debugPrint(data.toString());
-    // if (data['line'] == null) return;
-
-    // final int newLine = data['line'];
-
-    // if (newLine == null) return;
-
-    // if (newLine == controller.lastLine) return;
-
-    // controller.lastLine = newLine;
   }
 
   void connectToLiveShare() {
