@@ -6,7 +6,7 @@ part 'connected_live_share_user.g.dart';
 class ConnectedLiveShareUser {
   String id;
   String username;
-  int currentLine;
+  int? currentLine;
 
   ConnectedLiveShareUser({
     required this.id,

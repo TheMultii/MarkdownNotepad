@@ -11,7 +11,7 @@ ConnectedLiveShareUser _$ConnectedLiveShareUserFromJson(
     ConnectedLiveShareUser(
       id: json['id'] as String,
       username: json['username'] as String,
-      currentLine: json['currentLine'] as int,
+      currentLine: json['currentLine'] as int?,
     );
 
 Map<String, dynamic> _$ConnectedLiveShareUserToJson(
