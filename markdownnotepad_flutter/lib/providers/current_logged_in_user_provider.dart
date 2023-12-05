@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/helpers/get_logged_in_user_details.dart';
 import 'package:markdownnotepad/models/api_responses/access_token_response_model.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
+import 'package:markdownnotepad/viewmodels/event_log_vm_list.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 import 'package:markdownnotepad/viewmodels/server_settings.dart';
 
@@ -50,7 +51,8 @@ class CurrentLoggedInUserProvider extends ChangeNotifier {
         "Token does not need to be refreshed. It expires in ${tokenExpirationDate.difference(now).inDays} days",
       );
       _getUserData(cU.accessToken).then((value) async {
-        _currentUser = value; // TODO: don't update note entries where there is mismatch between local and remote updatedAt
+        _currentUser =
+            value; // TODO: don't update note entries where there is mismatch between local and remote updatedAt
         updateAvatarUrl();
         _loggedInUserBox.put('logged_in_user', value);
         notifyListeners();
@@ -116,7 +118,9 @@ class CurrentLoggedInUserProvider extends ChangeNotifier {
   }
 
   void logout() {
-    _loggedInUserBox.delete('logged_in_user');
+    _loggedInUserBox.clear();
+    Hive.box<EventLogVMList>('event_logs').clear();
+
     _currentUser = null;
     notifyListeners();
   }
