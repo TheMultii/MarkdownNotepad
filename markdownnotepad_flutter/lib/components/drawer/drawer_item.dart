@@ -43,7 +43,7 @@ class _MDNDrawerItemState extends State<MDNDrawerItem> {
         hoverColor: Colors.transparent,
         onTap: widget.onPressed,
         child: MouseRegion(
-          onHover: (event) => setState(() => isHovered = true),
+          onEnter: (event) => setState(() => isHovered = true),
           onExit: (event) => setState(() => isHovered = false),
           child: Padding(
             padding: const EdgeInsets.symmetric(
