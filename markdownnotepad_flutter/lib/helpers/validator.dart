@@ -1,4 +1,11 @@
 class MDNValidator {
+  static String? validateUUID(String? uuid) {
+    return ValidatorString(uuid)
+        .isNotEmpty(errMsg: "UUID nie może być pusty")
+        .isUUID(errMsg: "Niepoprawny UUID")
+        .build();
+  }
+
   static String? validateIPAddress(String? ipAddress) {
     return ValidatorString(ipAddress)
         .isNotEmpty(errMsg: "Adres IP nie może być pusty")
@@ -199,6 +206,16 @@ class ValidatorString extends Validator {
       errorMessage = errMsg;
     }
 
+    return this;
+  }
+
+  ValidatorString isUUID({required String errMsg}) {
+    if (errorMessage != null) return this;
+    if (value != null &&
+        !RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')
+            .hasMatch(value!)) {
+      errorMessage = errMsg;
+    }
     return this;
   }
 }
