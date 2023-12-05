@@ -23,9 +23,8 @@ class _MDNAppState extends State<MDNApp> {
   void initState() {
     super.initState();
 
-    final serverSettingsBox = Hive.box<ServerSettings>('server_settings');
     final ServerSettings? savedSettings =
-        serverSettingsBox.get('server_settings');
+        Hive.box<ServerSettings>('server_settings').get('server_settings');
 
     if (savedSettings?.ipAddress == null || savedSettings!.ipAddress.isEmpty) {
       redirectToInitialPage = true;
