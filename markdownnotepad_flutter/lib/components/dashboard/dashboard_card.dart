@@ -71,12 +71,12 @@ class DashboardCard extends StatelessWidget {
                           enabled: true,
                           child: Container(
                             width: double.infinity,
-                            height: subtitle?.isEmpty ?? true ? 130 : 140,
+                            height: subtitle == null ? 130 : 140,
                             color: Colors.cyan,
                           ),
                         ),
                         Container(
-                          height: subtitle?.isEmpty ?? true ? 130 : 140,
+                          height: subtitle == null ? 130 : 140,
                           decoration: BoxDecoration(
                             image: isDisabled
                                 ? null
@@ -109,7 +109,7 @@ class DashboardCard extends StatelessWidget {
                       padding: const EdgeInsets.all(8),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: (subtitle?.isNotEmpty ?? false)
+                        children: subtitle != null
                             ? [
                                 Align(
                                   alignment: Alignment.centerLeft,
@@ -131,10 +131,17 @@ class DashboardCard extends StatelessWidget {
                                         Flexible(
                                           fit: FlexFit.tight,
                                           child: Text(
-                                            isDisabled ? "" : subtitle ?? "",
+                                            isDisabled
+                                                ? ""
+                                                : (subtitle!.isNotEmpty
+                                                    ? subtitle!
+                                                    : "Notatka pusta"),
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               fontSize: 14,
+                                              fontStyle: subtitle!.isEmpty
+                                                  ? FontStyle.italic
+                                                  : FontStyle.normal,
                                               color: Theme.of(context)
                                                   .extension<
                                                       MarkdownNotepadTheme>()
