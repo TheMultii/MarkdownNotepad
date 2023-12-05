@@ -2,8 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:flutter_modular/flutter_modular.dart' show Modular;
+import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/helpers/color_converter.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/post_note_tag_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_all_note_tags_response_model.dart';
@@ -86,13 +87,10 @@ class _CreateNewNoteTagAlertDialogState
       final String destination = "/tag/${resp.noteTag.id}";
 
       navigatorPop();
-      drawerCurrentTabProvider.setCurrentTab(destination);
-      Modular.to.navigate(
-        destination,
-        arguments: {
-          "tagName": resp.noteTag.title,
-        },
-      );
+      if (!mounted) return;
+      NavigationHelper.navigateToPage(context, destination, arguments: {
+        "tagName": resp.noteTag.title,
+      });
     } on DioException catch (e) {
       debugPrint(e.message);
       debugPrint(e.response?.data.toString());
@@ -103,9 +101,7 @@ class _CreateNewNoteTagAlertDialogState
     setState(() => isCreating = false);
   }
 
-  void navigatorPop() {
-    Navigator.of(context).pop();
-  }
+  void navigatorPop() => Navigator.of(context).pop();
 
   @override
   Widget build(BuildContext context) {
