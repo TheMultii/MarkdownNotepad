@@ -27,7 +27,7 @@ dependencies:
     flutter_feather_icons: ^2.0.0+1
     retrofit: ^4.0.3
     json_annotation: ^4.8.1
-    dio: ^5.3.4
+    dio: ^5.4.0
     intl: ^0.18.1
     cron: ^0.5.1
     provider: ^6.1.1
