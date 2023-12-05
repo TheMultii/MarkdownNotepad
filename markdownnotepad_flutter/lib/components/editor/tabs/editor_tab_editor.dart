@@ -5,6 +5,7 @@ import 'package:markdownnotepad/components/editor/editor_context_menu.dart';
 import 'package:markdownnotepad/components/editor/editor_desktop_header.dart';
 import 'package:markdownnotepad/components/editor/editor_page_live_share_user_small_avatar.dart';
 import 'package:markdownnotepad/components/notifications/info_notify_toast.dart';
+import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/intents/editor_shortcuts.dart';
@@ -131,178 +132,187 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: Responsive.isMobile(context)
-          ? const EdgeInsets.only(top: 40)
-          : EdgeInsets.zero,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          EditorDesktopHeader(
-            noteTitle: widget.noteTitle,
+    final bool isMobile = Responsive.isMobile(context);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        isMobile
+            ? Container(
+                height: 30,
+                color: Theme.of(context)
+                    .extension<MarkdownNotepadTheme>()
+                    ?.cardColor
+                    ?.withOpacity(.25),
+              )
+            : const SizedBox(),
+        EditorDesktopHeader(
+          noteTitle: widget.noteTitle,
+          note: widget.note,
+          isLiveShareEnabled: widget.isLiveShareEnabled,
+          connectToLiveShare: () {
+            widget.connectToLiveShare?.call();
+          },
+          closeLiveShare: () {
+            widget.closeLiveShare?.call();
+          },
+          noteTitleFocusNode: noteTitleFocusNode,
+          onNoteTitleChanged: widget.onNoteTitleChanged,
+          connectedLiveShareUsers: widget.connectedLiveShareUsers,
+          contextMenuOptions: getEditorContextMenu(
+            context: context,
             note: widget.note,
+            textToRender: widget.controller.text,
             isLiveShareEnabled: widget.isLiveShareEnabled,
+            deleteNote: widget.deleteNote,
+            assignCatalog: widget.assignCatalog,
+            assignNoteTags: widget.assignNoteTags,
+            loggedInUser: widget.loggedInUser,
+            changeNoteName: () => FocusScope.of(context).requestFocus(
+              noteTitleFocusNode,
+            ),
             connectToLiveShare: () {
               widget.connectToLiveShare?.call();
             },
             closeLiveShare: () {
               widget.closeLiveShare?.call();
             },
-            noteTitleFocusNode: noteTitleFocusNode,
-            onNoteTitleChanged: widget.onNoteTitleChanged,
-            connectedLiveShareUsers: widget.connectedLiveShareUsers,
-            contextMenuOptions: getEditorContextMenu(
-              context: context,
-              note: widget.note,
-              textToRender: widget.controller.text,
-              isLiveShareEnabled: widget.isLiveShareEnabled,
-              deleteNote: widget.deleteNote,
-              assignCatalog: widget.assignCatalog,
-              assignNoteTags: widget.assignNoteTags,
-              loggedInUser: widget.loggedInUser,
-              changeNoteName: () => FocusScope.of(context).requestFocus(
-                noteTitleFocusNode,
-              ),
-              connectToLiveShare: () {
-                widget.connectToLiveShare?.call();
-              },
-              closeLiveShare: () {
-                widget.closeLiveShare?.call();
-              },
-            ),
-            contextMenuShortcuts: {
-              LogicalKeySet(
-                      LogicalKeyboardKey.control, LogicalKeyboardKey.keyS):
-                  () async {
-                NotifyToast().show(
-                  context: context,
-                  child: const InfoNotifyToast(
-                    title: 'Aplikacja automatycznie zapisuje zmiany',
-                    body: 'Nie ma potrzeby ręcznego zapisywania zmian,',
-                  ),
-                );
-              },
-            },
           ),
-          Expanded(
-            child: Stack(
-              children: [
-                if (!Responsive.isMobile(context) &&
-                    widget.isEditorSidebarEnabled)
-                  Container(
-                    width: widget.sidebarWidth,
-                    height: double.infinity,
-                    color: widget.sidebarColor,
-                  ),
-                SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: GestureDetector(
-                    onTap: () {
-                      widget.focusNode.requestFocus();
-                    },
-                  ),
+          contextMenuShortcuts: {
+            LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyS):
+                () async {
+              NotifyToast().show(
+                context: context,
+                child: const InfoNotifyToast(
+                  title: 'Aplikacja automatycznie zapisuje zmiany',
+                  body: 'Nie ma potrzeby ręcznego zapisywania zmian,',
                 ),
-                CodeTheme(
-                  data: CodeThemeData(
-                    styles: {
-                      ...widget.editorStyle,
-                      'root': TextStyle(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.background,
-                        color: const Color(0xfff8f8f2),
-                      ),
-                      'title': TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      'section': TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+              );
+            },
+          },
+        ),
+        Expanded(
+          child: Stack(
+            children: [
+              if (!Responsive.isMobile(context) &&
+                  widget.isEditorSidebarEnabled)
+                Container(
+                  width: widget.sidebarWidth,
+                  height: double.infinity,
+                  color: widget.sidebarColor,
+                ),
+              SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: GestureDetector(
+                  onTap: () {
+                    widget.focusNode.requestFocus();
+                  },
+                ),
+              ),
+              CodeTheme(
+                data: CodeThemeData(
+                  styles: {
+                    ...widget.editorStyle,
+                    'root': TextStyle(
+                      backgroundColor: Theme.of(context).colorScheme.background,
+                      color: const Color(0xfff8f8f2),
+                    ),
+                    'title': TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    'section': TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  },
+                ),
+                child: SingleChildScrollView(
+                  child: MDNEditorIntent(
+                    invokeFunction: (Intent intent) {
+                      final String intentName = intent.runtimeType
+                          .toString()
+                          .replaceAll('Intent', '')
+                          .replaceAll('Editor', '');
+
+                      if (!widget.focusNode.hasFocus) return;
+
+                      changeLineIndentation(
+                        getLineNumber(),
+                        intentName,
+                      );
                     },
-                  ),
-                  child: SingleChildScrollView(
-                    child: MDNEditorIntent(
-                      invokeFunction: (Intent intent) {
-                        final String intentName = intent.runtimeType
-                            .toString()
-                            .replaceAll('Intent', '')
-                            .replaceAll('Editor', '');
-
-                        if (!widget.focusNode.hasFocus) return;
-
-                        changeLineIndentation(
-                          getLineNumber(),
-                          intentName,
-                        );
+                    child: CodeField(
+                      controller: widget.controller,
+                      focusNode: widget.focusNode,
+                      wrap: true,
+                      separateGutterFromEditor: true,
+                      onChanged: (newContent) async {
+                        final String registeredValue = widget.controller.text;
+                        Future.delayed(
+                            Duration(
+                              milliseconds:
+                                  widget.isLiveShareEnabled ? 250 : 500,
+                            ), () {
+                          if (widget.onNoteContentChanged != null &&
+                              registeredValue == widget.controller.text) {
+                            widget.onNoteContentChanged!(newContent);
+                          }
+                        });
                       },
-                      child: CodeField(
-                        controller: widget.controller,
-                        focusNode: widget.focusNode,
-                        wrap: true,
-                        separateGutterFromEditor: true,
-                        onChanged: (newContent) async {
-                          final String registeredValue = widget.controller.text;
-                          Future.delayed(const Duration(milliseconds: 500), () {
-                            if (widget.onNoteContentChanged != null &&
-                                registeredValue == widget.controller.text) {
-                              widget.onNoteContentChanged!(newContent);
-                            }
-                          });
-                        },
-                        gutterStyle: GutterStyle(
-                          width: widget.sidebarWidth,
-                          margin: 0,
-                          textAlign: TextAlign.right,
-                          background: widget.gutterColor,
-                          showErrors: widget.isEditorSidebarEnabled,
-                          showFoldingHandles: widget.isEditorSidebarEnabled,
-                          showLineNumbers: widget.isEditorSidebarEnabled,
-                        ),
-                        lineNumberBuilder: (index, style) {
-                          final int lineNumber = index + 1;
-                          style?.apply(
-                            color: widget.sidebarColor,
-                          );
+                      gutterStyle: GutterStyle(
+                        width: widget.sidebarWidth,
+                        margin: 0,
+                        textAlign: TextAlign.right,
+                        background: widget.gutterColor,
+                        showErrors: widget.isEditorSidebarEnabled,
+                        showFoldingHandles: widget.isEditorSidebarEnabled,
+                        showLineNumbers: widget.isEditorSidebarEnabled,
+                      ),
+                      lineNumberBuilder: (index, style) {
+                        final int lineNumber = index + 1;
+                        style?.apply(
+                          color: widget.sidebarColor,
+                        );
 
-                          return TextSpan(
-                            children: [
-                              if (widget.connectedLiveShareUsers.any(
-                                  (user) => user.currentLine == lineNumber))
-                                WidgetSpan(
-                                  alignment: PlaceholderAlignment.middle,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      right: 5.0,
-                                    ),
-                                    child: EditorPageLiveShareUserSmallAvatar(
-                                      user: widget.connectedLiveShareUsers
-                                          .firstWhere((user) =>
-                                              user.currentLine == lineNumber),
-                                    ),
+                        return TextSpan(
+                          children: [
+                            if (widget.connectedLiveShareUsers
+                                .any((user) => user.currentLine == lineNumber))
+                              WidgetSpan(
+                                alignment: PlaceholderAlignment.middle,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: 5.0,
+                                  ),
+                                  child: EditorPageLiveShareUserSmallAvatar(
+                                    user: widget.connectedLiveShareUsers
+                                        .firstWhere((user) =>
+                                            user.currentLine == lineNumber),
                                   ),
                                 ),
-                              WidgetSpan(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 2),
-                                  child: Text('$lineNumber'),
-                                ),
                               ),
-                            ],
-                            style: style,
-                          );
-                        },
-                      ),
+                            WidgetSpan(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 2,
+                                ),
+                                child: Text('$lineNumber'),
+                              ),
+                            ),
+                          ],
+                          style: style,
+                        );
+                      },
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
