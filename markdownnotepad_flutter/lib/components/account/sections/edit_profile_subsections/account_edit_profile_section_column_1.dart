@@ -77,8 +77,12 @@ class AccountEditProfileSectionColumn1 extends StatelessWidget {
             labelText: 'Hasło',
             obscureText: true,
             onEditingComplete: () => updateUserProfile(),
-            validator: (passwordValidator) =>
-                MDNValidator.validatePassword(passwordValidator),
+            validator: (passwordValidator) {
+              if (passwordInputController.text.isEmpty) {
+                return null;
+              }
+              return MDNValidator.validatePassword(passwordValidator);
+            },
           ),
           const SizedBox(
             height: 10,
