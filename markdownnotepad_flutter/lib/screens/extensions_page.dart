@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/components/extensions/extension_list_item.dart';
@@ -40,6 +38,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
     final bool validated =
         ExtensionsHelper.validateLoadExtension(mdnLoadExtension);
     if (!validated) {
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const ErrorNotifyToast(
@@ -59,6 +58,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
     final MDNExtensionUniqueness uniqueness =
         await ExtensionsHelper.checkExtensionUniqueness(extension);
     if (uniqueness == MDNExtensionUniqueness.notUnique) {
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const ErrorNotifyToast(
@@ -69,8 +69,10 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
       return;
     }
 
+    if (!context.mounted) return;
     if (uniqueness == MDNExtensionUniqueness.newExtension) {
       final bool saved = await ExtensionsHelper.saveExtension(extension);
+      if (!context.mounted) return;
       if (!saved) {
         notifyToast.show(
           context: context,
@@ -89,6 +91,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
       );
     } else if (uniqueness == MDNExtensionUniqueness.editableExtension) {
       final bool patched = await ExtensionsHelper.patchExtension(extension);
+      if (!context.mounted) return;
       if (!patched) {
         notifyToast.show(
           context: context,
@@ -106,6 +109,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
         ),
       );
     } else if (uniqueness == MDNExtensionUniqueness.nonModified) {
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const ErrorNotifyToast(
