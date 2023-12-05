@@ -72,10 +72,26 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> drawerKey = GlobalKey<ScaffoldState>();
+    final bool isMobile = Responsive.isMobile(context);
 
     return Scaffold(
       key: drawerKey,
       drawer: widget.displayDrawer ? const MDNDrawer() : null,
+      appBar: isMobile
+          ? AppBar(
+              backgroundColor: Theme.of(context)
+                  .extension<MarkdownNotepadTheme>()
+                  ?.cardColor,
+              scrolledUnderElevation: 0,
+              title: const Text("MDN Notepad"),
+              leading: widget.displayDrawer
+                  ? IconButton(
+                      icon: const Icon(Symbols.menu),
+                      onPressed: () => drawerKey.currentState?.openDrawer(),
+                    )
+                  : null,
+            )
+          : null,
       body: SafeArea(
         child: MDNLayout(
           displayDrawer: widget.displayDrawer,
