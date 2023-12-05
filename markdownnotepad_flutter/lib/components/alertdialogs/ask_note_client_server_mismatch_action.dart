@@ -1,11 +1,7 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_modular/flutter_modular.dart'
-    show Modular, ModularWatchExtension;
 import 'package:markdownnotepad/helpers/date_helper.dart';
-import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 
 class AskNoteClientServerMismatchAction extends StatelessWidget {
   final VoidCallback overrideNoteFunction;
@@ -38,10 +34,7 @@ class AskNoteClientServerMismatchAction extends StatelessWidget {
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
-            Modular.to.navigate('/dashboard/');
-            context
-                .read<DrawerCurrentTabProvider>()
-                .setCurrentTab("/dashboard/");
+            NavigationHelper.navigateToPage(context, '/dashboard/');
           },
           child: const Text('Wróć do dashboardu'),
         ),
