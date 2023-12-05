@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:markdownnotepad/components/tag_chip/tag_chip_small.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/enums/dashboard_history_item_actions.dart';
 import 'package:markdownnotepad/helpers/get_relative_time_text_span.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -131,82 +131,87 @@ class DashboardHistoryListItem extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text.rich(
-                TextSpan(
-                  children: [
-                    WidgetSpan(
-                      child: MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: () {
-                            final DrawerCurrentTabProvider drawerProvider =
-                                context.read<DrawerCurrentTabProvider>();
-                            const String destination = "/miscellaneous/account";
-                            if (drawerProvider.currentTab == destination) {
-                              return;
-                            }
+          Flexible(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      WidgetSpan(
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () {
+                              final DrawerCurrentTabProvider drawerProvider =
+                                  context.read<DrawerCurrentTabProvider>();
+                              const String destination =
+                                  "/miscellaneous/account";
+                              if (drawerProvider.currentTab == destination) {
+                                return;
+                              }
 
-                            drawerProvider.setCurrentTab(destination);
-                            Modular.to.navigate(destination);
-                          },
-                          child: Text(
-                            userName,
-                          ),
-                        ),
-                      ),
-                    ),
-                    getActionTextSpan(context),
-                    WidgetSpan(
-                      child: MouseRegion(
-                        cursor: exists
-                            ? SystemMouseCursors.click
-                            : SystemMouseCursors.basic,
-                        child: GestureDetector(
-                          onTap: exists
-                              ? () {
-                                  final String destination =
-                                      "/editor/${note['id']}";
-                                  context
-                                      .read<DrawerCurrentTabProvider>()
-                                      .setCurrentTab(
-                                        destination,
-                                      );
-                                  Modular.to.navigate(destination);
-                                }
-                              : null,
-                          child: Text(
-                            note['title'],
-                            style: TextStyle(
-                              fontStyle:
-                                  exists ? FontStyle.normal : FontStyle.italic,
+                              NavigationHelper.navigateToPage(
+                                context,
+                                destination,
+                              );
+                            },
+                            child: Text(
+                              userName,
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      getActionTextSpan(context),
+                      WidgetSpan(
+                        child: MouseRegion(
+                          cursor: exists
+                              ? SystemMouseCursors.click
+                              : SystemMouseCursors.basic,
+                          child: GestureDetector(
+                            onTap: exists
+                                ? () {
+                                    final String destination =
+                                        "/editor/${note['id']}";
+                                    NavigationHelper.navigateToPage(
+                                      context,
+                                      destination,
+                                    );
+                                  }
+                                : null,
+                            child: Text(
+                              note['title'],
+                              style: TextStyle(
+                                fontStyle: exists
+                                    ? FontStyle.normal
+                                    : FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  maxLines: 2,
+                  style: const TextStyle(
+                    fontSize: 15,
+                  ),
                 ),
-                style: const TextStyle(
-                  fontSize: 15,
+                Text.rich(
+                  getRelativeTimeTextSpan(actionDateTime),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Theme.of(context)
+                        .extension<MarkdownNotepadTheme>()
+                        ?.text!
+                        .withOpacity(.4),
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-              Text.rich(
-                getRelativeTimeTextSpan(actionDateTime),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Theme.of(context)
-                      .extension<MarkdownNotepadTheme>()
-                      ?.text!
-                      .withOpacity(.4),
-                  fontSize: 14,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
