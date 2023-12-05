@@ -259,6 +259,10 @@ class _MDNDrawerState extends State<MDNDrawer> {
                               Modular.to.navigate(
                                 destination,
                               );
+
+                              if (Responsive.isMobile(context)) {
+                                Scaffold.of(context).openEndDrawer();
+                              }
                             },
                           ),
                           MDNDrawerItemSection(
@@ -294,6 +298,10 @@ class _MDNDrawerState extends State<MDNDrawer> {
                                       "noteTitle": note.title,
                                     },
                                   );
+
+                                  if (Responsive.isMobile(context)) {
+                                    Scaffold.of(context).openEndDrawer();
+                                  }
                                 },
                               );
                             },
@@ -331,6 +339,10 @@ class _MDNDrawerState extends State<MDNDrawer> {
                                     "catalogName": catalog.title,
                                   },
                                 );
+
+                                if (Responsive.isMobile(context)) {
+                                  Scaffold.of(context).openEndDrawer();
+                                }
                               },
                             );
                           }),
@@ -361,6 +373,10 @@ class _MDNDrawerState extends State<MDNDrawer> {
                                     "tagName": tag.title,
                                   },
                                 );
+
+                                if (Responsive.isMobile(context)) {
+                                  Scaffold.of(context).openEndDrawer();
+                                }
                               },
                             );
                           }),
@@ -379,6 +395,10 @@ class _MDNDrawerState extends State<MDNDrawer> {
                               Modular.to.navigate(
                                 destination,
                               );
+
+                              if (Responsive.isMobile(context)) {
+                                Scaffold.of(context).openEndDrawer();
+                              }
                             },
                           ),
                           MDNDrawerItem(
@@ -394,6 +414,10 @@ class _MDNDrawerState extends State<MDNDrawer> {
                               Modular.to.navigate(
                                 destination,
                               );
+
+                              if (Responsive.isMobile(context)) {
+                                Scaffold.of(context).openEndDrawer();
+                              }
                             },
                           ),
                           MDNDrawerItem(
@@ -407,6 +431,10 @@ class _MDNDrawerState extends State<MDNDrawer> {
                               Modular.to.navigate(
                                 destination,
                               );
+
+                              if (Responsive.isMobile(context)) {
+                                Scaffold.of(context).openEndDrawer();
+                              }
                             },
                           ),
                           const SizedBox(
