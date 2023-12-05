@@ -3,6 +3,7 @@ import 'package:flutter_context_menu/flutter_context_menu.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:markdownnotepad/components/editor/editor_desktop_header_list_item.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/helpers/date_helper.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
@@ -53,14 +54,16 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = Responsive.isMobile(context);
+
     return Container(
       color: Theme.of(context)
           .extension<MarkdownNotepadTheme>()
           ?.cardColor
           ?.withOpacity(.25),
-      padding: const EdgeInsets.only(
+      padding: EdgeInsets.only(
         top: 16,
-        left: 32,
+        left: isMobile ? 16 : 32,
         right: 16,
         bottom: 8,
       ),
@@ -166,28 +169,31 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
               )
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              EditorDesktopHeaderListItem(
-                icon: FeatherIcons.calendar,
-                title: 'Data stworzenia',
-                value: DateHelper.getFormattedDate(widget.note.createdAt),
-              ),
-              EditorDesktopHeaderListItem(
-                icon: FeatherIcons.folder,
-                title: 'Folder',
-                value: widget.note.folder?.title ?? 'Brak',
-                isItalic: widget.note.folder == null,
-              ),
-              EditorDesktopHeaderListItem(
-                icon: FeatherIcons.users,
-                title: 'Kolaboracja',
-                value:
-                    'W${widget.isLiveShareEnabled ? '' : 'y'}łączona${widget.connectedLiveShareUsers.isNotEmpty ? ' (${widget.connectedLiveShareUsers.length})' : ''}',
-              ),
-            ],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                EditorDesktopHeaderListItem(
+                  icon: FeatherIcons.calendar,
+                  title: 'Data stworzenia',
+                  value: DateHelper.getFormattedDate(widget.note.createdAt),
+                ),
+                EditorDesktopHeaderListItem(
+                  icon: FeatherIcons.folder,
+                  title: 'Folder',
+                  value: widget.note.folder?.title ?? 'Brak',
+                  isItalic: widget.note.folder == null,
+                ),
+                EditorDesktopHeaderListItem(
+                  icon: FeatherIcons.users,
+                  title: 'Kolaboracja',
+                  value:
+                      'W${widget.isLiveShareEnabled ? '' : 'y'}łączona${widget.connectedLiveShareUsers.isNotEmpty ? ' (${widget.connectedLiveShareUsers.length})' : ''}',
+                ),
+              ],
+            ),
           ),
         ],
       ),
