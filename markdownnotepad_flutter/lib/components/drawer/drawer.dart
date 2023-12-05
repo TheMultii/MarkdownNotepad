@@ -209,12 +209,13 @@ class _MDNDrawerState extends State<MDNDrawer> {
                                 )
                               : const SizedBox(),
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isMobile ? 30.0 : 20.0,
+                            ),
                             child: ElevatedButton.icon(
                               onPressed: () => onCreateNewNotePressed(context),
                               icon: Icon(
-                                FeatherIcons.plus,
+                                Symbols.add,
                                 size: 17,
                                 color: extendedTheme?.text,
                               ),
@@ -238,8 +239,8 @@ class _MDNDrawerState extends State<MDNDrawer> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(3),
                                 ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: isMobile ? 7 : 15,
                                 ),
                               ),
                             ),
