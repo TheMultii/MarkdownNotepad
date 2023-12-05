@@ -56,14 +56,17 @@ class _InitSetupPageState extends State<InitSetupPage> {
     }
 
     if (!kIsWeb) {
-      var wifiIP = await NetworkInfo().getWifiIP();
-      debugPrint("Wifi IP: $wifiIP");
-      ipAddress = wifiIP ?? "";
+      ipAddress = await NetworkInfo().getWifiIP() ?? "";
+      debugPrint("Wifi IP: $ipAddress");
     }
 
     if (ipAddress.isEmpty) {
       try {
-        for (var interface in await NetworkInterface.list()) {
+        for (var interface in await NetworkInterface.list(
+          includeLoopback: false,
+          type: InternetAddressType.IPv4,
+          includeLinkLocal: false,
+        )) {
           for (var addr in interface.addresses) {
             if (addr.type == InternetAddressType.IPv4 && !addr.isLoopback) {
               ipAddress = addr.address;
@@ -80,7 +83,7 @@ class _InitSetupPageState extends State<InitSetupPage> {
       return;
     }
 
-    var subnet = ipToCSubnet(ipAddress);
+    final String subnet = ipToCSubnet(ipAddress);
     debugPrint("Scanning subnet $subnet");
     List<Host> hosts = await scanner!.quickIcmpScanAsync(subnet);
 
