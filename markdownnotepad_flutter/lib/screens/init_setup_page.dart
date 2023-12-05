@@ -178,12 +178,6 @@ class _InitSetupPageState extends State<InitSetupPage> {
     );
 
     if (host == null) {
-      //make sure we've not received a response from an old host request
-      if (hostToCheck.internetAddress.address != customServerAddress) {
-        validateCustomHost();
-        return;
-      }
-
       //make sure we're not currently checking a host (it could result in script stating that valid host is inaccesible)
       if (socketBeingChecked != null) {
         return;
@@ -206,7 +200,7 @@ class _InitSetupPageState extends State<InitSetupPage> {
     });
   }
 
-  void completeSetup() {
+  void completeSetup() async {
     if (selectedHost == null && !kIsWeb) {
       return;
     }
@@ -215,7 +209,7 @@ class _InitSetupPageState extends State<InitSetupPage> {
     }
 
     final serverSettingsBox = Hive.box<ServerSettings>('server_settings');
-    serverSettingsBox.clear();
+    await serverSettingsBox.clear();
     serverSettingsBox.put(
       'server_settings',
       ServerSettings(
@@ -421,14 +415,24 @@ class _InitSetupPageState extends State<InitSetupPage> {
                                     AutovalidateMode.onUserInteraction,
                                 initialValue: customServerAddress,
                                 onChanged: (value) {
+                                  final String registeredValue = value;
                                   setState(() {
                                     customServerAddress = value;
-                                    hasSuccessfullyConnectedToHost = false;
                                   });
-                                  validateCustomHost();
+                                  Future.delayed(
+                                      const Duration(milliseconds: 500), () {
+                                    if (registeredValue ==
+                                        customServerAddress) {
+                                      setState(() {
+                                        hasSuccessfullyConnectedToHost = false;
+                                      });
+                                      validateCustomHost();
+                                    }
+                                  });
                                 },
                                 onFieldSubmitted: (value) =>
-                                    validateCustomHost(),
+                                    validateCustomHost()
+                                        .then((value) => completeSetup()),
                                 validator: (v) =>
                                     MDNValidator.validateIPAddress(v),
                                 decoration: InputDecoration(
@@ -450,14 +454,23 @@ class _InitSetupPageState extends State<InitSetupPage> {
                                     AutovalidateMode.onUserInteraction,
                                 initialValue: customServerPort,
                                 onChanged: (value) {
+                                  final String registeredValue = value;
                                   setState(() {
                                     customServerPort = value;
-                                    hasSuccessfullyConnectedToHost = false;
                                   });
-                                  validateCustomHost();
+                                  Future.delayed(
+                                      const Duration(milliseconds: 500), () {
+                                    if (registeredValue == customServerPort) {
+                                      setState(() {
+                                        hasSuccessfullyConnectedToHost = false;
+                                      });
+                                      validateCustomHost();
+                                    }
+                                  });
                                 },
                                 onFieldSubmitted: (value) =>
-                                    validateCustomHost(),
+                                    validateCustomHost()
+                                        .then((value) => completeSetup()),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: <TextInputFormatter>[
                                   FilteringTextInputFormatter.digitsOnly
