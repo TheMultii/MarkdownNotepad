@@ -12,6 +12,8 @@ import 'package:markdownnotepad/components/drawer/drawer_header.dart';
 import 'package:markdownnotepad/components/drawer/drawer_item.dart';
 import 'package:markdownnotepad/components/drawer/drawer_item_section.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/core/responsive_layout.dart';
+import 'package:markdownnotepad/core/search_bar.dart';
 import 'package:markdownnotepad/helpers/color_converter.dart';
 import 'package:markdownnotepad/models/catalog.dart';
 import 'package:markdownnotepad/models/note.dart';
@@ -93,6 +95,8 @@ class _MDNDrawerState extends State<MDNDrawer> {
       initialScrollOffset: dataDrawerProvider.scrollPosition,
     )..addListener(_onScroll);
 
+    final bool isMobile = Responsive.isMobile(context);
+
     return Drawer(
       elevation: 0,
       backgroundColor: extendedTheme?.drawerBackground,
@@ -149,9 +153,61 @@ class _MDNDrawerState extends State<MDNDrawer> {
                             .read<DataDrawerProvider>()
                             .setDrawerWidth(lbconstr.maxWidth);
                       });
+
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          isMobile
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: isMobile ? 30.0 : 20.0,
+                                  ).copyWith(
+                                    bottom: 10,
+                                  ),
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      Scaffold.of(context).openEndDrawer();
+
+                                      Navigator.of(context).push(
+                                        PageRouteBuilder(
+                                          opaque: false,
+                                          pageBuilder: (_, __, ___) =>
+                                              const MDNSearchBarWidget(),
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Symbols.search,
+                                      size: 17,
+                                      color: extendedTheme?.text,
+                                    ),
+                                    label: Text(
+                                      "Wyszukaj",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: extendedTheme?.text,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      backgroundColor: Colors.grey.shade900,
+                                      foregroundColor:
+                                          extendedTheme?.drawerBackground,
+                                      surfaceTintColor:
+                                          Theme.of(context).brightness ==
+                                                  Brightness.light
+                                              ? Colors.grey.shade900
+                                              : Colors.grey.shade100,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(3),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: isMobile ? 7 : 15,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 20.0),
