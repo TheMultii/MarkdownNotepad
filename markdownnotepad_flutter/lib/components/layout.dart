@@ -132,11 +132,8 @@ class _MDNLayoutState extends State<MDNLayout> {
                           Navigator.of(context).push(
                             PageRouteBuilder(
                               opaque: false,
-                              pageBuilder: (_, __, ___) => MDNSearchBarWidget(
-                                dismissEntry: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
+                              pageBuilder: (_, __, ___) =>
+                                  const MDNSearchBarWidget(),
                             ),
                           );
                         },
