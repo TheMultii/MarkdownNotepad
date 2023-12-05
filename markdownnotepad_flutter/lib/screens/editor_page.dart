@@ -78,6 +78,7 @@ class _EditorPageState extends State<EditorPage> {
   late io.Socket liveShareSocket;
   List<ConnectedLiveShareUser> connectedLiveShareUsers = [];
   int lastLine = 0;
+  bool isLiveShareChangesCurrentAuthor = false;
 
   @override
   void initState() {
@@ -226,6 +227,20 @@ class _EditorPageState extends State<EditorPage> {
     //   // ),
     // );
     controller.text = note!.content;
+    if (isLiveShareChangesCurrentAuthor) {
+      isLiveShareChangesCurrentAuthor = false;
+      controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: newCp),
+      );
+      fNode.requestFocus();
+    } else {
+      Future.delayed(10.ms, () {
+        controller.selection = TextSelection.fromPosition(
+          TextPosition(offset: newCp),
+        );
+        fNode.requestFocus();
+      });
+    }
     fNode.requestFocus();
   }
 
@@ -349,6 +364,8 @@ class _EditorPageState extends State<EditorPage> {
     }
 
     if (body.title == null && body.content == null) return Future.value();
+
+    isLiveShareChangesCurrentAuthor = true;
 
     liveShareSocket.emit('noteUpdate', body.toJson());
     return Future.value();
