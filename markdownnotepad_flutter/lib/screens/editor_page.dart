@@ -1,9 +1,10 @@
-// ignore_for_file: use_build_context_synchronously
-
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:flutter_highlight/themes/a11y-dark.dart';
@@ -22,6 +23,7 @@ import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/enums/editor_tabs.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_note_response_model.dart';
@@ -169,20 +171,14 @@ class _EditorPageState extends State<EditorPage> {
         ),
       );
 
-      Modular.to.navigate('/dashboard/');
+      NavigationHelper.navigateToPage(context, '/dashboard/');
     }
   }
 
   void liveShareSocketOnUserList(data) {
-    debugPrint('Received user list from LiveShare server - $data');
-
     final NoteSocketOnUserListChange newNoteSocketOnUserListChange =
         NoteSocketOnUserListChange.fromJson(
       jsonDecode(data),
-    );
-
-    debugPrint(
-      newNoteSocketOnUserListChange.user.username,
     );
 
     setState(() {
@@ -191,85 +187,90 @@ class _EditorPageState extends State<EditorPage> {
   }
 
   void liveShareSocketOnNoteUpdate(data) {
-    debugPrint("onNote: $data");
-
     final NoteSocketOnNotechange newNoteSocketOnNotechange =
         NoteSocketOnNotechange.fromJson(
       jsonDecode(data),
     );
 
-    debugPrint(
-      "${newNoteSocketOnNotechange.note.author?.username} changed note to ${newNoteSocketOnNotechange.note.title}",
-    );
-    debugPrint("newContent: ${newNoteSocketOnNotechange.note.content}");
-
     setState(() {
       note = newNoteSocketOnNotechange.note;
     });
-    // if (data['note'] == null) return;
 
-    // final Note? newNote = Note.fromJson(data['note']);
+    if (note?.author?.id == loggedInUser?.user.id) {
+      saveNoteToCache(note);
+    }
 
-    // if (newNote == null) return;
+    /*
+      * save cursor caret position before updating note
+      * and restore it after updating note
+      * so the user can continue editing the note
+      * without losing their cursor caret position
+      * when the note loses and regains focus again
+      */
+    final TextEditingValue value = controller.value;
+    final int cursorPosition = value.selection.baseOffset;
 
-    // if (note?.updatedAt == newNote.updatedAt) return;
+    int newCp = cursorPosition > note!.content.length
+        ? note!.content.length
+        : cursorPosition;
 
-    // if (note?.user?.id != newNote.user?.id) return;
+    setState(() {
+      isNoteSafeToEdit = true;
+      noteTitle = note!.title;
+    });
 
-    // if (note?.user?.id == loggedInUser?.user.id) return;
-
-    // if (isNoteSafeToEdit) {
-    //   showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return AskNoteClientServerMismatchAction(
-    //         cacheLastUpdate: note!.updatedAt,
-    //         serverLastUpdate: newNote.updatedAt,
-    //         overrideNoteFunction: () async {
-    //           final bool hasSaved = await patchNoteContentToServer(
-    //             forceUpdate: true,
-    //           );
-    //           if (hasSaved) {
-    //             Navigator.of(context).pop();
-    //           } else {
-    //             NotifyToast().show(
-    //               context: context,
-    //               child: const ErrorNotifyToast(
-    //                 title:
-    //                     "Błąd podczas nadpisywania notatki w pamięci podręcznej.",
-    //                 body: "Spróbuj ponownie później.",
-    //               ),
-    //             );
-    //           }
-    //         },
-    //         saveNoteToCache: () {
-    //           saveNoteToCache(newNote);
-    //           Navigator.of(context).pop();
-    //           setState(() {
-    //             isNoteSafeToEdit = true;
-    //             note = newNote;
-    //             noteTitle = note!.title;
-    //             controller.text = note!.content;
-    //           });
-    //         },
-    //       );
-    //     },
-    //   );
-    // } else {
-    //   saveNoteToCache(newNote);
-    //   setState(() {
-    //     isNoteSafeToEdit = true;
-    //     note = newNote;
-    //     noteTitle = note!.title;
-    //     controller.text = note!.content;
-    //   });
-    // }
+    // controller.value = value.copyWith(
+    //   text: note!.content,
+    //   // selection: TextSelection.fromPosition(
+    //   //   TextPosition(offset: newCp),
+    //   // ),
+    // );
+    controller.text = note!.content;
+    fNode.requestFocus();
   }
 
   void connectToLiveShare() {
     try {
       initializeLiveShareVariable();
       liveShareSocket.connect();
+      if (note?.author?.id == loggedInUser?.user.id) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Udostępnianie notatki"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                      "Skopiuj poniższy kod i udostępnij go znajomym, aby mogli współtworzyć tę notatkę z Tobą."),
+                  const SizedBox(
+                    height: 16.0,
+                  ),
+                  SelectableText(
+                    note!.id,
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Clipboard.setData(
+                      ClipboardData(
+                        text: note!.id,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Skopiuj link i zamknij"),
+                ),
+              ],
+            );
+          },
+        );
+      }
     } catch (e) {
       debugPrint(e.toString());
 
@@ -289,7 +290,7 @@ class _EditorPageState extends State<EditorPage> {
       setState(() => isLiveShareEnabled = false);
 
       if (note?.author?.id != loggedInUser?.user.id) {
-        Modular.to.navigate('/dashboard/');
+        NavigationHelper.navigateToPage(context, '/dashboard/');
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -517,6 +518,8 @@ class _EditorPageState extends State<EditorPage> {
                   final bool hasSaved = await patchNoteContentToServer(
                     forceUpdate: true,
                   );
+                  if (!context.mounted) return;
+
                   if (hasSaved) {
                     Navigator.of(context).pop();
                   } else {
@@ -561,10 +564,10 @@ class _EditorPageState extends State<EditorPage> {
         loggedInUserProvider.setCurrentUser(newUser);
       }
     } on DioException catch (e) {
-      Modular.to.navigate('/dashboard/');
+      NavigationHelper.navigateToPage(context, '/dashboard/');
       debugPrint(e.toString());
     } catch (e) {
-      Modular.to.navigate('/dashboard/');
+      NavigationHelper.navigateToPage(context, '/dashboard/');
       debugPrint(e.toString());
     }
   }
@@ -595,6 +598,7 @@ class _EditorPageState extends State<EditorPage> {
       );
 
       if (resp == null) {
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: const ErrorNotifyToast(
@@ -613,8 +617,11 @@ class _EditorPageState extends State<EditorPage> {
         catalog.notes?.removeWhere((element) => element.id == note!.id);
       });
       loggedInUserProvider.setCurrentUser(newUser);
-      Modular.to.navigate("/dashboard/");
+
+      if (!context.mounted) return;
+      NavigationHelper.navigateToPage(context, '/dashboard/');
     } catch (e) {
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const ErrorNotifyToast(
