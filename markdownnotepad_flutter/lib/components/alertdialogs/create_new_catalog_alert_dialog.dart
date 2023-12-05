@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:markdownnotepad/core/responsive_layout.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/post_catalog_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_all_catalogs_response_model.dart';
@@ -81,8 +81,9 @@ class _CreateNewCatalogAlertDialogState
       final String destination = "/dashboard/directory/${resp.catalog.id}";
 
       navigatorPop();
-      drawerCurrentTabProvider.setCurrentTab(destination);
-      Modular.to.navigate(
+      if (!mounted) return;
+      NavigationHelper.navigateToPage(
+        context,
         destination,
         arguments: {
           "catalogName": catalogNameController.text,
