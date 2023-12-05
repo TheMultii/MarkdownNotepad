@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:markdownnotepad/components/dashboard/dashboard_card.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/helpers/scroll_pointer_signal.dart';
-import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
-import 'package:provider/provider.dart';
 
 class DashboardLastViewedCards extends StatefulWidget {
   final List<Map<String, dynamic>> items;
@@ -34,37 +32,43 @@ class _DashboardLastViewedCardsState extends State<DashboardLastViewedCards> {
           child: Scrollbar(
             controller: _scrollController,
             thickness: 3.0,
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              scrollDirection: Axis.horizontal,
-              child: Wrap(
-                spacing: 10.0,
-                direction: Axis.horizontal,
-                children: widget.items
-                    .map(
-                      (itemCard) => DashboardCard(
-                        title: itemCard['title'],
-                        subtitle: itemCard['subtitle'],
-                        editDate: itemCard['editDate'],
-                        isLocalImage: itemCard['isLocalImage'],
-                        backgroundImage: itemCard['backgroundImage'],
-                        imageAlignment:
-                            itemCard['imageAlignment'] ?? Alignment.topCenter,
-                        opacity: itemCard['opacity'] ?? 1.0,
-                        isDisabled: itemCard['disabled'] ?? false,
-                        onTap: itemCard['disabled'] ?? false
-                            ? null
-                            : () {
-                                final String destination =
-                                    "/editor/${itemCard['id']}";
-                                context
-                                    .read<DrawerCurrentTabProvider>()
-                                    .setCurrentTab(destination);
-                                Modular.to.navigate(destination);
-                              },
-                      ),
-                    )
-                    .toList(),
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overScroll) {
+                overScroll.disallowIndicator();
+                return true;
+              },
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                child: Wrap(
+                  spacing: 10.0,
+                  direction: Axis.horizontal,
+                  children: widget.items
+                      .map(
+                        (itemCard) => DashboardCard(
+                          title: itemCard['title'],
+                          subtitle: itemCard['subtitle'],
+                          editDate: itemCard['editDate'],
+                          isLocalImage: itemCard['isLocalImage'],
+                          backgroundImage: itemCard['backgroundImage'],
+                          imageAlignment:
+                              itemCard['imageAlignment'] ?? Alignment.topCenter,
+                          opacity: itemCard['opacity'] ?? 1.0,
+                          isDisabled: itemCard['disabled'] ?? false,
+                          onTap: itemCard['disabled'] ?? false
+                              ? null
+                              : () {
+                                  final String destination =
+                                      "/editor/${itemCard['id']}";
+                                  NavigationHelper.navigateToPage(
+                                    context,
+                                    destination,
+                                  );
+                                },
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
             ),
           ),
