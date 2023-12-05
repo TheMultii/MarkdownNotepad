@@ -33,7 +33,6 @@ class _EditorMobileTopToolbarState extends State<EditorMobileTopToolbar> {
           borderRadius: BorderRadius.circular(24),
         ),
         child: Container(
-          width: 114,
           height: 40,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
@@ -50,6 +49,7 @@ class _EditorMobileTopToolbarState extends State<EditorMobileTopToolbar> {
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       EditorMobileHoverButton(
                         text: 'MD',
