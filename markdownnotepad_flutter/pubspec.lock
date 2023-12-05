@@ -338,14 +338,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.8"
-  diff_match_patch2:
+  device_info_plus:
     dependency: "direct main"
     description:
-      name: diff_match_patch2
-      sha256: "8ab8f0f294d22a738d7c11cea95d015f212bd4ef9eb5080064695c6a1ca6c63d"
+      name: device_info_plus
+      sha256: "0042cb3b2a76413ea5f8a2b40cec2a33e01d0c937e91f0f7c211fde4f7739ba6"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "9.1.1"
+  device_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: device_info_plus_platform_interface
+      sha256: d3b01d5868b50ae571cd1dc6e502fc94d956b665756180f7b16ead09e836fd64
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   dio:
     dependency: "direct main"
     description:
