@@ -48,7 +48,14 @@ class _MDNLayoutState extends State<MDNLayout> {
 
   Future<void> checkIsConnectedToTheServer() async {
     try {
-      final miscData = await apiService.getMiscellaneous();
+      final miscData = await apiService
+          .getMiscellaneous()
+          ?.timeout(const Duration(seconds: 5), onTimeout: () {
+        setState(() {
+          isConnectedToTheServer = false;
+        });
+        throw TimeoutException('Timeout');
+      });
       if (!mounted) return;
       if (miscData?.name != "MarkdownNotepad API") {
         setState(() {
