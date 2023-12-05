@@ -118,11 +118,15 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = Responsive.isMobile(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 35.0).copyWith(
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 15.0 : 35.0,
+          ).copyWith(
             top: Responsive.isDesktop(context) ? 48.0 : 32.0,
           ),
           child: Column(
@@ -130,9 +134,12 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
+              Flex(
+                direction: isMobile ? Axis.vertical : Axis.horizontal,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: isMobile
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.center,
                 children: [
                   const Text(
                     "Rozszerzenia",
@@ -149,6 +156,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
                               Icons.add,
@@ -200,6 +208,7 @@ class _ExtensionsPageState extends State<ExtensionsPage> {
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: ListView.separated(
                               shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return ExtensionListItem(
                                   extension: importedExtensions[index],
