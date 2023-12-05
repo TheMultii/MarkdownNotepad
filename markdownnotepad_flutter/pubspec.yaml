@@ -62,6 +62,7 @@ dependencies:
     permission_handler: ^11.1.0
     device_info_plus: ^9.1.1
     path_provider: ^2.1.1
+    back_button_interceptor: ^7.0.0
 
 dev_dependencies:
     flutter_test:
