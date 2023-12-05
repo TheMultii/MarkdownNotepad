@@ -109,6 +109,8 @@ class _CreateNewNoteTagAlertDialogState
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = Responsive.isMobile(context);
+
     return AlertDialog(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -145,7 +147,8 @@ class _CreateNewNoteTagAlertDialogState
             ),
             enableAlpha: false,
             pickerAreaBorderRadius: BorderRadius.circular(4),
-            hexInputBar: true,
+            hexInputBar: !isMobile,
+            labelTypes: isMobile ? const [] : [ColorLabelType.rgb],
           ),
         ],
       ),
