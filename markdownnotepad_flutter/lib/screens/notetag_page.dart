@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:dio/dio.dart';
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +14,7 @@ import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/helpers/color_converter.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_tag_body_model.dart';
@@ -24,7 +23,6 @@ import 'package:markdownnotepad/models/notetag.dart';
 import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
-import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -113,10 +111,16 @@ class _NoteTagPageState extends State<NoteTagPage> {
       });
       loggedInUserProvider.setCurrentUser(newUser);
     } on DioException catch (e) {
-      Modular.to.navigate('/dashboard/');
+      NavigationHelper.navigateToPage(
+        context,
+        "/dashboard/",
+      );
       debugPrint(e.toString());
     } catch (e) {
-      Modular.to.navigate('/dashboard/');
+      NavigationHelper.navigateToPage(
+        context,
+        "/dashboard/",
+      );
       debugPrint(e.toString());
     }
   }
@@ -142,6 +146,7 @@ class _NoteTagPageState extends State<NoteTagPage> {
       );
 
       if (resp == null) {
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: const ErrorNotifyToast(
@@ -196,6 +201,7 @@ class _NoteTagPageState extends State<NoteTagPage> {
                   onColorChanged: (Color value) {
                     newColor = value;
                   },
+                  enableAlpha: false,
                 ),
               ],
             ),
@@ -228,6 +234,7 @@ class _NoteTagPageState extends State<NoteTagPage> {
       );
 
       if (resp == null) {
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: const ErrorNotifyToast(
@@ -244,9 +251,11 @@ class _NoteTagPageState extends State<NoteTagPage> {
       );
       loggedInUserProvider.setCurrentUser(newUser);
 
-      const String destination = "/dashboard/";
-      context.read<DrawerCurrentTabProvider>().setCurrentTab(destination);
-      Modular.to.navigate(destination);
+      if (!context.mounted) return;
+      NavigationHelper.navigateToPage(
+        context,
+        "/dashboard/",
+      );
     } catch (e) {
       notifyToast.show(
         context: context,
@@ -278,6 +287,7 @@ class _NoteTagPageState extends State<NoteTagPage> {
       );
 
       if (resp == null) {
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: const ErrorNotifyToast(
@@ -307,6 +317,7 @@ class _NoteTagPageState extends State<NoteTagPage> {
       });
       loggedInUserProvider.setCurrentUser(newUser);
 
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const SuccessNotifyToast(title: "Usunięto notatkę z tego tagu"),
@@ -319,16 +330,21 @@ class _NoteTagPageState extends State<NoteTagPage> {
   void goToNote(String noteID) {
     final String destination = "/editor/$noteID";
 
-    context.read<DrawerCurrentTabProvider>().setCurrentTab(destination);
-    Modular.to.navigate(destination);
+    NavigationHelper.navigateToPage(
+      context,
+      destination,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final int cardsCount = noteTagData?.notes?.length ?? 0;
 
-    List<NoteSimple> notesSorted = cardsCount == 0 ? [] : noteTagData!.notes!
-      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    final List<NoteSimple> notesSorted =
+        cardsCount == 0 ? [] : noteTagData!.notes!
+          ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+
+    final bool isMobile = Responsive.isMobile(context);
 
     return Scaffold(
       body: GestureDetector(
@@ -340,8 +356,11 @@ class _NoteTagPageState extends State<NoteTagPage> {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 35.0).copyWith(
-              top: Responsive.isDesktop(context) ? 48.0 : 32.0,
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 15.0 : 35.0,
+            ).copyWith(
+              top: Responsive.isDesktop(context) ? 48.0 : 24.0,
+              bottom: 24.0,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -353,63 +372,30 @@ class _NoteTagPageState extends State<NoteTagPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextFormField(
-                            controller: newNoteTagNameController,
-                            maxLines: 1,
-                            onChanged: (value) {
-                              setState(() {
-                                noteTagName = value;
-                              });
-                              updateNoteTagName();
-                            },
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Title",
-                              hintStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .extension<MarkdownNotepadTheme>()
-                                    ?.text
-                                    ?.withOpacity(.6),
-                              ),
-                            ),
-                            style: const TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.w600,
-                            ),
+                      child: TextFormField(
+                        controller: newNoteTagNameController,
+                        maxLines: 1,
+                        onChanged: (value) {
+                          setState(() {
+                            noteTagName = value;
+                          });
+                          updateNoteTagName();
+                        },
+                        decoration: InputDecoration(
+                          isDense: true,
+                          border: InputBorder.none,
+                          hintText: "Title",
+                          hintStyle: TextStyle(
+                            color: Theme.of(context)
+                                .extension<MarkdownNotepadTheme>()
+                                ?.text
+                                ?.withOpacity(.6),
                           ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Material(
-                                borderRadius: BorderRadius.circular(4),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(4),
-                                  onTap: () => changeNoteTagColor(),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(2.0),
-                                    child: Text("Zmień kolor tagu"),
-                                  ),
-                                ),
-                              ),
-                              const Text(" ・ "),
-                              Material(
-                                borderRadius: BorderRadius.circular(4),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(4),
-                                  onTap: () => deleteNoteTag(),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(2.0),
-                                    child: Text("Usuń tag"),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ),
+                        style: const TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     Padding(
@@ -437,7 +423,9 @@ class _NoteTagPageState extends State<NoteTagPage> {
                               borderRadius: BorderRadius.circular(9999),
                             ),
                             padding: const EdgeInsets.symmetric(
-                                vertical: 2, horizontal: 8),
+                              vertical: 2,
+                              horizontal: 8,
+                            ),
                             child: Text(
                               "$cardsCount",
                               style: GoogleFonts.inter(
@@ -455,10 +443,41 @@ class _NoteTagPageState extends State<NoteTagPage> {
                     ),
                   ],
                 ),
+                Row(
+                  children: [
+                    Material(
+                      borderRadius: BorderRadius.circular(4),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(4),
+                        onTap: () => changeNoteTagColor(),
+                        child: const Padding(
+                          padding: EdgeInsets.all(2.0),
+                          child: Text("Zmień kolor tagu"),
+                        ),
+                      ),
+                    ),
+                    const Text(" ・ "),
+                    Material(
+                      borderRadius: BorderRadius.circular(4),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(4),
+                        onTap: () => deleteNoteTag(),
+                        child: const Padding(
+                          padding: EdgeInsets.all(2.0),
+                          child: Text("Usuń tag"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32.0),
+                  padding: const EdgeInsets.only(
+                    top: 32.0,
+                    bottom: 16.0,
+                  ),
                   child: cardsCount > 0
                       ? DynamicHeightGridView(
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: cardsCount,
                           crossAxisCount: Responsive.isDesktop(context)
@@ -466,7 +485,8 @@ class _NoteTagPageState extends State<NoteTagPage> {
                               : Responsive.isTablet(context)
                                   ? 2
                                   : 1,
-                          mainAxisSpacing: 16,
+                          mainAxisSpacing:
+                              Responsive.isMobile(context) ? 4 : 16,
                           crossAxisSpacing: 16,
                           builder: (BuildContext context, int index) {
                             final NoteSimple noteData = notesSorted[index];
