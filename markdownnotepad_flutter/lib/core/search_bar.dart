@@ -3,23 +3,22 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:markdownnotepad/components/search_bar_item.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
+import 'package:markdownnotepad/core/responsive_layout.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
+import 'package:markdownnotepad/helpers/validator.dart';
+import 'package:markdownnotepad/models/api_responses/get_note_response_model.dart';
+import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
-import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
+import 'package:markdownnotepad/services/mdn_api_service.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 import 'package:markdownnotepad/viewmodels/search_result.dart';
 import 'package:markdownnotepad/viewmodels/search_results.dart';
 import 'package:provider/provider.dart';
 
 class MDNSearchBarWidget extends StatefulWidget {
-  final Function() dismissEntry;
-
-  const MDNSearchBarWidget({
-    super.key,
-    required this.dismissEntry,
-  });
+  const MDNSearchBarWidget({super.key});
 
   @override
   State<MDNSearchBarWidget> createState() => _MDNSearchBarWidgetState();
@@ -32,8 +31,18 @@ class _MDNSearchBarWidgetState extends State<MDNSearchBarWidget> {
   bool isSearching = false;
   SearchResults searchResults = SearchResults();
 
+  late String authorizationString;
   LoggedInUser? get loggedInUser =>
       context.read<CurrentLoggedInUserProvider>().currentUser;
+  MDNApiService? get apiService =>
+      context.read<ApiServiceProvider>().apiService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    authorizationString = "Bearer ${loggedInUser?.accessToken}";
+  }
 
   final List<Map<String, String>> searchActions = [
     {"destination": "/dashboard/", "title": "Dashboard"},
@@ -51,86 +60,84 @@ class _MDNSearchBarWidgetState extends State<MDNSearchBarWidget> {
     });
     Timer(100.ms, () {
       if (!mounted) return;
-      widget.dismissEntry();
+      Navigator.of(context).pop();
     });
   }
 
-  void search() {
+  void search() async {
     setState(() => isSearching = true);
 
     searchResults = SearchResults();
+
     if (textValue.isNotEmpty) {
+      await _searchLiveShareNote();
+
       if (textValue.length > 2) {
-        for (final Map<String, String> action in searchActions) {
-          if (action['title']
-                  ?.toLowerCase()
-                  .contains(textValue.toLowerCase()) ??
-              false) {
-            searchResults.actionResult = SearchResult(
-              id: action['destination']!,
-              title: action["title"]!,
-              type: SearchResultType.other,
-              onTap: action["title"]! == "Wyloguj" ||
-                      action["title"]! == "Logout"
-                  ? () => context.read<CurrentLoggedInUserProvider>().logout()
-                  : null,
-            );
-            break;
-          }
-        }
+        _searchActionResults();
       }
 
-      searchResults.notes = loggedInUser!.user.notes!
-          .where((element) {
-            return element.title
-                    .toLowerCase()
-                    .contains(textValue.toLowerCase()) ||
-                (element.id.toLowerCase().contains(textValue.toLowerCase()) &&
-                    textValue.length == 36);
-          })
-          .map(
-            (e) => SearchResult(
-              id: e.id,
-              title: e.title,
-              type: SearchResultType.note,
-            ),
-          )
-          .toList();
-      searchResults.tags = loggedInUser!.user.tags!
-          .where((element) {
-            return element.title
-                    .toLowerCase()
-                    .contains(textValue.toLowerCase()) ||
-                (element.id.toLowerCase().contains(textValue.toLowerCase()) &&
-                    textValue.length == 36);
-          })
-          .map(
-            (e) => SearchResult(
-              id: e.id,
-              title: e.title,
-              type: SearchResultType.tag,
-            ),
-          )
-          .toList();
-      searchResults.catalogs = loggedInUser!.user.catalogs!
-          .where((element) {
-            return element.title
-                    .toLowerCase()
-                    .contains(textValue.toLowerCase()) ||
-                (element.id.toLowerCase().contains(textValue.toLowerCase()) &&
-                    textValue.length == 36);
-          })
-          .map(
-            (e) => SearchResult(
-              id: e.id,
-              title: e.title,
-              type: SearchResultType.catalog,
-            ),
-          )
-          .toList();
+      _searchItems(loggedInUser!.user.notes!, SearchResultType.note);
+      _searchItems(loggedInUser!.user.tags!, SearchResultType.tag);
+      _searchItems(loggedInUser!.user.catalogs!, SearchResultType.catalog);
     }
 
     setState(() => isSearching = false);
+  }
+
+  Future<void> _searchLiveShareNote() async {
+    try {
+      final String splittedSlash = textValue.split("/").last;
+      if (MDNValidator.validateUUID(splittedSlash) == null &&
+          !loggedInUser!.user.notes!
+              .any((element) => element.id == splittedSlash) &&
+          apiService != null) {
+        final GetNoteResponseModel? liveShareNote =
+            await apiService!.getNote(splittedSlash, authorizationString);
+
+        if (liveShareNote != null) {
+          searchResults.liveShareNote = SearchResult(
+            id: splittedSlash,
+            title: liveShareNote.note.title,
+            type: SearchResultType.note,
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void _searchActionResults() {
+    for (final Map<String, String> action in searchActions) {
+      if (action['title']?.toLowerCase().contains(textValue.toLowerCase()) ??
+          false) {
+        searchResults.actionResult = SearchResult(
+          id: action['destination']!,
+          title: action["title"]!,
+          type: SearchResultType.other,
+          onTap: action["title"]! == "Wyloguj" || action["title"]! == "Logout"
+              ? () => context.read<CurrentLoggedInUserProvider>().logout()
+              : null,
+        );
+        break;
+      }
+    }
+  }
+
+  void _searchItems(List<dynamic> items, SearchResultType resultType) {
+    searchResults.notes = items
+        .where((element) =>
+            element.title.toLowerCase().contains(textValue.toLowerCase()) ||
+            (element.id.toLowerCase().contains(textValue.toLowerCase()) &&
+                textValue.length == 36))
+        .map(
+          (e) => SearchResult(
+            id: e.id,
+            title: e.title,
+            type: resultType,
+          ),
+        )
+        .toList();
   }
 
   void onTapItem(SearchResult searchResult) {
@@ -152,13 +159,19 @@ class _MDNSearchBarWidgetState extends State<MDNSearchBarWidget> {
     }
 
     if (destination.isEmpty) return;
-    context.read<DrawerCurrentTabProvider>().setCurrentTab(destination);
-    Modular.to.navigate(destination);
+
+    NavigationHelper.navigateToPage(
+      context,
+      destination,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final double margin = MediaQuery.of(context).size.width * .45 / 2;
+    double margin = MediaQuery.of(context).size.width * (.45 / 2);
+    if (Responsive.isMobile(context)) {
+      margin = MediaQuery.of(context).size.width * (.15 / 2);
+    }
 
     return RawKeyboardListener(
       focusNode: FocusNode(),
@@ -296,6 +309,40 @@ class _MDNSearchBarWidgetState extends State<MDNSearchBarWidget> {
                                                     .actionResult!);
                                               },
                                             ),
+                                          if (searchResults.liveShareNote !=
+                                              null) ...[
+                                            const Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 8.0,
+                                                vertical: 4.0,
+                                              ),
+                                              child: Text(
+                                                'LiveShare',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                            SearchBarItem(
+                                              elementID: searchResults
+                                                  .liveShareNote!.id,
+                                              text: searchResults
+                                                  .liveShareNote!.title,
+                                              isLast: true,
+                                              onTap: () {
+                                                if (searchResults
+                                                        .liveShareNote!.onTap !=
+                                                    null) {
+                                                  searchResults
+                                                      .liveShareNote!.onTap!();
+                                                  return;
+                                                }
+                                                onTapItem(searchResults
+                                                    .liveShareNote!);
+                                              },
+                                            ),
+                                          ],
                                           if (searchResults
                                               .notes.isNotEmpty) ...[
                                             Padding(
