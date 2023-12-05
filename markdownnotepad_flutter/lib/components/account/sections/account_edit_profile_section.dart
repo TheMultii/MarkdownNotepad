@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -110,6 +108,7 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
           randomAvatarString = DateTime.now().millisecondsSinceEpoch.toString();
         });
       } catch (e) {
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: const ErrorNotifyToast(
@@ -141,6 +140,7 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
     }
 
     if (patchModel.isEmpty && !hasUpdatedAnyField) {
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const ErrorNotifyToast(
@@ -171,6 +171,7 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
 
       hasUpdatedAnyField = true;
     } catch (e) {
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const ErrorNotifyToast(
@@ -182,6 +183,7 @@ class _AccountEditProfileSectionState extends State<AccountEditProfileSection> {
     }
 
     if (hasUpdatedAnyField) {
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const SuccessNotifyToast(
