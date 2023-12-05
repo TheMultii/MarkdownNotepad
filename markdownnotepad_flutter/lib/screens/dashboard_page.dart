@@ -137,7 +137,9 @@ class _DashboardPageState extends State<DashboardPage> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 35.0).copyWith(
+          padding: EdgeInsets.symmetric(
+            horizontal: Responsive.isMobile(context) ? 15.0 : 35.0,
+          ).copyWith(
             top: Responsive.isDesktop(context) ? 48.0 : 32.0,
           ),
           child: Consumer<CurrentLoggedInUserProvider>(
@@ -200,26 +202,30 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 36.0),
-                    child: Row(
-                      children: [
-                        DashboardHeaderMenuButton(
-                          text: "Ostatnio wyświetlane",
-                          tab: DashboardTabs.lastViewed,
-                          selectedTab: selectedTab,
-                          onTap: () => setState(
-                            () => selectedTab = DashboardTabs.lastViewed,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          DashboardHeaderMenuButton(
+                            text: "Ostatnio wyświetlane",
+                            tab: DashboardTabs.lastViewed,
+                            selectedTab: selectedTab,
+                            onTap: () => setState(
+                              () => selectedTab = DashboardTabs.lastViewed,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 20.0),
-                        DashboardHeaderMenuButton(
-                          text: "Dodane do ulubionych",
-                          tab: DashboardTabs.addedToFavourites,
-                          selectedTab: selectedTab,
-                          onTap: () => setState(
-                            () => selectedTab = DashboardTabs.addedToFavourites,
+                          const SizedBox(width: 20.0),
+                          DashboardHeaderMenuButton(
+                            text: "Dodane do ulubionych",
+                            tab: DashboardTabs.addedToFavourites,
+                            selectedTab: selectedTab,
+                            onTap: () => setState(
+                              () =>
+                                  selectedTab = DashboardTabs.addedToFavourites,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   if (selectedTab == DashboardTabs.lastViewed)
