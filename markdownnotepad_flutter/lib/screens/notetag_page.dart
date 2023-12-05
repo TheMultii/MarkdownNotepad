@@ -502,6 +502,10 @@ class _NoteTagPageState extends State<NoteTagPage> {
                                     context
                                         .read<DataDrawerProvider>()
                                         .getDrawerWidth(context);
+                                final double dy = cursorPosition.dy -
+                                    (isMobile
+                                        ? AppBar().preferredSize.height
+                                        : 0);
 
                                 final contextMenu = ContextMenu(
                                   entries: [
@@ -520,7 +524,7 @@ class _NoteTagPageState extends State<NoteTagPage> {
                                   ],
                                   position: Offset(
                                     dx,
-                                    cursorPosition.dy,
+                                    dy,
                                   ),
                                   padding: const EdgeInsets.all(8.0),
                                 );
