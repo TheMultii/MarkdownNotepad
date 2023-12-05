@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:markdownnotepad/components/editor/editor_context_menu.dart';
 import 'package:markdownnotepad/components/editor/editor_desktop_header.dart';
 import 'package:markdownnotepad/components/notifications/info_notify_toast.dart';
+import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/markdown_visual_builder/markdown_preview.dart';
 import 'package:markdownnotepad/models/note.dart';
@@ -42,15 +43,26 @@ class EditorTabVisualPreview extends StatefulWidget {
 }
 
 class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
+  final FocusNode noteTitleFocusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
-    final FocusNode noteTitleFocusNode = FocusNode();
+    final bool isMobile = MediaQuery.of(context).size.width < 768;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        isMobile
+            ? Container(
+                height: 30,
+                color: Theme.of(context)
+                    .extension<MarkdownNotepadTheme>()
+                    ?.cardColor
+                    ?.withOpacity(.25),
+              )
+            : const SizedBox(),
         EditorDesktopHeader(
           noteTitle: widget.noteTitle,
           note: widget.note,
