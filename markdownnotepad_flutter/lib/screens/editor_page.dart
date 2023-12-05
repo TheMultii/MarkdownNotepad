@@ -127,8 +127,14 @@ class _EditorPageState extends State<EditorPage> {
   void initializeLiveShareVariable() {
     if (serverSettings == null) return;
 
+    String link =
+        'http://${serverSettings!.ipAddress}:${serverSettings!.port}/notes?id=${widget.id}';
+    if (kIsWeb) {
+      link += '&authorization=$authorizationString';
+    }
+
     liveShareSocket = io.io(
-        'http://${serverSettings!.ipAddress}:${serverSettings!.port}/notes?id=${widget.id}',
+        link,
         io.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()

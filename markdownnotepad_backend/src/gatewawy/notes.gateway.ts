@@ -48,7 +48,12 @@ export class NotesGateway
   }
 
   async handleConnection(@ConnectedSocket() client: Socket) {
-    const authToken: string | null = client.handshake.headers.authorization;
+    const authToken: string = (
+      client.handshake.query?.authorization ??
+      client.handshake.headers.authorization ??
+      ''
+    ).toString();
+
     if (!authToken) {
       this.sendErrorToClient(client, 'Missing authorization header');
       return;
@@ -56,10 +61,7 @@ export class NotesGateway
 
     let decodedJWT: JwtPayload;
     try {
-      decodedJWT = await decodeJwt(
-        this.jwtService,
-        client.handshake.headers.authorization,
-      );
+      decodedJWT = await decodeJwt(this.jwtService, authToken);
     } catch (error) {
       this.sendErrorToClient(client, 'Invalid token');
       return;
@@ -139,7 +141,12 @@ export class NotesGateway
     @MessageBody() data: LineNumberDto,
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
-    const authToken: string | null = client.handshake.headers.authorization;
+    const authToken: string = (
+      client.handshake.query?.authorization ??
+      client.handshake.headers.authorization ??
+      ''
+    ).toString();
+
     if (!authToken) {
       this.sendErrorToClient(client, 'Missing authorization header');
       return;
@@ -147,10 +154,7 @@ export class NotesGateway
 
     let decodedJWT: JwtPayload;
     try {
-      decodedJWT = await decodeJwt(
-        this.jwtService,
-        client.handshake.headers.authorization,
-      );
+      decodedJWT = await decodeJwt(this.jwtService, authToken);
     } catch (error) {
       this.sendErrorToClient(client, 'Invalid token');
       return;
@@ -212,7 +216,12 @@ export class NotesGateway
     @MessageBody() data: NoteDtoOptional,
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
-    const authToken: string | null = client.handshake.headers.authorization;
+    const authToken: string = (
+      client.handshake.query?.authorization ??
+      client.handshake.headers.authorization ??
+      ''
+    ).toString();
+
     if (!authToken) {
       this.sendErrorToClient(client, 'Missing authorization header');
       return;
@@ -220,10 +229,7 @@ export class NotesGateway
 
     let decodedJWT: JwtPayload;
     try {
-      decodedJWT = await decodeJwt(
-        this.jwtService,
-        client.handshake.headers.authorization,
-      );
+      decodedJWT = await decodeJwt(this.jwtService, authToken);
     } catch (error) {
       this.sendErrorToClient(client, 'Invalid token');
       return;
@@ -298,7 +304,9 @@ export class NotesGateway
       this.noteMutex.set(note.id, true);
     }
 
-    await this.notesService.updateNoteById(note.id, noteModel);
+    const n = await this.notesService.updateNoteById(note.id, noteModel);
+    note.title = n.title;
+    note.content = n.content;
     this.notifyClientsAboutNoteChange(note, user);
     this.noteMutex.set(note.id, false);
 
@@ -333,7 +341,12 @@ export class NotesGateway
     const noteID = client.handshake.query.id as string;
 
     if (noteID) {
-      const authToken: string | null = client.handshake.headers.authorization;
+      const authToken: string = (
+        client.handshake.query?.authorization ??
+        client.handshake.headers.authorization ??
+        ''
+      ).toString();
+
       let decodedJWT: JwtPayload;
 
       try {
