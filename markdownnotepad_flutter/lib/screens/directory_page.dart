@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:dio/dio.dart';
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +14,7 @@ import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/patch_catalog_body_model.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
@@ -26,7 +25,6 @@ import 'package:markdownnotepad/models/note_simple.dart';
 import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
 import 'package:markdownnotepad/providers/data_drawer_provider.dart';
-import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -115,10 +113,16 @@ class _DirectoryPageState extends State<DirectoryPage> {
       });
       loggedInUserProvider.setCurrentUser(newUser);
     } on DioException catch (e) {
-      Modular.to.navigate('/dashboard/');
+      NavigationHelper.navigateToPage(
+        context,
+        '/dashboard/',
+      );
       debugPrint(e.toString());
     } catch (e) {
-      Modular.to.navigate('/dashboard/');
+      NavigationHelper.navigateToPage(
+        context,
+        '/dashboard/',
+      );
       debugPrint(e.toString());
     }
   }
@@ -143,6 +147,7 @@ class _DirectoryPageState extends State<DirectoryPage> {
       );
 
       if (resp == null) {
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: const ErrorNotifyToast(
@@ -185,6 +190,7 @@ class _DirectoryPageState extends State<DirectoryPage> {
       );
 
       if (resp == null) {
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: const ErrorNotifyToast(
@@ -201,9 +207,11 @@ class _DirectoryPageState extends State<DirectoryPage> {
       );
       loggedInUserProvider.setCurrentUser(newUser);
 
-      const String destination = "/dashboard/";
-      context.read<DrawerCurrentTabProvider>().setCurrentTab(destination);
-      Modular.to.navigate(destination);
+      if (!context.mounted) return;
+      NavigationHelper.navigateToPage(
+        context,
+        '/dashboard/',
+      );
     } catch (e) {
       notifyToast.show(
         context: context,
@@ -225,6 +233,7 @@ class _DirectoryPageState extends State<DirectoryPage> {
       );
 
       if (resp == null) {
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: const ErrorNotifyToast(
@@ -254,6 +263,7 @@ class _DirectoryPageState extends State<DirectoryPage> {
       });
       loggedInUserProvider.setCurrentUser(newUser);
 
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const SuccessNotifyToast(title: "Usunięto notatkę z folderu"),
@@ -266,8 +276,10 @@ class _DirectoryPageState extends State<DirectoryPage> {
   void goToNote(String noteID) {
     final String destination = "/editor/$noteID";
 
-    context.read<DrawerCurrentTabProvider>().setCurrentTab(destination);
-    Modular.to.navigate(destination);
+    NavigationHelper.navigateToPage(
+      context,
+      destination,
+    );
   }
 
   Future<void> assignNote(String nID) async {
@@ -322,6 +334,8 @@ class _DirectoryPageState extends State<DirectoryPage> {
     List<NoteSimple> notesSorted = cardsCount == 0 ? [] : catalogData!.notes!
       ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
 
+    final bool isMobile = Responsive.isMobile(context);
+
     return Scaffold(
       body: GestureDetector(
         onTapDown: (pos) {
@@ -332,8 +346,11 @@ class _DirectoryPageState extends State<DirectoryPage> {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 35.0).copyWith(
-              top: Responsive.isDesktop(context) ? 48.0 : 32.0,
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 15.0 : 35.0,
+            ).copyWith(
+              top: Responsive.isDesktop(context) ? 48.0 : 24.0,
+              bottom: 24.0,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -435,9 +452,13 @@ class _DirectoryPageState extends State<DirectoryPage> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32.0),
+                  padding: const EdgeInsets.only(
+                    top: 32.0,
+                    bottom: 16.0,
+                  ),
                   child: cardsCount > 0
                       ? DynamicHeightGridView(
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: cardsCount,
                           crossAxisCount: Responsive.isDesktop(context)
@@ -445,7 +466,8 @@ class _DirectoryPageState extends State<DirectoryPage> {
                               : Responsive.isTablet(context)
                                   ? 2
                                   : 1,
-                          mainAxisSpacing: 16,
+                          mainAxisSpacing:
+                              Responsive.isMobile(context) ? 4 : 16,
                           crossAxisSpacing: 16,
                           builder: (BuildContext context, int index) {
                             final NoteSimple noteData = notesSorted[index];
@@ -461,6 +483,10 @@ class _DirectoryPageState extends State<DirectoryPage> {
                                     context
                                         .read<DataDrawerProvider>()
                                         .getDrawerWidth(context);
+                                final double dy = cursorPosition.dy -
+                                    (isMobile
+                                        ? AppBar().preferredSize.height
+                                        : 0);
 
                                 final contextMenu = ContextMenu(
                                   entries: [
@@ -479,7 +505,7 @@ class _DirectoryPageState extends State<DirectoryPage> {
                                   ],
                                   position: Offset(
                                     dx,
-                                    cursorPosition.dy,
+                                    dy,
                                   ),
                                   padding: const EdgeInsets.all(8.0),
                                 );
@@ -508,7 +534,9 @@ class _DirectoryPageState extends State<DirectoryPage> {
                           borderRadius: BorderRadius.circular(4.0),
                           child: const Padding(
                             padding: EdgeInsets.symmetric(
-                                vertical: 2.0, horizontal: 4.0),
+                              vertical: 2.0,
+                              horizontal: 4.0,
+                            ),
                             child: Text("Przypisz notatkę do folderu"),
                           ),
                         ),
