@@ -343,6 +343,29 @@ class _RegisterPageState extends State<RegisterPage> {
                                   fontSize: 13,
                                 ),
                               ),
+                              MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Hive.box<ServerSettings>('server_settings')
+                                        .clear();
+                                    Hive.box<EventLogVMList>('event_logs')
+                                        .clear();
+                                    Hive.box<LoggedInUser>('logged_in_user')
+                                        .clear();
+                                    Modular.to.navigate('/init-setup/');
+                                  },
+                                  child: Text(
+                                    'Kliknij tutaj',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
