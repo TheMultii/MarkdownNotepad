@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/viewmodels/connected_live_share_user.dart';
+import 'package:markdownnotepad/viewmodels/server_settings.dart';
 
 class EditorPageLiveShareUserSmallAvatar extends StatelessWidget {
   final ConnectedLiveShareUser user;
@@ -16,6 +18,9 @@ class EditorPageLiveShareUserSmallAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final MarkdownNotepadTheme? theme =
         Theme.of(context).extension<MarkdownNotepadTheme>();
+
+    final ServerSettings? savedSettings =
+        Hive.box<ServerSettings>('server_settings').get('server_settings');
 
     return Tooltip(
       message: user.username,
@@ -37,7 +42,7 @@ class EditorPageLiveShareUserSmallAvatar extends StatelessWidget {
           onTap: onTap == null ? null : () => onTap!(),
           child: ClipOval(
             child: Image.network(
-              "http://localhost:3000/avatar/${user.id}",
+              "http://${savedSettings?.ipAddress}:${savedSettings?.port}/avatar/${user.id}",
               width: 18,
               height: 18,
               fit: BoxFit.cover,
