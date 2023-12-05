@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_modular/flutter_modular.dart' show Modular;
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/post_note_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_all_notes_response_model.dart';
@@ -82,13 +82,11 @@ class _CreateNewNoteAlertDialogState extends State<CreateNewNoteAlertDialog> {
       final String destination = "/editor/${resp.note.id}";
 
       navigatorPop();
-      drawerCurrentTabProvider.setCurrentTab(destination);
-      Modular.to.navigate(
-        destination,
-        arguments: {
-          "noteTitle": resp.note.title,
-        },
-      );
+
+      if (!mounted) return;
+      NavigationHelper.navigateToPage(context, destination, arguments: {
+        "noteTitle": resp.note.title,
+      });
     } on DioException catch (e) {
       debugPrint(e.message);
       debugPrint(e.response?.data.toString());
