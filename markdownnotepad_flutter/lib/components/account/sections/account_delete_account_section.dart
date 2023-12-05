@@ -98,6 +98,7 @@ class _AccountDeleteAccountSectionState
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                 ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(
                 height: 10,
