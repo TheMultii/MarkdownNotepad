@@ -144,11 +144,14 @@ class _EditorDesktopHeaderState extends State<EditorDesktopHeader> {
                               .getDrawerWidth(context) *
                           2);
 
+                  final double dy = pos.globalPosition.dy -
+                      (isMobile ? AppBar().preferredSize.height * 1.8 : 0);
+
                   final contextMenu = ContextMenu(
                     entries: widget.contextMenuOptions,
                     position: Offset(
                       dx,
-                      pos.globalPosition.dy,
+                      dy,
                     ),
                     padding: const EdgeInsets.all(8.0),
                     shortcuts: widget.contextMenuShortcuts,
