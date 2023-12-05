@@ -109,7 +109,7 @@ class _EditorPageState extends State<EditorPage> {
     serverSettings = serverSettingsBox.get('server_settings');
 
     if (serverSettings == null) {
-      Modular.to.navigate('/auth/login');
+      Modular.to.navigate('/init-setup/');
       return;
     }
 
