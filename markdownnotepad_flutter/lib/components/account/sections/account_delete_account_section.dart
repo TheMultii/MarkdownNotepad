@@ -52,7 +52,7 @@ class _AccountDeleteAccountSectionState
       currentUserProvider.logout();
       Modular.to.navigate('/auth/login');
     } catch (e) {
-      // ignore: use_build_context_synchronously
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const ErrorNotifyToast(
