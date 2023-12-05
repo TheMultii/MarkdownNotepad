@@ -59,7 +59,6 @@ dependencies:
     dart_eval: ^0.7.2
     window_manager: ^0.3.7
     flutter_colorpicker: ^1.0.3
-    diff_match_patch2: ^0.5.0
 
 dev_dependencies:
     flutter_test:
