@@ -35,6 +35,8 @@ class ExtensionsHelper {
         return null;
       }
 
+      if (result.files.first.extension != 'json') return null;
+
       PlatformFile file = result.files.first;
       if (file.bytes == null) return null;
 
