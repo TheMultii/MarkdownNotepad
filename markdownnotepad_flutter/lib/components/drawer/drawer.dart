@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:markdownnotepad/components/alertdialogs/create_new_catalog_alert_dialog.dart';
 import 'package:markdownnotepad/components/alertdialogs/create_new_note_alert_dialog.dart';
 import 'package:markdownnotepad/components/alertdialogs/create_new_notetag_alert_dialog.dart';
@@ -15,6 +14,7 @@ import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/core/search_bar.dart';
 import 'package:markdownnotepad/helpers/color_converter.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/models/catalog.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/models/notetag.dart';
@@ -253,11 +253,9 @@ class _MDNDrawerState extends State<MDNDrawer> {
                             title: "Dashboard",
                             isSelected: isTabSelected("/dashboard/"),
                             onPressed: () {
-                              const String destination = "/dashboard/";
-
-                              notifier.setCurrentTab(destination);
-                              Modular.to.navigate(
-                                destination,
+                              NavigationHelper.navigateToPage(
+                                context,
+                                "/dashboard/",
                               );
 
                               if (Responsive.isMobile(context)) {
@@ -291,8 +289,8 @@ class _MDNDrawerState extends State<MDNDrawer> {
                                   final String destination =
                                       "/editor/${note.id}";
 
-                                  notifier.setCurrentTab(destination);
-                                  Modular.to.navigate(
+                                  NavigationHelper.navigateToPage(
+                                    context,
                                     destination,
                                     arguments: {
                                       "noteTitle": note.title,
@@ -332,8 +330,8 @@ class _MDNDrawerState extends State<MDNDrawer> {
                                 final String destination =
                                     "/dashboard/directory/${catalog.id}";
 
-                                notifier.setCurrentTab(destination);
-                                Modular.to.navigate(
+                                NavigationHelper.navigateToPage(
+                                  context,
                                   destination,
                                   arguments: {
                                     "catalogName": catalog.title,
@@ -366,8 +364,8 @@ class _MDNDrawerState extends State<MDNDrawer> {
                               onPressed: () {
                                 final String destination = "/tag/${tag.id}";
 
-                                notifier.setCurrentTab(destination);
-                                Modular.to.navigate(
+                                NavigationHelper.navigateToPage(
+                                  context,
                                   destination,
                                   arguments: {
                                     "tagName": tag.title,
@@ -388,12 +386,9 @@ class _MDNDrawerState extends State<MDNDrawer> {
                             title: "Konto",
                             isSelected: isTabSelected("/miscellaneous/account"),
                             onPressed: () {
-                              const String destination =
-                                  "/miscellaneous/account";
-
-                              notifier.setCurrentTab(destination);
-                              Modular.to.navigate(
-                                destination,
+                              NavigationHelper.navigateToPage(
+                                context,
+                                "/miscellaneous/account",
                               );
 
                               if (Responsive.isMobile(context)) {
@@ -407,12 +402,9 @@ class _MDNDrawerState extends State<MDNDrawer> {
                             isSelected:
                                 isTabSelected("/miscellaneous/extensions"),
                             onPressed: () {
-                              const String destination =
-                                  "/miscellaneous/extensions";
-
-                              notifier.setCurrentTab(destination);
-                              Modular.to.navigate(
-                                destination,
+                              NavigationHelper.navigateToPage(
+                                context,
+                                "/miscellaneous/extensions",
                               );
 
                               if (Responsive.isMobile(context)) {
@@ -425,11 +417,9 @@ class _MDNDrawerState extends State<MDNDrawer> {
                             title: "Licencje",
                             isSelected: isTabSelected("/miscellaneous/legal"),
                             onPressed: () {
-                              const String destination = "/miscellaneous/legal";
-
-                              notifier.setCurrentTab(destination);
-                              Modular.to.navigate(
-                                destination,
+                              NavigationHelper.navigateToPage(
+                                context,
+                                "/miscellaneous/legal",
                               );
 
                               if (Responsive.isMobile(context)) {
