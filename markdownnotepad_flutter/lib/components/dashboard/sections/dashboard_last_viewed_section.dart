@@ -36,6 +36,15 @@ class DashboardLastViewedSection extends StatelessWidget {
                   (note) => {
                     "id": note.id,
                     "title": note.title,
+                    "subtitle":
+                        note.content.replaceAll("\n", " ").trim().isEmpty
+                            ? ""
+                            : note.content.replaceAll("\n", " ").length > 50
+                                ? note.content
+                                    .replaceAll("\n", " ")
+                                    .trim()
+                                    .substring(0, 50)
+                                : note.content.replaceAll("\n", "").trim(),
                     "editDate": note.updatedAt,
                     "isLocalImage": false,
                     "backgroundImage":
@@ -48,6 +57,7 @@ class DashboardLastViewedSection extends StatelessWidget {
                     (index) => {
                       "id": 0,
                       "title": "",
+                      "subtitle": "",
                       "editDate": DateTime.now(),
                       "isLocalImage": false,
                       "opacity": .15,
