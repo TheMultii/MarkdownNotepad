@@ -89,9 +89,9 @@ class _MDNDrawerState extends State<MDNDrawer> {
     final MarkdownNotepadTheme? extendedTheme =
         Theme.of(context).extension<MarkdownNotepadTheme>();
 
-    double scrollPosition = dataDrawerProvider.scrollPosition;
-    _scrollController = ScrollController(initialScrollOffset: scrollPosition);
-    _scrollController.addListener(_onScroll);
+    _scrollController = ScrollController(
+      initialScrollOffset: dataDrawerProvider.scrollPosition,
+    )..addListener(_onScroll);
 
     return Drawer(
       elevation: 0,
