@@ -1,7 +1,6 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart' show Modular;
@@ -16,14 +15,16 @@ import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
 import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/helpers/get_logged_in_user_details.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/login_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/message_failure_model.dart';
 import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
-import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
+import 'package:markdownnotepad/viewmodels/event_log_vm_list.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
+import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -40,11 +41,17 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   late MDNApiService apiService;
 
+  final String randomImage = [
+    "https://i.redd.it/n9wuwc3dxjvb1.png",
+    "https://i.redd.it/gpwwcd0xehub1.jpg"
+  ][Random().nextInt(2)];
+
   @override
   void initState() {
     super.initState();
 
     MDNDiscordRPC().clearPresence();
+
     apiService = context.read<ApiServiceProvider>().apiService;
   }
 
@@ -70,12 +77,12 @@ class _LoginPageState extends State<LoginPage> {
       loggedInUserBox.clear();
       loggedInUserBox.put("logged_in_user", loggedInUser);
 
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const SuccessNotifyToast(
           title: "Pomyślnie zalogowano",
           body: "Za chwilę zostaniesz przekierowany",
-          minWidth: 200,
         ),
       );
 
@@ -83,30 +90,33 @@ class _LoginPageState extends State<LoginPage> {
         context
             .read<CurrentLoggedInUserProvider>()
             .setCurrentUser(loggedInUser);
-        context.read<DrawerCurrentTabProvider>().setCurrentTab("/dashboard/");
-        Modular.to.navigate("/dashboard/");
+
+        NavigationHelper.navigateToPage(
+          context,
+          "/dashboard/",
+        );
       });
     } on DioException catch (e) {
       try {
         final errMsg = MessageFailureModel.fromJson(
           e.response?.data ?? {"message": "Błąd"},
         );
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: ErrorNotifyToast(
             title: "Błąd",
             body: errMsg.message,
-            minWidth: 200,
           ),
         );
       } catch (e) {
         debugPrint(e.toString());
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: const ErrorNotifyToast(
             title: "Błąd",
             body: "Błędne dane",
-            minWidth: 200,
           ),
         );
         debugPrint(e.toString());
@@ -118,11 +128,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String randomImage = [
-      "https://pbs.twimg.com/media/Fo1tbQ4aUAAn_Fy?format=jpg",
-      "https://api.mganczarczyk.pl/tairiku/display/1123719621581527065"
-    ][Random().nextInt(2)];
-
     final bool isMobile = Responsive.isMobile(context);
 
     return Scaffold(
@@ -140,150 +145,156 @@ class _LoginPageState extends State<LoginPage> {
                   ),
             Expanded(
               flex: 8,
-              child: Container(
-                decoration: isMobile
-                    ? BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            randomImage,
-                          ),
-                          fit: BoxFit.cover,
-                          opacity: .075,
-                        ),
-                      )
-                    : null,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 50, right: 50),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      isMobile
-                          ? Image.asset(
-                              "assets/icon.png",
+              child: NotificationListener<OverscrollIndicatorNotification>(
+                onNotification: (overScroll) {
+                  overScroll.disallowIndicator();
+                  return true;
+                },
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Container(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height,
+                    ),
+                    decoration: isMobile
+                        ? BoxDecoration(
+                            image: DecorationImage(
                               fit: BoxFit.cover,
-                              width: 100,
-                              height: 100,
-                            )
-                          : const SizedBox(),
-                      Text(
-                        '👋 Miło Cię znowu widzieć',
-                        style: GoogleFonts.getFont(
-                          'Poppins',
-                          fontSize: isMobile ? 24 : 35,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        textAlign:
-                            isMobile ? TextAlign.center : TextAlign.start,
-                      ),
-                      Container(
-                        padding:
-                            isMobile ? const EdgeInsets.only(top: 6) : null,
-                        transform: Matrix4.translationValues(0.0, -8.0, 0.0),
-                        child: Text(
-                          'Zaloguj się',
-                          style: GoogleFonts.getFont(
-                            'Poppins',
-                            color: Colors.white.withOpacity(.6),
-                            fontSize: isMobile ? 12 : 20,
-                            fontWeight: FontWeight.w400,
+                              image: CachedNetworkImageProvider(
+                                randomImage,
+                              ),
+                              opacity: .075,
+                            ),
+                          )
+                        : null,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 50, right: 50),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          isMobile
+                              ? Image.asset(
+                                  "assets/icon.png",
+                                  fit: BoxFit.cover,
+                                  width: 100,
+                                  height: 100,
+                                )
+                              : const SizedBox(),
+                          Text(
+                            '👋 Miło Cię znowu widzieć',
+                            style: GoogleFonts.getFont(
+                              'Poppins',
+                              fontSize: isMobile ? 24 : 35,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign:
+                                isMobile ? TextAlign.center : TextAlign.start,
                           ),
-                        ),
-                      ),
-                      //login form
-                      Padding(
-                        padding: isMobile
-                            ? const EdgeInsets.symmetric(
-                                vertical: 20,
-                              )
-                            : const EdgeInsets.all(60.0),
-                        child: Form(
-                          child: Column(
-                            children: <Widget>[
-                              MDNInputWidget(
-                                inputController: usernameController,
-                                labelText: 'Nazwa użytkownika',
-                                onEditingComplete: () => login(),
-                                validator: (usernameValidator) =>
-                                    MDNValidator.validateUsername(
-                                  usernameValidator,
-                                ),
+                          Container(
+                            transform: Matrix4.translationValues(
+                              0.0,
+                              isMobile ? -2.0 : -8.0,
+                              0.0,
+                            ),
+                            child: Text(
+                              'Zaloguj się',
+                              style: GoogleFonts.getFont(
+                                'Poppins',
+                                color: Colors.white.withOpacity(.6),
+                                fontSize: isMobile ? 12 : 20,
+                                fontWeight: FontWeight.w400,
                               ),
-                              const SizedBox(
-                                width: double.infinity,
-                                height: 22,
-                              ),
-                              MDNInputWidget(
-                                inputController: passwordController,
-                                labelText: 'Hasło',
-                                obscureText: true,
-                                onEditingComplete: () => login(),
-                                validator: (passwordValidator) =>
-                                    MDNValidator.validatePassword(
-                                  passwordValidator,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      //Buttons
-                      AuthButton(
-                        actionText: 'Zaloguj się',
-                        onPressed: () => login(),
-                      ),
-                      // zapomniałeś hasło?
-                      Padding(
-                        padding: const EdgeInsets.only(top: 14.0, bottom: 5.0),
-                        child: Wrap(
-                          spacing: 8.0,
-                          children: <Widget>[
-                            const Text('Zapomniałeś hasło?'),
-                            MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Modular.to.navigate("/auth/reset-password");
-                                },
-                                child: Text(
-                                  'Zresetuj je',
+                          //login form
+                          Padding(
+                            padding: isMobile
+                                ? const EdgeInsets.symmetric(
+                                    vertical: 20,
+                                  )
+                                : const EdgeInsets.all(60.0),
+                            child: Form(
+                              child: Column(
+                                children: <Widget>[
+                                  MDNInputWidget(
+                                    inputController: usernameController,
+                                    labelText: 'Nazwa użytkownika',
+                                    onEditingComplete: () => login(),
+                                    validator: (usernameValidator) =>
+                                        MDNValidator.validateUsername(
+                                      usernameValidator,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: double.infinity,
+                                    height: 22,
+                                  ),
+                                  MDNInputWidget(
+                                    inputController: passwordController,
+                                    labelText: 'Hasło',
+                                    obscureText: true,
+                                    onEditingComplete: () => login(),
+                                    validator: (passwordValidator) =>
+                                        MDNValidator.validatePassword(
+                                      passwordValidator,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          //Buttons
+                          AuthButton(
+                            actionText: 'Zaloguj się',
+                            onPressed: () => login(),
+                          ),
+                          // zarejestruj się
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 14.0, bottom: 5.0),
+                            child: Wrap(
+                              spacing: 8.0,
+                              children: <Widget>[
+                                const Text(
+                                  'Nie masz konta?',
                                   style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 13,
                                   ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // zarejestruj się
-                      Wrap(
-                        spacing: 8.0,
-                        children: <Widget>[
-                          const Text(
-                            'Nie masz konta?',
-                            style: TextStyle(
-                              fontSize: 13,
+                                MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Modular.to.navigate("/auth/register");
+                                    },
+                                    child: Text(
+                                      'Zarejestruj się',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          MouseRegion(
-                            cursor: SystemMouseCursors.click,
-                            child: GestureDetector(
-                              onTap: () {
-                                Modular.to.navigate("/auth/register");
-                              },
-                              child: Text(
-                                'Zarejestruj się',
+                          // zmień serwer
+                          Wrap(
+                            spacing: 8.0,
+                            children: <Widget>[
+                              const Text(
+                                'Chcesz zmienić serwer?',
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                               ),
-                            ),
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
