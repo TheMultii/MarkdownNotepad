@@ -1,7 +1,6 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart' show Modular;
@@ -14,15 +13,18 @@ import 'package:markdownnotepad/components/notifications/error_notify_toast.dart
 import 'package:markdownnotepad/components/notifications/success_notify_toast.dart';
 import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
+import 'package:markdownnotepad/core/responsive_layout.dart';
+import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
 import 'package:markdownnotepad/models/api_models/register_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/message_failure_model.dart';
 import 'package:markdownnotepad/models/user.dart';
 import 'package:markdownnotepad/providers/api_service_provider.dart';
 import 'package:markdownnotepad/providers/current_logged_in_user_provider.dart';
-import 'package:markdownnotepad/providers/drawer_current_tab_provider.dart';
 import 'package:markdownnotepad/services/mdn_api_service.dart';
+import 'package:markdownnotepad/viewmodels/event_log_vm_list.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
+import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -41,6 +43,12 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   late MDNApiService apiService;
+
+  String randomImage = [
+    "https://pbs.twimg.com/media/FrFRTDwaMAAF-aq?format=jpg",
+    "https://pbs.twimg.com/media/Fo1tbQ4aUAAn_Fy?format=jpg",
+    "https://pbs.twimg.com/media/FomXyNIaYAA_GZD?format=jpg"
+  ][Random().nextInt(3)];
 
   @override
   void initState() {
@@ -98,12 +106,12 @@ class _RegisterPageState extends State<RegisterPage> {
       loggedInUserBox.clear();
       loggedInUserBox.put("logged_in_user", loggedInUser);
 
+      if (!context.mounted) return;
       notifyToast.show(
         context: context,
         child: const SuccessNotifyToast(
           title: "Pomyślnie zalogowano",
           body: "Za chwilę zostaniesz przekierowany",
-          minWidth: 200,
         ),
       );
 
@@ -111,14 +119,18 @@ class _RegisterPageState extends State<RegisterPage> {
         context
             .read<CurrentLoggedInUserProvider>()
             .setCurrentUser(loggedInUser);
-        context.read<DrawerCurrentTabProvider>().setCurrentTab("/dashboard/");
-        Modular.to.navigate("/dashboard/");
+
+        NavigationHelper.navigateToPage(
+          context,
+          "/dashboard/",
+        );
       });
     } on DioException catch (e) {
       try {
         final errMsg = MessageFailureModel.fromJson(
           e.response?.data ?? {"message": "Błąd"},
         );
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: ErrorNotifyToast(
@@ -129,6 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       } catch (e) {
         debugPrint(e.toString());
+        if (!context.mounted) return;
         notifyToast.show(
           context: context,
           child: const ErrorNotifyToast(
@@ -146,141 +159,195 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final randomImage = [
-      "FrFRTDwaMAAF-aq",
-      "Fo1tbQ4aUAAn_Fy",
-      "FomXyNIaYAA_GZD"
-    ][Random().nextInt(3)];
+    final bool isMobile = Responsive.isMobile(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Row(
           children: <Widget>[
-            Expanded(
-              flex: 6,
-              child: MDNCachedNetworkImage(
-                  imageURL:
-                      "https://pbs.twimg.com/media/$randomImage?format=jpg"),
-            ),
+            isMobile
+                ? const SizedBox()
+                : Expanded(
+                    flex: 6,
+                    child: MDNCachedNetworkImage(
+                      imageURL: randomImage,
+                    ),
+                  ),
             Expanded(
               flex: 8,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 50, right: 50),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      '👋 Miło Cię poznać',
-                      style: GoogleFonts.getFont(
-                        'Poppins',
-                        fontSize: 35,
-                        fontWeight: FontWeight.w600,
-                      ),
+              child: NotificationListener<OverscrollIndicatorNotification>(
+                onNotification: (overScroll) {
+                  overScroll.disallowIndicator();
+                  return true;
+                },
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Container(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height,
                     ),
-                    Container(
-                      transform: Matrix4.translationValues(0.0, -8.0, 0.0),
-                      child: Text(
-                        'Zarejestruj się',
-                        style: GoogleFonts.getFont(
-                          'Poppins',
-                          color: Colors.white.withOpacity(.6),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                    //register form
-                    Padding(
-                      padding: const EdgeInsets.all(45.0),
-                      child: Form(
-                        child: Column(
-                          children: <Widget>[
-                            MDNInputWidget(
-                              inputController: usernameController,
-                              labelText: 'Nazwa użytkownika',
-                              onEditingComplete: () => register(),
-                              validator: (usernameValidator) =>
-                                  MDNValidator.validateUsername(
-                                usernameValidator,
+                    decoration: isMobile
+                        ? BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: CachedNetworkImageProvider(
+                                randomImage,
                               ),
+                              opacity: .075,
                             ),
-                            const SizedBox(
-                              width: double.infinity,
-                              height: 22,
-                            ),
-                            MDNInputWidget(
-                              inputController: mailController,
-                              labelText: 'Adres e-mail',
-                              onEditingComplete: () => register(),
-                              validator: (emailValidator) =>
-                                  MDNValidator.validateEmail(
-                                emailValidator,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: double.infinity,
-                              height: 22,
-                            ),
-                            MDNInputWidget(
-                              inputController: passwordController,
-                              labelText: 'Hasło',
-                              onEditingComplete: () => register(),
-                              obscureText: true,
-                              validator: (passwordValidator) =>
-                                  MDNValidator.validatePassword(
-                                passwordValidator,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: double.infinity,
-                              height: 22,
-                            ),
-                            MDNInputWidget(
-                              inputController: confirmPasswordController,
-                              labelText: 'Powtórz hasło',
-                              onEditingComplete: () => register(),
-                              obscureText: true,
-                              validator: (repeatPasswordValidator) =>
-                                  MDNValidator.validateRepeatPassword(
-                                passwordController.text,
-                                repeatPasswordValidator,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    //Buttons
-                    AuthButton(
-                      actionText: "Zarejestruj się",
-                      onPressed: () => register(),
-                    ),
-                    // zaloguj się
-                    Padding(
-                      padding: const EdgeInsets.only(top: 14.0),
-                      child: Wrap(
-                        spacing: 8.0,
+                          )
+                        : null,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 50, right: 50),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          const Text('Masz już konto?'),
-                          MouseRegion(
-                            cursor: SystemMouseCursors.click,
-                            child: GestureDetector(
-                              onTap: () {
-                                Modular.to.navigate("/auth/login");
-                              },
-                              child: Text(
-                                'Zaloguj się',
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
+                          isMobile
+                              ? Image.asset(
+                                  "assets/icon.png",
+                                  fit: BoxFit.cover,
+                                  width: 100,
+                                  height: 100,
+                                )
+                              : const SizedBox(),
+                          Text(
+                            '👋 Miło Cię poznać',
+                            style: GoogleFonts.getFont(
+                              'Poppins',
+                              fontSize: isMobile ? 24 : 35,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign:
+                                isMobile ? TextAlign.center : TextAlign.start,
+                          ),
+                          Container(
+                            transform: Matrix4.translationValues(
+                              0.0,
+                              isMobile ? -2.0 : -8.0,
+                              0.0,
+                            ),
+                            child: Text(
+                              'Zarejestruj się',
+                              style: GoogleFonts.getFont(
+                                'Poppins',
+                                color: Colors.white.withOpacity(.6),
+                                fontSize: isMobile ? 12 : 20,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                           ),
+                          //register form
+                          Padding(
+                            padding: isMobile
+                                ? const EdgeInsets.symmetric(
+                                    vertical: 20,
+                                  )
+                                : const EdgeInsets.all(45.0),
+                            child: Form(
+                              child: Column(
+                                children: <Widget>[
+                                  MDNInputWidget(
+                                    inputController: usernameController,
+                                    labelText: 'Nazwa użytkownika',
+                                    onEditingComplete: () => register(),
+                                    validator: (usernameValidator) =>
+                                        MDNValidator.validateUsername(
+                                      usernameValidator,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: double.infinity,
+                                    height: 22,
+                                  ),
+                                  MDNInputWidget(
+                                    inputController: mailController,
+                                    labelText: 'Adres e-mail',
+                                    onEditingComplete: () => register(),
+                                    validator: (emailValidator) =>
+                                        MDNValidator.validateEmail(
+                                      emailValidator,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: double.infinity,
+                                    height: 22,
+                                  ),
+                                  MDNInputWidget(
+                                    inputController: passwordController,
+                                    labelText: 'Hasło',
+                                    onEditingComplete: () => register(),
+                                    obscureText: true,
+                                    validator: (passwordValidator) =>
+                                        MDNValidator.validatePassword(
+                                      passwordValidator,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: double.infinity,
+                                    height: 22,
+                                  ),
+                                  MDNInputWidget(
+                                    inputController: confirmPasswordController,
+                                    labelText: 'Powtórz hasło',
+                                    onEditingComplete: () => register(),
+                                    obscureText: true,
+                                    validator: (repeatPasswordValidator) =>
+                                        MDNValidator.validateRepeatPassword(
+                                      passwordController.text,
+                                      repeatPasswordValidator,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          //Buttons
+                          AuthButton(
+                            actionText: "Zarejestruj się",
+                            onPressed: () => register(),
+                          ),
+                          // zaloguj się
+                          Padding(
+                            padding: const EdgeInsets.only(top: 14.0),
+                            child: Wrap(
+                              spacing: 8.0,
+                              children: <Widget>[
+                                const Text('Masz już konto?'),
+                                MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Modular.to.navigate("/auth/login");
+                                    },
+                                    child: Text(
+                                      'Zaloguj się',
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // zmień serwer
+                          Wrap(
+                            spacing: 8.0,
+                            children: <Widget>[
+                              const Text(
+                                'Chcesz zmienić serwer?',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                ),
+                              ),
+                          ),
                         ],
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
               ),
             ),
