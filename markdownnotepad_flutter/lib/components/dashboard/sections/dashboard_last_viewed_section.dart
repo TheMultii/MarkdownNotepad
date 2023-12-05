@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_history_list_item.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_last_viewed_cards.dart';
+import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/viewmodels/event_log_vm.dart';
 import 'package:markdownnotepad/viewmodels/logged_in_user.dart';
@@ -73,7 +74,7 @@ class DashboardLastViewedSection extends StatelessWidget {
           children: [
             Positioned(
               top: 0,
-              bottom: 50,
+              bottom: Responsive.isMobile(context) ? 80 : 50,
               left: 11.5,
               child: Container(
                 width: 2,
