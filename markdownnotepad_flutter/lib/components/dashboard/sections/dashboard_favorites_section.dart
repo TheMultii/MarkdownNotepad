@@ -7,7 +7,7 @@ class DashboardFavouritesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        "🤔 Nie ma.",
+        ". . .",
         textAlign: TextAlign.center,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
