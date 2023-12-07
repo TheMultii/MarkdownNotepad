@@ -7,10 +7,12 @@ part 'note_socket_on_note_change.g.dart';
 @JsonSerializable()
 class NoteSocketOnNotechange {
   final Note note;
+  final List<int> changeset;
   final ConnectedLiveShareUser user;
 
   NoteSocketOnNotechange({
     required this.note,
+    required this.changeset,
     required this.user,
   });
 
