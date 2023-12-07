@@ -253,7 +253,7 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
                         Future.delayed(
                             Duration(
                               milliseconds:
-                                  widget.isLiveShareEnabled ? 250 : 500,
+                                  widget.isLiveShareEnabled ? 125 : 500,
                             ), () {
                           if (widget.onNoteContentChanged != null &&
                               registeredValue == widget.controller.text) {
