@@ -40,6 +40,7 @@ import 'package:markdownnotepad/viewmodels/server_settings.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:crdt/map_crdt.dart';
 
 class EditorPage extends StatefulWidget {
   final String id;
@@ -220,26 +221,60 @@ class _EditorPageState extends State<EditorPage> {
       noteTitle = note!.title;
     });
 
-    // controller.value = value.copyWith(
-    //   text: note!.content,
-    //   // selection: TextSelection.fromPosition(
-    //   //   TextPosition(offset: newCp),
-    //   // ),
-    // );
-    controller.text = note!.content;
+    MapCrdt localCRDT = MapCrdt(['note_content']);
+    List<String> lines = controller.fullText.split('\n');
+    for (int i = 0; i < lines.length; i++) {
+      localCRDT.put('note_content', i.toString(), lines[i]);
+    }
+
+    MapCrdt serverCRDT = MapCrdt(['note_content']);
+    lines = note!.content.split('\n');
+    for (int i = 0; i < lines.length; i++) {
+      serverCRDT.put('note_content', i.toString(), lines[i]);
+    }
+
+    localCRDT.merge(serverCRDT.getChangeset());
+
+    final String mergedContent =
+        localCRDT.getMap('note_content').values.join('\n');
+
+    int currentCursorPosition = controller.selection.baseOffset;
+
+    if (mergedContent != controller.fullText) {
+      controller.text = mergedContent;
+    } else {
+      controller.text = note!.content;
+    }
+
+    // Determine the new cursor position based on the previous cursor position
+    int newCursorPosition = currentCursorPosition <= controller.text.length
+        ? currentCursorPosition
+        : controller.text.length;
+
+    //calculate current line number based on the new cursor position
+    final int currentline = getLineNumber() + 1;
+    debugPrint(newNoteSocketOnNotechange.changeset.toString());
+    int toMove = 0;
+    for (int i = currentline - 1; i >= 0; i--) {
+      toMove += newNoteSocketOnNotechange.changeset[i];
+    }
+
     if (isLiveShareChangesCurrentAuthor) {
       isLiveShareChangesCurrentAuthor = false;
+      controller.value = value.copyWith(
+        text: note!.content,
+      );
       controller.selection = TextSelection.fromPosition(
         TextPosition(offset: newCp),
       );
-      fNode.requestFocus();
     } else {
-      Future.delayed(10.ms, () {
-        controller.selection = TextSelection.fromPosition(
+      newCp += toMove;
+      controller.value = value.copyWith(
+        text: note!.content,
+        selection: TextSelection.fromPosition(
           TextPosition(offset: newCp),
-        );
-        fNode.requestFocus();
-      });
+        ),
+      );
     }
     fNode.requestFocus();
   }
