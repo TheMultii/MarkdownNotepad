@@ -246,7 +246,7 @@ class _EditorPageState extends State<EditorPage> {
 
     //calculate current line number based on the new cursor position
     final int currentline = getLineNumber() + 1;
-    debugPrint(newNoteSocketOnNotechange.changeset.toString());
+
     int toMove = 0;
     for (int i = currentline - 1; i >= 0; i--) {
       toMove += newNoteSocketOnNotechange.changeset[i];
