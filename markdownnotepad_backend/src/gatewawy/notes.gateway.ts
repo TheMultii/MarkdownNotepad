@@ -21,8 +21,10 @@ import { NoteDtoOptional } from 'src/notes/dto/note.optional.dto';
 import { UserBasicWithCurrentLine } from './userbasic.model';
 import { LineNumberDto } from './dto/line_number.dto';
 import { EventLogsService } from 'src/eventlogs/eventlogs.service';
+import * as Diff from 'diff';
 import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { DiffPart } from './diffpart.model';
 
 @Injectable()
 @WebSocketGateway({ namespace: 'notes' })
@@ -331,10 +333,69 @@ export class NotesGateway
       this.noteMutex.set(note.id, true);
     }
 
+    const changeset = [];
+    const diffResult = Diff.diffLines(note.content, noteModel.content);
+    let hasLineRemovedSth = false;
+
+    diffResult.forEach((part: DiffPart) => {
+      if (typeof part.value !== 'string') {
+        return;
+      }
+
+      if (part.added) {
+        // New lines added in noteModel
+        const addedLines = part.value
+          .split('\n')
+          .filter((line) => line.trim().length > 0);
+
+        if (hasLineRemovedSth) {
+          // Add the length of the added lines to the last element of the array
+          changeset[changeset.length - 1] += addedLines.join('').length;
+          hasLineRemovedSth = false;
+        } else {
+          // Add lengths of individual added lines to the changeset array
+          addedLines.forEach((addedLine) => changeset.push(addedLine.length));
+
+          if (addedLines.length === 0) {
+            // Check for the newline character
+            changeset.push(
+              part.value.toString().replace(/\n/g, '').trim().length === 0
+                ? 1
+                : 0,
+            );
+          }
+        }
+      } else if (part.removed) {
+        hasLineRemovedSth = true;
+        // Lines removed in noteModel
+        const removedLines = part.value
+          .split('\n')
+          .filter((line) => line.trim().length > 0);
+
+        removedLines.forEach((removedLine) =>
+          changeset.push(removedLine.length * -1),
+        );
+
+        if (removedLines.length === 0) {
+          // Adjust the last element of the array for the newline indicator
+          changeset[changeset.length - 1] -=
+            part.value.toString().replace(/\n/g, '').trim().length === 0
+              ? 1
+              : 0;
+        }
+      } else {
+        hasLineRemovedSth = false;
+        // Lines unchanged
+        for (let i = 0; i < part.count; i++) {
+          changeset.push(0);
+        }
+      }
+    });
+
     const n = await this.notesService.updateNoteById(note.id, noteModel);
     note.title = n.title;
     note.content = n.content;
-    this.notifyClientsAboutNoteChange(note, user);
+    this.notifyClientsAboutNoteChange(note, user, changeset);
     this.noteMutex.set(note.id, false);
 
     if (note.author.username !== decodedJWT.username) {
@@ -463,10 +524,15 @@ export class NotesGateway
   notifyClientsAboutNoteChange = (
     note: NoteInclude,
     user: UserBasicWithCurrentLine,
+    changeset: number[] = [],
   ): void => {
+    changeset =
+      changeset.length > 0 ? changeset : note.content.split('\n').map(() => 0);
+
     const message = {
       note,
       user,
+      changeset,
     };
     this.server
       .to(`notes-${note.id}`)
