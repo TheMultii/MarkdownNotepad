@@ -238,18 +238,11 @@ class _EditorPageState extends State<EditorPage> {
     final String mergedContent =
         localCRDT.getMap('note_content').values.join('\n');
 
-    int currentCursorPosition = controller.selection.baseOffset;
-
     if (mergedContent != controller.fullText) {
       controller.text = mergedContent;
     } else {
       controller.text = note!.content;
     }
-
-    // Determine the new cursor position based on the previous cursor position
-    int newCursorPosition = currentCursorPosition <= controller.text.length
-        ? currentCursorPosition
-        : controller.text.length;
 
     //calculate current line number based on the new cursor position
     final int currentline = getLineNumber() + 1;
@@ -265,14 +258,18 @@ class _EditorPageState extends State<EditorPage> {
         text: note!.content,
       );
       controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: newCp),
+        TextPosition(
+          offset: newCp,
+        ),
       );
     } else {
       newCp += toMove;
       controller.value = value.copyWith(
         text: note!.content,
         selection: TextSelection.fromPosition(
-          TextPosition(offset: newCp),
+          TextPosition(
+            offset: newCp,
+          ),
         ),
       );
     }
