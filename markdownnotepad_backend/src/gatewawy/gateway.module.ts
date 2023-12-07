@@ -5,6 +5,7 @@ import { NotesService } from 'src/notes/notes.service';
 import { PrismaService } from 'src/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { EventLogsService } from 'src/eventlogs/eventlogs.service';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   providers: [
@@ -18,6 +19,10 @@ import { EventLogsService } from 'src/eventlogs/eventlogs.service';
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
+    }),
+    CacheModule.register({
+      ttl: 600,
+      max: 100,
     }),
   ],
 })
