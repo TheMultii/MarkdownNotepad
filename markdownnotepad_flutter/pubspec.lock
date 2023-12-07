@@ -624,10 +624,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_modular
-      sha256: ac6298ce1abd414286ee5a554fc45e81e358461979b5d4e02c8abd685e3b23f2
+      sha256: "0d50176ce394b792b447ee1c73e51e60c42b028a07b1974f3930f962c5f5e933"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.2"
+    version: "6.0.4+1"
   flutter_native_splash:
     dependency: "direct main"
     description:
@@ -906,10 +906,10 @@ packages:
     dependency: transitive
     description:
       name: modular_core
-      sha256: "5baaa460ac9d85d457d6864ef41a2194b8115a6bdeb585a684789f2d9004c892"
+      sha256: fbcc3683dedbe0ccd1d75636c94c057b56c5ec4e068cc0ac40cefd5ba27c109c
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.2"
+    version: "3.0.3+1"
   nested:
     dependency: transitive
     description:
