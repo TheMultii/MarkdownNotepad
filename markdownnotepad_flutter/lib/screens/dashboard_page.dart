@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:markdownnotepad/components/dashboard/sections/dashboard_favorites_section.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_header_menu_button.dart';
 import 'package:markdownnotepad/components/dashboard/sections/dashboard_last_viewed_section.dart';
 import 'package:markdownnotepad/core/discord_rpc.dart';
@@ -214,16 +213,16 @@ class _DashboardPageState extends State<DashboardPage> {
                               () => selectedTab = DashboardTabs.lastViewed,
                             ),
                           ),
-                          const SizedBox(width: 20.0),
-                          DashboardHeaderMenuButton(
-                            text: "Dodane do ulubionych",
-                            tab: DashboardTabs.addedToFavourites,
-                            selectedTab: selectedTab,
-                            onTap: () => setState(
-                              () =>
-                                  selectedTab = DashboardTabs.addedToFavourites,
-                            ),
-                          ),
+                          // const SizedBox(width: 20.0),
+                          // DashboardHeaderMenuButton(
+                          //   text: "Dodane do ulubionych",
+                          //   tab: DashboardTabs.addedToFavourites,
+                          //   selectedTab: selectedTab,
+                          //   onTap: () => setState(
+                          //     () =>
+                          //         selectedTab = DashboardTabs.addedToFavourites,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -233,8 +232,8 @@ class _DashboardPageState extends State<DashboardPage> {
                       loggedInUser: loggedInUser,
                       eventLogs: eventLogs,
                     )
-                  else if (selectedTab == DashboardTabs.addedToFavourites)
-                    const DashboardFavouritesSection(),
+                  // else if (selectedTab == DashboardTabs.addedToFavourites)
+                  //   const DashboardFavouritesSection(),
                 ],
               );
             },
