@@ -257,7 +257,7 @@ export class NotesGateway
       this.sendErrorToClient(client, 'Invalid data');
       return;
     }
-    if (!data.title && !data.content) {
+    if (data.title == null && data.content == null) {
       this.sendErrorToClient(client, 'Missing title or content');
       return;
     }
