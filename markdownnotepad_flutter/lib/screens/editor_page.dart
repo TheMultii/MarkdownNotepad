@@ -392,10 +392,8 @@ class _EditorPageState extends State<EditorPage> {
       body.title = note!.title;
     }
 
-    if (newContent?.isNotEmpty ?? false) {
+    if (newContent != null) {
       body.content = newContent;
-    } else {
-      body.content = note!.content;
     }
 
     if (body.title == null && body.content == null) return Future.value();
