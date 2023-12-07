@@ -11,7 +11,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { NotesService } from 'src/notes/notes.service';
-import { Logger, Injectable } from '@nestjs/common';
+import { Logger, Injectable, Inject } from '@nestjs/common';
 import { UUIDDto } from 'src/dto';
 import { validate } from 'class-validator';
 import { Note as NoteModel, NoteInclude } from 'src/notes/notes.model';
@@ -21,6 +21,8 @@ import { NoteDtoOptional } from 'src/notes/dto/note.optional.dto';
 import { UserBasicWithCurrentLine } from './userbasic.model';
 import { LineNumberDto } from './dto/line_number.dto';
 import { EventLogsService } from 'src/eventlogs/eventlogs.service';
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 @WebSocketGateway({ namespace: 'notes' })
@@ -32,6 +34,7 @@ export class NotesGateway
     private readonly userService: UserService,
     private readonly eventLogsService: EventLogsService,
     private readonly jwtService: JwtService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   @WebSocketServer()
@@ -45,6 +48,27 @@ export class NotesGateway
 
   afterInit() {
     this.logger.log('Initialized notes gateway.');
+  }
+
+  private async getUserFromCacheOrDb(
+    username: string,
+  ): Promise<UserBasicWithCurrentLine> {
+    const cachedUser: UserBasicWithCurrentLine =
+      await this.cacheManager.get(username);
+
+    if (cachedUser) {
+      return cachedUser;
+    }
+
+    const user: UserBasicWithCurrentLine =
+      await this.userService.getUserByUsernameBasic(username);
+
+    if (user) {
+      // Cache the user for future requests
+      await this.cacheManager.set(username, user);
+    }
+
+    return user;
   }
 
   async handleConnection(@ConnectedSocket() client: Socket) {
@@ -106,8 +130,9 @@ export class NotesGateway
       this.connectedUsers.set(uuidDto.id, new Set());
     }
 
-    const user: UserBasicWithCurrentLine =
-      await this.userService.getUserByUsernameBasic(decodedJWT.username);
+    const user: UserBasicWithCurrentLine = await this.getUserFromCacheOrDb(
+      decodedJWT.username,
+    );
 
     user.currentLine = 0;
 
@@ -189,8 +214,9 @@ export class NotesGateway
       return;
     }
 
-    const user: UserBasicWithCurrentLine =
-      await this.userService.getUserByUsernameBasic(decodedJWT.username);
+    const user: UserBasicWithCurrentLine = await this.getUserFromCacheOrDb(
+      decodedJWT.username,
+    );
 
     if (!user) {
       this.sendErrorToClient(client, 'User not found');
@@ -268,8 +294,9 @@ export class NotesGateway
       return;
     }
 
-    const user: UserBasicWithCurrentLine =
-      await this.userService.getUserByUsernameBasic(decodedJWT.username);
+    const user: UserBasicWithCurrentLine = await this.getUserFromCacheOrDb(
+      decodedJWT.username,
+    );
 
     if (!user) {
       this.sendErrorToClient(client, 'User not found');
@@ -355,8 +382,9 @@ export class NotesGateway
         return;
       }
 
-      const user: UserBasicWithCurrentLine =
-        await this.userService.getUserByUsernameBasic(decodedJWT.username);
+      const user: UserBasicWithCurrentLine = await this.getUserFromCacheOrDb(
+        decodedJWT.username,
+      );
 
       if (!user) {
         return;
@@ -376,6 +404,7 @@ export class NotesGateway
       }
 
       this.removeUserFromConnectedUsers(noteID, user);
+      this.cacheManager.del(user.username);
 
       const newSize = this.connectedUsers.get(noteID)?.size;
       if (newSize > 0)
