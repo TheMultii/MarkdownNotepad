@@ -248,6 +248,7 @@ class _EditorTabEditorState extends State<EditorTabEditor> {
                       focusNode: widget.focusNode,
                       wrap: true,
                       separateGutterFromEditor: true,
+                      disableSuggestions: true,
                       onChanged: (newContent) async {
                         final String registeredValue = widget.controller.text;
                         Future.delayed(
