@@ -225,7 +225,7 @@ class _EditorPageState extends State<EditorPage> {
     }
 
     MapCrdt serverCRDT = MapCrdt(['note_content']);
-    lines = note!.content.split('\n');
+    lines = newNoteSocketOnNotechange.note.content.split('\n');
     for (int i = 0; i < lines.length; i++) {
       serverCRDT.put('note_content', i.toString(), lines[i]);
     }
