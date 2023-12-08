@@ -231,10 +231,24 @@ class _EditorPageState extends State<EditorPage> {
     for (int i = 0; i < lines.length; i++) {
       serverCRDT.put('note_content', i.toString(), lines[i]);
     }
+    int addedLines = 0;
+    for (int i = serverCRDT.getMap('note_content').length;
+        i < localCRDT.getMap('note_content').length;
+        i++) {
+      addedLines++;
+      serverCRDT.put('note_content', i.toString(), '');
+    }
 
     localCRDT.merge(serverCRDT.getChangeset());
 
     String mergedContent = localCRDT.getMap('note_content').values.join('\n');
+
+    for (int i = 0; i < addedLines; i++) {
+      mergedContent = mergedContent.substring(
+        0,
+        mergedContent.lastIndexOf('\n'),
+      );
+    }
 
     if (mergedContent != controller.fullText) {
       controller.text = mergedContent;
