@@ -195,10 +195,6 @@ class _EditorPageState extends State<EditorPage> {
       jsonDecode(data),
     );
 
-    setState(() {
-      note = newNoteSocketOnNotechange.note;
-    });
-
     if (note?.author?.id == loggedInUser?.user.id) {
       saveNoteToCache(note);
     }
@@ -236,8 +232,7 @@ class _EditorPageState extends State<EditorPage> {
 
     localCRDT.merge(serverCRDT.getChangeset());
 
-    final String mergedContent =
-        localCRDT.getMap('note_content').values.join('\n');
+    String mergedContent = localCRDT.getMap('note_content').values.join('\n');
 
     if (mergedContent != controller.fullText) {
       controller.text = mergedContent;
@@ -250,30 +245,52 @@ class _EditorPageState extends State<EditorPage> {
 
     int toMove = 0;
     for (int i = currentline - 1; i >= 0; i--) {
-      toMove += newNoteSocketOnNotechange.changeset[i];
+      try {
+        toMove += newNoteSocketOnNotechange.changeset[i];
+      } catch (e) {
+        toMove += 0;
+      }
     }
 
+    final n = note;
+    n!.content = newNoteSocketOnNotechange.note.content;
+    n.updatedAt = newNoteSocketOnNotechange.note.updatedAt;
     if (isLiveShareChangesCurrentAuthor) {
       isLiveShareChangesCurrentAuthor = false;
-      controller.value = value.copyWith(
-        text: note!.content,
-      );
-      controller.selection = TextSelection.fromPosition(
-        TextPosition(
-          offset: newCp,
-        ),
-      );
-    } else {
-      newCp += toMove;
-      controller.value = value.copyWith(
-        text: note!.content,
-        selection: TextSelection.fromPosition(
+      try {
+        controller.selection = TextSelection.fromPosition(
           TextPosition(
             offset: newCp,
           ),
-        ),
-      );
+        );
+      } catch (e) {
+        controller.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: note!.content.length,
+          ),
+        );
+      }
+    } else {
+      newCp += toMove;
+      try {
+        controller.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: newCp,
+          ),
+        );
+      } catch (e) {
+        controller.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: note!.content.length,
+          ),
+        );
+      }
     }
+
+    setState(() {
+      note = n;
+    });
+
     fNode.requestFocus();
   }
 
