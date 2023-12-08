@@ -189,7 +189,7 @@ class _EditorPageState extends State<EditorPage> {
     });
   }
 
-  void liveShareSocketOnNoteUpdate(data) {
+  Future<void> liveShareSocketOnNoteUpdate(data) async {
     final NoteSocketOnNotechange newNoteSocketOnNotechange =
         NoteSocketOnNotechange.fromJson(
       jsonDecode(data),
@@ -223,6 +223,8 @@ class _EditorPageState extends State<EditorPage> {
     for (int i = 0; i < lines.length; i++) {
       localCRDT.put('note_content', i.toString(), lines[i]);
     }
+
+    await Future.delayed(5.ms, () {});
 
     MapCrdt serverCRDT = MapCrdt(['note_content']);
     lines = newNoteSocketOnNotechange.note.content.split('\n');
