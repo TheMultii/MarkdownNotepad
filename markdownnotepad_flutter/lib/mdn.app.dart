@@ -48,7 +48,9 @@ Changes:
 
 - Added support for live share indicators in the gutter
 
-- Fixed issue with code suggestion popup position''',
+- Fixed issue with code suggestion popup position
+
+- Disabled code suggestion popup, as it is not necessary for a markdown editor''',
           ),
         ));
 
