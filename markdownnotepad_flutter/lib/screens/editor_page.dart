@@ -124,6 +124,7 @@ class _EditorPageState extends State<EditorPage> {
   void dispose() {
     controller.dispose();
     fNode.dispose();
+    liveShareSocket.disconnect();
     liveShareSocket.dispose();
     super.dispose();
   }
