@@ -37,7 +37,6 @@ import { Catalog as CatalogModel, CatalogInclude } from './catalogs.model';
 import { CatalogDto } from './dto/catalogs.dto';
 import { CatalogDtoOptional } from './dto/catalogs.optional.dto';
 import { JwtPayload, decodeJwt } from 'src/auth/jwt.decode';
-import { validate } from 'class-validator';
 import { UserPasswordless } from 'src/user/user.model';
 import { Catalog } from '@prisma/client';
 import { NoteInclude } from 'src/notes/notes.model';
@@ -168,13 +167,6 @@ export class CatalogsController {
         return response.status(400).json({ error: 'Bad request' });
       }
 
-      const validationErrors = await validate(catalogDto);
-      if (validationErrors.length > 0) {
-        return response.status(400).send({
-          message: validationErrors,
-        });
-      }
-
       const user: UserPasswordless = await this.userService.getUserByUsername(
         decodedJWT.username,
       );
@@ -238,13 +230,6 @@ export class CatalogsController {
         );
       } catch (error) {
         return response.status(400).json({ error: 'Bad request' });
-      }
-
-      const validationErrors = await validate(catalogDto);
-      if (validationErrors.length > 0) {
-        return response.status(400).send({
-          message: validationErrors,
-        });
       }
 
       const user: UserPasswordless = await this.userService.getUserByUsername(
@@ -402,13 +387,6 @@ export class CatalogsController {
         );
       } catch (error) {
         return response.status(400).json({ error: 'Bad request' });
-      }
-
-      const errors = await validate(params);
-      if (errors.length > 0) {
-        return response.status(400).send({
-          message: errors,
-        });
       }
 
       const catalogToRemove = await this.catalogsService.getCatalogById(
