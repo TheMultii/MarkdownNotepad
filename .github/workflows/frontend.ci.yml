@@ -2,35 +2,31 @@ name: Frontend CI
 
 on:
     push:
-        branches: ["master"]
+        branches: [master]
     pull_request:
-        branches: ["master"]
+        branches: [master]
 
 jobs:
-    test:
+    build:
         runs-on: ubuntu-latest
 
-        container:
-            image: ghcr.io/cirruslabs/flutter:3.16.3
-
         steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
+            - uses: actions/checkout@v2
 
-            - name: Set up Flutter
-              run: |
-                  flutter pub global activate junitreport
-                  export PATH="$PATH:$HOME/.pub-cache/bin"
-
-            - name: Run tests and generate coverage
-              run: |
-                  cd markdownnotepad_flutter
-                  flutter test --machine --coverage | tojunit -o report.xml
-                  lcov --summary coverage/lcov.info
-                  genhtml coverage/lcov.info --output=frontend_coverage
-
-            - name: Upload coverage report
-              uses: actions/upload-artifact@v2
+            - name: Setup Flutter SDK
+              uses: flutter-actions/setup-flutter@v2
               with:
-                  name: frontend_coverage
-                  path: ${{ github.workspace }}/frontend_coverage
+                  channel: stable
+                  version: 3.16.3
+
+            - name: Navigate to the markdownnotepad_flutter directory
+              run: cd markdownnotepad_flutter
+
+            - name: Install dependencies
+              run: flutter pub get
+
+            - name: Analyze project source
+              run: dart analyze
+
+            - name: Run tests
+              run: flutter test
