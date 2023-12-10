@@ -27,3 +27,8 @@ jobs:
                   cd markdownnotepad_backend
                   npm ci
                   npm test
+            - name: Upload MDN Coverage
+              uses: actions/upload-artifact@v1
+              with:
+                  name: Coverage
+                  path: markdownnotepad_backend/coverage
