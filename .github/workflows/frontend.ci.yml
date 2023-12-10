@@ -24,6 +24,7 @@ jobs:
 
             - name: Run code quality analysis
               run: |
+                  cd markdownnotepad_flutter
                   metrics lib -r codeclimate  > frontend_coverage.json
 
             - name: Upload code quality report
@@ -49,6 +50,7 @@ jobs:
 
             - name: Run tests and generate coverage
               run: |
+                  cd markdownnotepad_flutter
                   flutter test --machine --coverage | tojunit -o report.xml
                   lcov --summary coverage/lcov.info
                   genhtml coverage/lcov.info --output=frontend_coverage
