@@ -36,4 +36,4 @@ jobs:
               uses: actions/upload-artifact@v1
               with:
                   name: frontend_coverage
-                  path: coverage
+                  path: markdownnotepad_flutter/coverage
