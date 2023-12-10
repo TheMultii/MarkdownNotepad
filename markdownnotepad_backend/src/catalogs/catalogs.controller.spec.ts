@@ -1167,6 +1167,52 @@ describe('CatalogsController', () => {
 
       expect(response['error']).toEqual('Bad request');
     });
+
+    it('exception is properly handled', async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as unknown as Response;
+
+      const decodeJwtSpy = jest
+        .spyOn(decodeJwtModule, 'decodeJwt')
+        .mockImplementation(async () => {
+          return {
+            username: 'sample username',
+            iat: 1626775668,
+            exp: 1626779268,
+          };
+        });
+
+      const getUserByUsernameSpy = jest
+        .spyOn(userService, 'getUserByUsername')
+        .mockImplementation(() => {
+          throw new Error('sample error');
+        });
+
+      const removeNoteDto = {
+        id: '1',
+        noteId: '2',
+      };
+
+      await controller.removeNoteFromCatalog(req, res, removeNoteDto);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getUserByUsernameSpy).toHaveBeenCalled();
+      expect(res.statusCode).toBe(500);
+      expect(res['data'].message).toBe('Internal Server Error');
+    });
   });
   });
 });
