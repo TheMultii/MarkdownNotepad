@@ -89,5 +89,30 @@ describe('CatalogsController', () => {
       expect(controller.getCatalogs).toHaveBeenCalled();
       expect(result).toEqual({ catalogs: [] });
     });
+
+    it('catalog should be of CatalogInclude type', async () => {
+      const req = {} as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return data;
+        },
+      } as unknown as Response;
+
+      jest.spyOn(controller, 'getCatalogs').mockResolvedValue({
+        catalogs: [sampleCatalog],
+      } as Response & {
+        catalogs: CatalogInclude[];
+      });
+      const resposne = (await controller.getCatalogs(req, res)) as Response & {
+        catalogs: CatalogInclude[];
+      };
+
+      expect(controller.getCatalogs).toHaveBeenCalled();
+      expect(resposne.catalogs.length).toEqual(1);
+    });
   });
 });
