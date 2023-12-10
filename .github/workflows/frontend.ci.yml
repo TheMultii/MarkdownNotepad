@@ -7,32 +7,6 @@ on:
         branches: ["master"]
 
 jobs:
-    code_quality:
-        runs-on: ubuntu-latest
-
-        container:
-            image: ghcr.io/cirruslabs/flutter:3.16.3
-
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
-
-            - name: Set up Flutter
-              run: |
-                  flutter pub global activate dart_code_metrics
-                  export PATH="$PATH:$HOME/.pub-cache/bin"
-
-            - name: Run code quality analysis
-              run: |
-                  cd markdownnotepad_flutter
-                  metrics lib -r codeclimate  > frontend_coverage.json
-
-            - name: Upload code quality report
-              uses: actions/upload-artifact@v2
-              with:
-                  name: code_quality
-                  path: frontend_coverage.json
-
     test:
         runs-on: ubuntu-latest
 
