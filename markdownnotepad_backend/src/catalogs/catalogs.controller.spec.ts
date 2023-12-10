@@ -1514,10 +1514,15 @@ describe('CatalogsController', () => {
         .spyOn(catalogsService, 'getCatalogById')
         .mockResolvedValue(customMockupedCatalog);
 
+      const deleteCatalogByIdSpy = jest
+        .spyOn(catalogsService, 'deleteCatalogById')
+        .mockResolvedValue(customMockupedCatalog);
+
       await controller.deleteCatalogById(req, res, uuidDto);
 
       expect(decodeJwtSpy).toHaveBeenCalled();
       expect(getCatalogByIdSpy).toHaveBeenCalled();
+      expect(deleteCatalogByIdSpy).toHaveBeenCalled();
       expect(res['data'].message).toEqual('Catalog deleted successfully');
     });
 
