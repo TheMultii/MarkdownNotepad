@@ -68,4 +68,26 @@ describe('CatalogsController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  describe('getCatalogs', () => {
+    it('should call getCatalogs', async () => {
+      const req = {} as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return data;
+        },
+      } as unknown as Response;
+      jest
+        .spyOn(controller, 'getCatalogs')
+        .mockResolvedValue({ catalogs: [] } as Response & { catalogs: [] });
+      const result = await controller.getCatalogs(req, res);
+
+      expect(controller.getCatalogs).toHaveBeenCalled();
+      expect(result).toEqual({ catalogs: [] });
+    });
+  });
 });
