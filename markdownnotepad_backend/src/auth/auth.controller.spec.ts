@@ -584,6 +584,39 @@ describe('AuthController', () => {
 
       expect(res.statusCode).toEqual(400);
     });
+
+    it('exception is properly handled', async () => {
+      const registerDto: RegisterDto = new RegisterDto();
+      registerDto.username = 'testuser';
+      registerDto.email = 'mail@mail.mail';
+      registerDto.password = 'testpassword';
+
+      const req = {} as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return { status: this.statusCode, data };
+        },
+        send: function (data) {
+          return { status: this.statusCode, data };
+        },
+      } as unknown as Response;
+
+      const loginSpy = jest
+        .spyOn(authService, 'register')
+        .mockImplementation(() => {
+          throw new Error();
+        });
+
+      await controller.register(req, res, registerDto);
+      console.log(res);
+
+      expect(loginSpy).toHaveBeenCalled();
+      expect(res.statusCode).toEqual(400);
+    });
   });
 
   describe('refresh', () => {
