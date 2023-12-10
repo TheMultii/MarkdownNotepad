@@ -23,5 +23,6 @@ jobs:
                   cache: "npm"
                   cache-dependency-path: "markdownnotepad_backend/package-lock.json"
             - run: cd markdownnotepad_backend
+            - run: ls -al
             - run: npm ci
             - run: npm test
