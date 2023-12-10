@@ -597,6 +597,72 @@ describe('CatalogsController', () => {
       expect(getCatalogByIdSpy).toHaveBeenCalled();
       expect(res['data'].catalog.id).toEqual(sampleCatalog.id);
     });
+
+    it('should return unauthorized if user is not authenticated', async () => {
+      const req = {} as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return data;
+        },
+      } as unknown as Response;
+
+      const catalogDto = {
+        title: sampleCatalog.title,
+      };
+
+      const response = await controller.createCatalog(req, res, catalogDto);
+
+      expect(response['error']).toEqual('Bad request');
+    });
+
+    it('exception is properly handled', async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as unknown as Response;
+
+      const decodeJwtSpy = jest
+        .spyOn(decodeJwtModule, 'decodeJwt')
+        .mockImplementation(async () => {
+          return {
+            username: 'sample username',
+            iat: 1626775668,
+            exp: 1626779268,
+          };
+        });
+
+      const getUserByUsernameSpy = jest
+        .spyOn(userService, 'getUserByUsername')
+        .mockImplementation(() => {
+          throw new Error('sample error');
+        });
+
+      const catalogDto = {
+        title: sampleCatalog.title,
+      };
+
+      await controller.createCatalog(req, res, catalogDto);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getUserByUsernameSpy).toHaveBeenCalled();
+      expect(res.statusCode).toBe(500);
+      expect(res['data'].message).toBe('Internal Server Error');
+    });
   });
   });
   });
