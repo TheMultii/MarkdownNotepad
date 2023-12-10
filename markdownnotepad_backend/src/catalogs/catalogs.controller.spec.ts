@@ -1141,6 +1141,32 @@ describe('CatalogsController', () => {
       expect(removeNoteFromCatalogSpy).toHaveBeenCalled();
       expect(res['data'].catalog.notes.length).toEqual(1);
     });
+
+    it('should return unauthorized if user is not authenticated', async () => {
+      const req = {} as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return data;
+        },
+      } as unknown as Response;
+
+      const removeNoteDto = {
+        id: '1',
+        noteId: '2',
+      };
+
+      const response = await controller.removeNoteFromCatalog(
+        req,
+        res,
+        removeNoteDto,
+      );
+
+      expect(response['error']).toEqual('Bad request');
+    });
   });
   });
 });
