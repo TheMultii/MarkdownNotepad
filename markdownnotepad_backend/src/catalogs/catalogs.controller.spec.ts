@@ -1416,6 +1416,64 @@ describe('CatalogsController', () => {
         'You do not have permission to access this catalog',
       );
     });
+
+    it('HTTP 500 will be thrown if catalog was not successfully updated in the database', async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as Response;
+
+      const removeNoteDto = {
+        id: '1',
+        noteId: '2',
+      };
+
+      const decodeJwtSpy = jest
+        .spyOn(decodeJwtModule, 'decodeJwt')
+        .mockImplementation(async () => {
+          return {
+            username: 'sample username',
+            iat: 1626775668,
+            exp: 1626779268,
+          };
+        });
+
+      const getUserByUsernameSpy = jest
+        .spyOn(userService, 'getUserByUsername')
+        .mockResolvedValue(sampleCatalog.owner as UserPasswordless);
+
+      const getCatalogByIdSpy = jest
+        .spyOn(catalogsService, 'getCatalogById')
+        .mockResolvedValue(sampleCatalog);
+
+      const getNoteByIdSpy = jest
+        .spyOn(notesService, 'getNoteById')
+        .mockResolvedValue(sampleCatalog.notes[0] as NoteInclude);
+
+      const updateCatalogByIdSpy = jest
+        .spyOn(catalogsService, 'disconnectNoteFromCatalog')
+        .mockResolvedValue(null);
+
+      await controller.removeNoteFromCatalog(req, res, removeNoteDto);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getUserByUsernameSpy).toHaveBeenCalled();
+      expect(getCatalogByIdSpy).toHaveBeenCalled();
+      expect(getNoteByIdSpy).toHaveBeenCalled();
+      expect(updateCatalogByIdSpy).toHaveBeenCalled();
+      expect(res['data'].message).toBe('Catalog not updated');
+    });
   });
   });
 });
