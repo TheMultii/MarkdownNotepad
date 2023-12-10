@@ -95,7 +95,7 @@
       "json",
       "html"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "<rootDir>/coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/src/$1"
