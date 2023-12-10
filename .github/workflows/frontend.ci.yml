@@ -7,8 +7,12 @@ on:
         branches: [master]
 
 jobs:
-    build:
+    test:
         runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: ./markdownnotepad_flutter
 
         steps:
             - uses: actions/checkout@v2
@@ -19,9 +23,6 @@ jobs:
                   channel: stable
                   version: 3.16.3
 
-            - name: Navigate to the markdownnotepad_flutter directory
-              run: cd markdownnotepad_flutter
-
             - name: Install dependencies
               run: flutter pub get
 
@@ -29,4 +30,10 @@ jobs:
               run: dart analyze
 
             - name: Run tests
-              run: flutter test
+              run: flutter test --coverage
+
+            - name: Upload MDN Coverage
+              uses: actions/upload-artifact@v1
+              with:
+                  name: frontend_coverage
+                  path: coverage
