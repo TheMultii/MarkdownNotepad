@@ -809,6 +809,83 @@ describe('CatalogsController', () => {
       expect(getCatalogByIdSpy).toHaveBeenCalled();
       expect(res['data'].catalog.title).toEqual(sampleCatalog.title);
     });
+
+    it('should return unauthorized if user is not authenticated', async () => {
+      const req = {} as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return data;
+        },
+      } as unknown as Response;
+
+      const catalogDto = {
+        title: sampleCatalog.title + ' updated',
+      };
+
+      const uuid = 'f5710154-bfc1-4866-9b96-b4c2f6a4c2c6';
+      const uuidDto = new UUIDDto(uuid);
+
+      const response = await controller.updateCatalogById(
+        req,
+        res,
+        catalogDto,
+        uuidDto,
+      );
+
+      expect(response['error']).toEqual('Bad request');
+    });
+
+    it('exception is properly handled', async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as unknown as Response;
+
+      const decodeJwtSpy = jest
+        .spyOn(decodeJwtModule, 'decodeJwt')
+        .mockImplementation(async () => {
+          return {
+            username: 'sample username',
+            iat: 1626775668,
+            exp: 1626779268,
+          };
+        });
+
+      const getUserByUsernameSpy = jest
+        .spyOn(userService, 'getUserByUsername')
+        .mockImplementation(() => {
+          throw new Error('sample error');
+        });
+
+      const catalogDto = {
+        title: sampleCatalog.title,
+      };
+
+      const uuid = 'f5710154-bfc1-4866-9b96-b4c2f6a4c2c6';
+      const uuidDto = new UUIDDto(uuid);
+
+      await controller.updateCatalogById(req, res, catalogDto, uuidDto);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getUserByUsernameSpy).toHaveBeenCalled();
+      expect(res.statusCode).toBe(500);
+      expect(res['data'].message).toBe('Internal Server Error');
+    });
   });
   });
   });
