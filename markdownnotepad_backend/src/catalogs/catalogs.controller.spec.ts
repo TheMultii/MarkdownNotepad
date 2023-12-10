@@ -1306,6 +1306,60 @@ describe('CatalogsController', () => {
       expect(res.statusCode).toBe(404);
       expect(res['data'].message).toBe('Catalog not found');
     });
+
+    it('HTTP 404 will be thrown if note is not found', async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as unknown as Response;
+
+      const decodeJwtSpy = jest
+        .spyOn(decodeJwtModule, 'decodeJwt')
+        .mockImplementation(async () => {
+          return {
+            username: 'sample username',
+            iat: 1626775668,
+            exp: 1626779268,
+          };
+        });
+
+      const getUserByUsernameSpy = jest
+        .spyOn(userService, 'getUserByUsername')
+        .mockResolvedValue(sampleCatalog.owner as UserPasswordless);
+
+      const getCatalogByIdSpy = jest
+        .spyOn(catalogsService, 'getCatalogById')
+        .mockResolvedValue(sampleCatalog);
+
+      const getNoteByIdSpy = jest
+        .spyOn(notesService, 'getNoteById')
+        .mockResolvedValue(null);
+
+      const removeNoteDto = {
+        id: '1',
+        noteId: '2',
+      };
+
+      await controller.removeNoteFromCatalog(req, res, removeNoteDto);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getUserByUsernameSpy).toHaveBeenCalled();
+      expect(getCatalogByIdSpy).toHaveBeenCalled();
+      expect(getNoteByIdSpy).toHaveBeenCalled();
+      expect(res.statusCode).toBe(404);
+      expect(res['data'].message).toBe('Note not found');
+    });
   });
   });
 });
