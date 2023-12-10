@@ -546,10 +546,11 @@ packages:
   flutter_code_editor:
     dependency: "direct main"
     description:
-      name: flutter_code_editor
-      sha256: "56673b62f2d844c1a2b0cf43a4495be0d6123111de5f33887781d2d3b39a77b6"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "910188bfc834df76ba3a6c5d8fe4076e7a212b7d"
+      url: "https://gitlab.mganczarczyk.pl/TheMultii/flutter_code_editor"
+    source: git
     version: "0.3.1"
   flutter_colorpicker:
     dependency: "direct main"

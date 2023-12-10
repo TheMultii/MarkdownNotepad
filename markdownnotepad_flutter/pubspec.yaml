@@ -32,7 +32,9 @@ dependencies:
     cron: ^0.5.1
     provider: ^6.1.1
     flutter_highlight: ^0.7.0
-    flutter_code_editor: ^0.3.1
+    flutter_code_editor:
+        git:
+            url: "https://gitlab.mganczarczyk.pl/TheMultii/flutter_code_editor"
     flutter_localizations:
         sdk: flutter
     highlight: ^0.7.0
