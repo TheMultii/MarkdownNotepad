@@ -114,5 +114,44 @@ describe('CatalogsController', () => {
       expect(controller.getCatalogs).toHaveBeenCalled();
       expect(resposne.catalogs.length).toEqual(1);
     });
+
+    it("user's catalogs should be returned", async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as unknown as Response;
+
+      const decodeJwtSpy = jest
+        .spyOn(decodeJwtModule, 'decodeJwt')
+        .mockImplementation(async () => {
+          return {
+            username: 'sample username',
+            iat: 1626775668,
+            exp: 1626779268,
+          };
+        });
+
+      const getUsersCatalogsSpy = jest
+        .spyOn(catalogsService, 'getUsersCatalogs')
+        .mockResolvedValue([sampleCatalog]);
+
+      await controller.getCatalogs(req, res);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getUsersCatalogsSpy).toHaveBeenCalled();
+      expect(res.statusCode).toBe(200);
+      expect(res['data'].catalogs.length).toEqual(1);
+    });
   });
 });
