@@ -544,6 +544,60 @@ describe('CatalogsController', () => {
       expect(res['data'].message).toBe('Internal Server Error');
     });
   });
+
+  describe('createCatalog', () => {
+    it('should create a catalog', async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as Response;
+
+      const catalogDto = {
+        title: sampleCatalog.title,
+      };
+
+      const decodeJwtSpy = jest
+        .spyOn(decodeJwtModule, 'decodeJwt')
+        .mockImplementation(async () => {
+          return {
+            username: 'sample username',
+            iat: 1626775668,
+            exp: 1626779268,
+          };
+        });
+
+      const getUserByUsernameSpy = jest
+        .spyOn(userService, 'getUserByUsername')
+        .mockResolvedValue(sampleCatalog.owner as UserPasswordless);
+
+      const createCatalogSpy = jest
+        .spyOn(catalogsService, 'createCatalog')
+        .mockResolvedValue(sampleCatalog);
+
+      const getCatalogByIdSpy = jest
+        .spyOn(catalogsService, 'getCatalogById')
+        .mockResolvedValue(sampleCatalog);
+
+      await controller.createCatalog(req, res, catalogDto);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getUserByUsernameSpy).toHaveBeenCalled();
+      expect(createCatalogSpy).toHaveBeenCalled();
+      expect(getCatalogByIdSpy).toHaveBeenCalled();
+      expect(res['data'].catalog.id).toEqual(sampleCatalog.id);
+    });
+  });
   });
   });
 });
