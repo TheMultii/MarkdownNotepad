@@ -612,7 +612,6 @@ describe('AuthController', () => {
         });
 
       await controller.register(req, res, registerDto);
-      console.log(res);
 
       expect(loginSpy).toHaveBeenCalled();
       expect(res.statusCode).toEqual(400);
