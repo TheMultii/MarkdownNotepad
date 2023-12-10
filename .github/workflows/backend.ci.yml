@@ -22,7 +22,7 @@ jobs:
                   node-version: ${{ matrix.node-version }}
                   cache: "npm"
                   cache-dependency-path: "markdownnotepad_backend/package-lock.json"
-            run: |
-                cd markdownnotepad_backend
-                npm ci
-                npm test
+            - run: |
+                  cd markdownnotepad_backend
+                  npm ci
+                  npm test
