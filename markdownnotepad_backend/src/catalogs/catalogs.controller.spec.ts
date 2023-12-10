@@ -1475,5 +1475,50 @@ describe('CatalogsController', () => {
       expect(res['data'].message).toBe('Catalog not updated');
     });
   });
+
+  describe('deleteCatalogById', () => {
+    it('should delete a catalog', async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as Response;
+
+      const uuid = 'f5710154-bfc1-4866-9b96-b4c2f6a4c2c6';
+      const customMockupedCatalog = sampleCatalog;
+      customMockupedCatalog.id = uuid;
+
+      const uuidDto = new UUIDDto(uuid);
+
+      const decodeJwtSpy = jest
+        .spyOn(decodeJwtModule, 'decodeJwt')
+        .mockImplementation(async () => {
+          return {
+            username: 'sample username',
+            iat: 1626775668,
+            exp: 1626779268,
+          };
+        });
+
+      const getCatalogByIdSpy = jest
+        .spyOn(catalogsService, 'getCatalogById')
+        .mockResolvedValue(customMockupedCatalog);
+
+      await controller.deleteCatalogById(req, res, uuidDto);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getCatalogByIdSpy).toHaveBeenCalled();
+      expect(res['data'].message).toEqual('Catalog deleted successfully');
+    });
   });
 });
