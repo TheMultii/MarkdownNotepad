@@ -475,6 +475,28 @@ describe('CatalogsController', () => {
         'You do not have permission to access this catalog',
       );
     });
+
+    it('should return unauthorized if user is not authenticated', async () => {
+      const req = {} as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return data;
+        },
+      } as unknown as Response;
+
+      const uuid = 'f5710154-bfc1-4866-9b96-b4c2f6a4c2c6';
+      const uuidDto = {
+        id: uuid,
+      } as UUIDDto;
+
+      const response = await controller.getCatalogById(req, res, uuidDto);
+
+      expect(response['error']).toEqual('Bad request');
+    });
   });
   });
 });
