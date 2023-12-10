@@ -1,9 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, Length } from '@nestjs/class-validator';
+import { IsEmail, IsString, Length, Matches } from '@nestjs/class-validator';
 
 export class RegisterDto {
   @ApiProperty()
   @IsString()
+  @Matches(/^[a-zA-Z0-9]+$/, {
+    message: 'Username must contain only letters and numbers',
+  })
   @Length(4, 20)
   username: string;
 
