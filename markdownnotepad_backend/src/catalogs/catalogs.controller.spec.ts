@@ -1093,6 +1093,54 @@ describe('CatalogsController', () => {
       expect(res['data'].message).toBe('Catalog not updated');
     });
   });
+
+  describe('removeNoteFromCatalog', () => {
+    it('should remove a note from a catalog', async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as Response;
+
+      const removeNoteDto = {
+        id: '1',
+        noteId: '2',
+      };
+
+      const getUserByUsernameSpy = jest
+        .spyOn(userService, 'getUserByUsername')
+        .mockResolvedValue(sampleCatalog.owner as UserPasswordless);
+
+      const getNoteByIdSpy = jest
+        .spyOn(notesService, 'getNoteById')
+        .mockResolvedValue(sampleCatalog.notes[0] as NoteInclude);
+
+      const getCatalogByIdSpy = jest
+        .spyOn(catalogsService, 'getCatalogById')
+        .mockResolvedValue(sampleCatalog);
+
+      const removeNoteFromCatalogSpy = jest
+        .spyOn(catalogsService, 'disconnectNoteFromCatalog')
+        .mockResolvedValue(sampleCatalog);
+
+      await controller.removeNoteFromCatalog(req, res, removeNoteDto);
+
+      expect(getUserByUsernameSpy).toHaveBeenCalled();
+      expect(getNoteByIdSpy).toHaveBeenCalled();
+      expect(getCatalogByIdSpy).toHaveBeenCalled();
+      expect(removeNoteFromCatalogSpy).toHaveBeenCalled();
+      expect(res['data'].catalog.notes.length).toEqual(1);
+    });
   });
   });
 });
