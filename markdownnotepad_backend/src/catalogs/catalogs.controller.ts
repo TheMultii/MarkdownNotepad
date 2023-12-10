@@ -241,7 +241,7 @@ export class CatalogsController {
       }
 
       const catalogIncludeCheck: CatalogInclude =
-        await this.catalogsService.getCatalogById(request.params.id);
+        await this.catalogsService.getCatalogById(params.id);
 
       if (!catalogIncludeCheck) {
         return response.status(404).json({ message: 'Catalog not found' });
@@ -319,7 +319,7 @@ export class CatalogsController {
       }
 
       const catalogIncludeCheck: CatalogInclude =
-        await this.catalogsService.getCatalogById(request.params.id);
+        await this.catalogsService.getCatalogById(params.id);
 
       if (!catalogIncludeCheck) {
         return response.status(404).json({ message: 'Catalog not found' });
@@ -390,7 +390,7 @@ export class CatalogsController {
       }
 
       const catalogToRemove = await this.catalogsService.getCatalogById(
-        request.params.id,
+        params.id,
       );
 
       if (!catalogToRemove) {
@@ -403,7 +403,7 @@ export class CatalogsController {
         });
       }
 
-      this.catalogsService.deleteCatalogById(request.params.id);
+      this.catalogsService.deleteCatalogById(params.id);
 
       return response.status(200).json({
         message: 'Catalog deleted successfully',
