@@ -219,5 +219,22 @@ describe('CatalogsController', () => {
       expect(controller.getCatalogs).toHaveBeenCalled();
       expect(typeof response).toEqual('object');
     });
+
+    it('should return unauthorized if user is not authenticated', async () => {
+      const req = {} as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return data;
+        },
+      } as unknown as Response;
+
+      const response = await controller.getCatalogs(req, res);
+
+      expect(response['error']).toEqual('Bad request');
+    });
   });
 });
