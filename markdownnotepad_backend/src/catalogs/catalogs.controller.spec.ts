@@ -236,5 +236,33 @@ describe('CatalogsController', () => {
 
       expect(response['error']).toEqual('Bad request');
     });
+
+    it('returned catalogs should have an author field with id, username and email', async () => {
+      const req = {} as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return data;
+        },
+      } as unknown as Response;
+
+      jest.spyOn(controller, 'getCatalogs').mockResolvedValue({
+        catalogs: [sampleCatalog],
+      } as Response & {
+        catalogs: CatalogInclude[];
+      });
+      const response = (await controller.getCatalogs(req, res)) as Response & {
+        catalogs: CatalogInclude[];
+      };
+
+      expect(controller.getCatalogs).toHaveBeenCalled();
+      expect(response.catalogs[0].owner.id).toEqual('2');
+      expect(response.catalogs[0].owner.username).toEqual('sample username');
+      expect(response.catalogs[0].owner.email).toEqual('sample email');
+    });
+  });
   });
 });
