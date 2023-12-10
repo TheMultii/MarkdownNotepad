@@ -248,10 +248,7 @@ export class CatalogsController {
       }
 
       const catalog = new CatalogModel();
-      if (catalogDto.title) catalog.title = catalogDto.title;
-      else {
-        return response.status(400).json({ message: 'Bad request' });
-      }
+      catalog.title = catalogDto.title;
 
       if (catalogIncludeCheck.owner.username !== decodedJWT.username) {
         return response.status(403).json({
