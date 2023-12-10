@@ -427,6 +427,54 @@ describe('CatalogsController', () => {
       expect(getCatalogByIdSpy).toHaveBeenCalled();
       expect(res['data'].message).toBe('Catalog not found');
     });
+
+    it("should return an error if provided uuid is a different user's catalog", async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as unknown as Response;
+
+      const uuid = 'f5710154-bfc1-4866-9b96-b4c2f6a4c2c6';
+      const uuidDto = {
+        id: uuid,
+      } as UUIDDto;
+
+      const decodeJwtSpy = jest
+        .spyOn(decodeJwtModule, 'decodeJwt')
+        .mockImplementation(async () => {
+          return {
+            username: 'sample username',
+            iat: 1626775668,
+            exp: 1626779268,
+          };
+        });
+
+      const sC = JSON.parse(JSON.stringify(sampleCatalog));
+      sC.owner.username = 'asdadasd';
+
+      const getCatalogByIdSpy = jest
+        .spyOn(catalogsService, 'getCatalogById')
+        .mockResolvedValue(sC as Response & CatalogInclude);
+
+      await controller.getCatalogById(req, res, uuidDto);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getCatalogByIdSpy).toHaveBeenCalled();
+      expect(res['data'].message).toBe(
+        'You do not have permission to access this catalog',
+      );
+    });
   });
   });
 });
