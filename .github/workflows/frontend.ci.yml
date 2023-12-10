@@ -1,0 +1,60 @@
+name: Frontend CI
+
+on:
+    push:
+        branches: ["master"]
+    pull_request:
+        branches: ["master"]
+
+jobs:
+    code_quality:
+        runs-on: ubuntu-latest
+
+        container:
+            image: ghcr.io/cirruslabs/flutter:3.16.3
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Set up Flutter
+              run: |
+                  flutter pub global activate dart_code_metrics
+                  export PATH="$PATH:$HOME/.pub-cache/bin"
+
+            - name: Run code quality analysis
+              run: |
+                  metrics lib -r codeclimate  > frontend_coverage.json
+
+            - name: Upload code quality report
+              uses: actions/upload-artifact@v2
+              with:
+                  name: code_quality
+                  path: frontend_coverage.json
+
+    test:
+        runs-on: ubuntu-latest
+
+        container:
+            image: ghcr.io/cirruslabs/flutter:3.16.3
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Set up Flutter
+              run: |
+                  flutter pub global activate junitreport
+                  export PATH="$PATH:$HOME/.pub-cache/bin"
+
+            - name: Run tests and generate coverage
+              run: |
+                  flutter test --machine --coverage | tojunit -o report.xml
+                  lcov --summary coverage/lcov.info
+                  genhtml coverage/lcov.info --output=frontend_coverage
+
+            - name: Upload coverage report
+              uses: actions/upload-artifact@v2
+              with:
+                  name: frontend_coverage
+                  path: ${{ github.workspace }}/frontend_coverage
