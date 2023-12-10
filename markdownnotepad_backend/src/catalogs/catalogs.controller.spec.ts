@@ -353,6 +353,36 @@ describe('CatalogsController', () => {
       expect(getCatalogByIdSpy).toHaveBeenCalled();
       expect(res.statusCode).toEqual(200);
     });
+
+    it('should return an error if user has provided an invalid uuid', async () => {
+      const uuid = 'invalid uuid';
+      const uuidDto = new UUIDDto(uuid);
+
+      const errors = await validate(uuidDto);
+      expect(errors.length).toBeGreaterThan(0);
+      expect(errors[0].constraints).toMatchObject({
+        isUuid: 'id must be a UUID',
+      });
+    });
+
+    it('should return an error if user has provided an invalid uuid', async () => {
+      const uuid = 'f5710154-bfc1-4866-9b96-b4c2f6a4c2c6';
+      const uuidDto = new UUIDDto(uuid);
+
+      const errors = await validate(uuidDto);
+      expect(errors.length).toEqual(0);
+    });
+
+    it('should return an error if user has not provided an uuid', async () => {
+      const uuid = '';
+      const uuidDto = new UUIDDto(uuid);
+
+      const errors = await validate(uuidDto);
+      expect(errors.length).toBeGreaterThan(0);
+      expect(errors[0].constraints).toMatchObject({
+        isUuid: 'id must be a UUID',
+      });
+    });
   });
   });
 });
