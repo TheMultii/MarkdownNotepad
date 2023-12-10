@@ -157,6 +157,37 @@ describe('AuthController', () => {
 
       expect(res.statusCode).toEqual(400);
     });
+
+    it('exception is properly handled', async () => {
+      const loginDto: LoginDto = new LoginDto();
+      loginDto.username = 'testuser';
+      loginDto.password = 'testpassword';
+
+      const req = {} as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return { status: this.statusCode, data };
+        },
+        send: function (data) {
+          return { status: this.statusCode, data };
+        },
+      } as unknown as Response;
+
+      const loginSpy = jest
+        .spyOn(authService, 'login')
+        .mockImplementation(() => {
+          throw new Error();
+        });
+
+      await controller.login(req, res, loginDto);
+
+      expect(loginSpy).toHaveBeenCalled();
+      expect(res.statusCode).toEqual(400);
+    });
   });
 
   describe('register', () => {
@@ -182,7 +213,6 @@ describe('AuthController', () => {
 
       const result = await controller.register(req, res, registerDto);
 
-      // Add your assertions here
       expect(result).toEqual({ status: 201, data: mockUserData });
     });
 
