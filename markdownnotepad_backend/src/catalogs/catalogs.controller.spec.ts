@@ -1360,6 +1360,62 @@ describe('CatalogsController', () => {
       expect(res.statusCode).toBe(404);
       expect(res['data'].message).toBe('Note not found');
     });
+
+    it('HTTP 403 will be thrown if user is not the owner of the catalog', async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as unknown as Response;
+
+      const removeNoteDto = {
+        id: '1',
+        noteId: '2',
+      };
+
+      const decodeJwtSpy = jest
+        .spyOn(decodeJwtModule, 'decodeJwt')
+        .mockImplementation(async () => {
+          return {
+            username: 'other username',
+            iat: 1626775668,
+            exp: 1626779268,
+          };
+        });
+
+      const getUserByUsernameSpy = jest
+        .spyOn(userService, 'getUserByUsername')
+        .mockResolvedValue(sampleCatalog.owner as UserPasswordless);
+
+      const getCatalogByIdSpy = jest
+        .spyOn(catalogsService, 'getCatalogById')
+        .mockResolvedValue(sampleCatalog);
+
+      const getNoteByIdSpy = jest
+        .spyOn(notesService, 'getNoteById')
+        .mockResolvedValue(sampleCatalog.notes[0] as NoteInclude);
+
+      await controller.removeNoteFromCatalog(req, res, removeNoteDto);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getUserByUsernameSpy).toHaveBeenCalled();
+      expect(getCatalogByIdSpy).toHaveBeenCalled();
+      expect(getNoteByIdSpy).toHaveBeenCalled();
+      expect(res.statusCode).toBe(403);
+      expect(res['data'].message).toBe(
+        'You do not have permission to access this catalog',
+      );
+    });
   });
   });
 });
