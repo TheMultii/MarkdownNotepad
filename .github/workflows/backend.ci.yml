@@ -21,5 +21,6 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "npm"
+            - run: cd markdownnotepad_backend
             - run: npm ci
             - run: npm test
