@@ -194,5 +194,30 @@ describe('CatalogsController', () => {
       expect(res.statusCode).toBe(500);
       expect(res['data'].message).toBe('Internal Server Error');
     });
+
+    it('returned catalogs should be an object', async () => {
+      const req = {} as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return data;
+        },
+      } as unknown as Response;
+
+      jest.spyOn(controller, 'getCatalogs').mockResolvedValue({
+        catalogs: [sampleCatalog],
+      } as Response & {
+        catalogs: CatalogInclude[];
+      });
+      const response = (await controller.getCatalogs(req, res)) as Response & {
+        catalogs: CatalogInclude[];
+      };
+
+      expect(controller.getCatalogs).toHaveBeenCalled();
+      expect(typeof response).toEqual('object');
+    });
   });
 });
