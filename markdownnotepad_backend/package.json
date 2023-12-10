@@ -90,6 +90,11 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "html"
+    ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
