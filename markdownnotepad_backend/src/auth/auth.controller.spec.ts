@@ -717,5 +717,43 @@ describe('AuthController', () => {
 
       expect(result).toEqual({ status: 400, data: { error: 'Bad request' } });
     });
+
+    it('should return a 500 error if the user is not found', async () => {
+      const mockToken =
+        'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJtYXJrZG93bi5ub3RlcGFkIiwiaWF0IjoxNzAyMjEwMDY3LCJleHAiOjE3MzM3NDYwNjcsImF1ZCI6Im1hcmtkb3duLm5vdGVwYWQiLCJzdWIiOiJUaGVyZSdzIG5vdGhpbmcgaGVyZSB3b3J0aCB5b3VyIGF0dGVudGlvbiA7KSJ9.JH54OfwKSLbaAnSlqWde7P-JV-lksppoSy9Stlb4Vhg';
+
+      const mockUsername = 'testuser';
+
+      const req = {
+        headers: { authorization: mockToken },
+      } as unknown as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          return { status: this.statusCode, data };
+        },
+        send: function (data) {
+          return { status: this.statusCode, data };
+        },
+      } as unknown as Response;
+
+      const decodeJwtSpy = jest
+        .spyOn(jwtService, 'decode')
+        .mockReturnValue({ username: mockUsername });
+
+      const getUserByUsernameSpy = jest
+        .spyOn(userService, 'getUserByUsername')
+        .mockResolvedValue(null);
+
+      await controller.refresh(req, res);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getUserByUsernameSpy).toHaveBeenCalled();
+      expect(res.statusCode).toEqual(500);
+    });
+
   });
 });
