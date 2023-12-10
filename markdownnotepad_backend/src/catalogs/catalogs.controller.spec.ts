@@ -706,6 +706,54 @@ describe('CatalogsController', () => {
       expect(res.statusCode).toBe(500);
       expect(res['data'].message).toBe('User not found');
     });
+
+    it('HTTP 500 will be thrown if catalog was not successfully added to the database', async () => {
+      const req = {
+        headers: {
+          authorization: 'Bearer x',
+        },
+      } as Request;
+      const res = {
+        status: function (statusCode) {
+          this.statusCode = statusCode;
+          return this;
+        },
+        json: function (data) {
+          this.data = data;
+          return data;
+        },
+      } as Response;
+
+      const catalogDto = {
+        title: sampleCatalog.title,
+      };
+
+      const decodeJwtSpy = jest
+        .spyOn(decodeJwtModule, 'decodeJwt')
+        .mockImplementation(async () => {
+          return {
+            username: 'sample username',
+            iat: 1626775668,
+            exp: 1626779268,
+          };
+        });
+
+      const getUserByUsernameSpy = jest
+        .spyOn(userService, 'getUserByUsername')
+        .mockResolvedValue(sampleCatalog.owner as UserPasswordless);
+
+      const createCatalogSpy = jest
+        .spyOn(catalogsService, 'createCatalog')
+        .mockResolvedValue(null);
+
+      await controller.createCatalog(req, res, catalogDto);
+
+      expect(decodeJwtSpy).toHaveBeenCalled();
+      expect(getUserByUsernameSpy).toHaveBeenCalled();
+      expect(createCatalogSpy).toHaveBeenCalled();
+      expect(res['data'].message).toBe('Catalog not created');
+    });
+  });
   });
   });
   });
