@@ -50,6 +50,7 @@ Future<void> prepare() async {
   await Hive.openBox<ImportedExtensions>('imported_extensions');
   await Hive.openBox<EventLogVMList>('event_logs');
 }
+
 void main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   await prepare();
@@ -64,6 +65,21 @@ void main() async {
       );
 
       expect(find.byType(Image), findsOneWidget);
+    });
+
+    testWidgets(
+        'widget contains a tappable button with a "Tryb zaawansowany" text',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: InitSetupPage(),
+        ),
+      );
+      expect(find.widgetWithText(ElevatedButton, "Tryb zaawansowany"),
+          findsOneWidget);
+
+      await tester
+          .tap(find.widgetWithText(ElevatedButton, "Tryb zaawansowany"));
     });
   });
   });
