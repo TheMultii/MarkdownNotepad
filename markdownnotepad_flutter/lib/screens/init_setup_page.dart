@@ -218,7 +218,7 @@ class _InitSetupPageState extends State<InitSetupPage> {
       ),
     );
 
-    Modular.to.pushReplacementNamed('/');
+    Modular.to.pushReplacementNamed('/auth/login');
   }
 
   @override
