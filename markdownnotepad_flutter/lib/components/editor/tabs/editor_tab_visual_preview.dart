@@ -5,6 +5,7 @@ import 'package:markdownnotepad/components/editor/editor_desktop_header.dart';
 import 'package:markdownnotepad/components/notifications/info_notify_toast.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
+import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/markdown_visual_builder/markdown_preview.dart';
 import 'package:markdownnotepad/models/note.dart';
 import 'package:markdownnotepad/viewmodels/connected_live_share_user.dart';
@@ -47,7 +48,7 @@ class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMobile = MediaQuery.of(context).size.width < 768;
+    final bool isMobile = Responsive.isMobile(context);
 
     return Focus(
       autofocus: true,
