@@ -49,5 +49,33 @@ void main() {
         ),
       );
     });
+
+    testWidgets('should not have an underline if it\'s not a selected card',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: DashboardHeaderMenuButton(
+            text: 'test',
+            tab: DashboardTabs.lastViewed,
+            selectedTab: DashboardTabs.addedToFavourites,
+            onTap: () {},
+          ),
+        ),
+      );
+
+      expect(
+        tester
+            .widget<AnimatedContainer>(find.byType(AnimatedContainer))
+            .decoration,
+        const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.transparent,
+              width: 1.5,
+            ),
+          ),
+        ),
+      );
+    });
   });
 }
