@@ -77,5 +77,26 @@ void main() {
         ),
       );
     });
+
+    testWidgets('should be clickable', (tester) async {
+      int counter = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: DashboardHeaderMenuButton(
+            text: 'test',
+            tab: DashboardTabs.lastViewed,
+            selectedTab: DashboardTabs.lastViewed,
+            onTap: () {
+              counter++;
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.byType(GestureDetector));
+
+      expect(counter, 1);
+    });
   });
 }
