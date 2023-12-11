@@ -97,6 +97,22 @@ void main() async {
 
       await tester.pump();
     });
+
+    testWidgets(
+        'after clicking "Tryb zaawansowany" button, widget contains two TextFields',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: InitSetupPage(),
+        ),
+      );
+      await tester
+          .tap(find.widgetWithText(ElevatedButton, "Tryb zaawansowany"));
+
+      await tester.pump();
+
+      expect(find.byType(TextField), findsNWidgets(2));
+    });
   });
   });
 }
