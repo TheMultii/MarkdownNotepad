@@ -49,71 +49,75 @@ class _EditorTabVisualPreviewState extends State<EditorTabVisualPreview> {
   Widget build(BuildContext context) {
     final bool isMobile = MediaQuery.of(context).size.width < 768;
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        isMobile
-            ? Container(
-                height: 30,
-                color: Theme.of(context)
-                    .extension<MarkdownNotepadTheme>()
-                    ?.cardColor
-                    ?.withOpacity(.25),
-              )
-            : const SizedBox(),
-        EditorDesktopHeader(
-          noteTitle: widget.noteTitle,
-          note: widget.note,
-          isTitleEditable: false,
-          isLiveShareEnabled: widget.isLiveShareEnabled,
-          noteTitleFocusNode: noteTitleFocusNode,
-          connectToLiveShare: () {
-            widget.connectToLiveShare?.call();
-          },
-          closeLiveShare: () {
-            widget.closeLiveShare?.call();
-          },
-          connectedLiveShareUsers: widget.connectedLiveShareUsers,
-          contextMenuOptions: getEditorContextMenu(
-            context: context,
+    return Focus(
+      autofocus: true,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          isMobile
+              ? Container(
+                  height: 30,
+                  color: Theme.of(context)
+                      .extension<MarkdownNotepadTheme>()
+                      ?.cardColor
+                      ?.withOpacity(.25),
+                )
+              : const SizedBox(),
+          EditorDesktopHeader(
+            noteTitle: widget.noteTitle,
             note: widget.note,
-            textToRender: widget.textToRender,
+            isTitleEditable: false,
             isLiveShareEnabled: widget.isLiveShareEnabled,
-            deleteNote: widget.deleteNote,
-            loggedInUser: widget.loggedInUser,
-            assignCatalog: widget.assignCatalog,
-            assignNoteTags: widget.assignNoteTags,
-            changeNoteName: () => FocusScope.of(context).requestFocus(
-              noteTitleFocusNode,
-            ),
+            noteTitleFocusNode: noteTitleFocusNode,
             connectToLiveShare: () {
               widget.connectToLiveShare?.call();
             },
             closeLiveShare: () {
               widget.closeLiveShare?.call();
             },
-          ),
-          contextMenuShortcuts: {
-            LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyS):
-                () async {
-              NotifyToast().show(
-                context: context,
-                child: const InfoNotifyToast(
-                  title: 'Aplikacja automatycznie zapisuje zmiany',
-                  body: 'Nie ma potrzeby ręcznego zapisywania zmian,',
-                ),
-              );
+            connectedLiveShareUsers: widget.connectedLiveShareUsers,
+            contextMenuOptions: getEditorContextMenu(
+              context: context,
+              note: widget.note,
+              textToRender: widget.textToRender,
+              isLiveShareEnabled: widget.isLiveShareEnabled,
+              deleteNote: widget.deleteNote,
+              loggedInUser: widget.loggedInUser,
+              assignCatalog: widget.assignCatalog,
+              assignNoteTags: widget.assignNoteTags,
+              changeNoteName: () => FocusScope.of(context).requestFocus(
+                noteTitleFocusNode,
+              ),
+              connectToLiveShare: () {
+                widget.connectToLiveShare?.call();
+              },
+              closeLiveShare: () {
+                widget.closeLiveShare?.call();
+              },
+            ),
+            contextMenuShortcuts: {
+              LogicalKeySet(
+                      LogicalKeyboardKey.control, LogicalKeyboardKey.keyS):
+                  () async {
+                NotifyToast().show(
+                  context: context,
+                  child: const InfoNotifyToast(
+                    title: 'Aplikacja automatycznie zapisuje zmiany',
+                    body: 'Nie ma potrzeby ręcznego zapisywania zmian,',
+                  ),
+                );
+              },
             },
-          },
-        ),
-        Expanded(
-          child: MarkdownPreview(
-            textToRender: widget.textToRender,
           ),
-        ),
-      ],
+          Expanded(
+            child: MarkdownPreview(
+              textToRender: widget.textToRender,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

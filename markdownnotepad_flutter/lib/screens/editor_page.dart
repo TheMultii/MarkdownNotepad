@@ -18,6 +18,7 @@ import 'package:markdownnotepad/components/editor/editor_mobile_top_toolbar.dart
 import 'package:markdownnotepad/components/editor/tabs/editor_tab_editor.dart';
 import 'package:markdownnotepad/components/editor/tabs/editor_tab_visual_preview.dart';
 import 'package:markdownnotepad/components/notifications/error_notify_toast.dart';
+import 'package:markdownnotepad/components/notifications/info_notify_toast.dart';
 import 'package:markdownnotepad/core/app_theme_extension.dart';
 import 'package:markdownnotepad/core/discord_rpc.dart';
 import 'package:markdownnotepad/core/notify_toast.dart';
@@ -25,6 +26,7 @@ import 'package:markdownnotepad/core/responsive_layout.dart';
 import 'package:markdownnotepad/enums/editor_tabs.dart';
 import 'package:markdownnotepad/helpers/navigation_helper.dart';
 import 'package:markdownnotepad/helpers/validator.dart';
+import 'package:markdownnotepad/intents/editor_page_shortcuts.dart';
 import 'package:markdownnotepad/models/api_models/patch_note_body_model.dart';
 import 'package:markdownnotepad/models/api_responses/get_note_response_model.dart';
 import 'package:markdownnotepad/models/note.dart';
@@ -747,183 +749,224 @@ class _EditorPageState extends State<EditorPage> {
   @override
   Widget build(BuildContext context) {
     const double sidebarWidth = 85;
+    final FocusNode focusNode = FocusNode();
 
     final MarkdownNotepadTheme? mdnTheme =
         Theme.of(context).extension<MarkdownNotepadTheme>();
     final Color? sidebarColor = mdnTheme?.cardColor?.withOpacity(.25);
     final Color? gutterColor = mdnTheme?.gutterColor;
 
-    return Stack(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: note == null
-                    ? const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            strokeWidth: 3.0,
-                          ),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Text(
-                            'Ładowanie...',
-                          ),
-                        ],
-                      )
-                        .animate()
-                        .fadeIn(
-                          duration: 150.ms,
-                        )
-                        .scale(
-                          begin: const Offset(.6, .6),
-                          end: const Offset(1.0, 1.0),
-                          duration: 150.ms,
-                        )
-                    : selectedTab == EditorTabs.editor
-                        ? EditorTabEditor(
-                            controller: controller,
-                            focusNode: fNode,
-                            sidebarWidth: sidebarWidth,
-                            sidebarColor: sidebarColor,
-                            gutterColor: gutterColor,
-                            editorStyle: a11yDarkTheme,
-                            noteTitle: noteTitle,
-                            note: note!,
-                            isEditorSidebarEnabled:
-                                !Responsive.isMobile(context) &&
-                                    isEditorSidebarEnabled,
-                            isLiveShareEnabled: isLiveShareEnabled,
-                            deleteNote: deleteNote,
-                            loggedInUser: loggedInUser,
-                            assignCatalog: assignCatalog,
-                            assignNoteTags: assignNoteTags,
-                            connectToLiveShare: connectToLiveShare,
-                            closeLiveShare: closeLiveShare,
-                            connectedLiveShareUsers: connectedLiveShareUsers,
-                            onNoteTitleChanged: (newTitle) async {
-                              if (MDNValidator.validateNoteTitle(newTitle) !=
-                                  null) return;
-
-                              await patchNoteContentToServer(
-                                forceUpdate: false,
-                                newTitle: newTitle,
-                              );
-                              if (!mounted || note == null) return;
-
-                              var n = note;
-                              n!.title = newTitle;
-
-                              setState(() {
-                                noteTitle = newTitle;
-                                note = n;
-                              });
-                            },
-                            onNoteContentChanged: (newContent) async {
-                              await patchNoteContentToServer(
-                                forceUpdate: false,
-                                newContent: newContent,
-                              );
-                              if (!mounted || note == null) return;
-
-                              var n = note;
-                              n!.content = newContent;
-
-                              setState(() {
-                                note = n;
-                              });
-                            },
-                          )
-                        : EditorTabVisualPreview(
-                            textToRender: controller.fullText,
-                            isLiveShareEnabled: isLiveShareEnabled,
-                            connectToLiveShare: connectToLiveShare,
-                            closeLiveShare: closeLiveShare,
-                            deleteNote: deleteNote,
-                            loggedInUser: loggedInUser,
-                            assignCatalog: assignCatalog,
-                            assignNoteTags: assignNoteTags,
-                            noteTitle: noteTitle,
-                            note: note!,
-                            connectedLiveShareUsers: connectedLiveShareUsers,
-                          ),
-              ),
+    return Focus(
+      focusNode: focusNode,
+      autofocus: true,
+      child: MDNEditorPageIntent(
+        focusNode: focusNode,
+        invokeCtrlTab: (Intent intent) {
+          final bool willChangeToEditor = selectedTab == EditorTabs.visual;
+          onTabChange(
+            selectedTab == EditorTabs.editor
+                ? EditorTabs.visual
+                : EditorTabs.editor,
+          );
+          if (willChangeToEditor) {
+            fNode.requestFocus();
+          }
+        },
+        invokeCtrlShiftO: (Intent intent) {
+          if (loggedInUser?.user.id != note?.author?.id) return;
+          if (isLiveShareEnabled) return;
+          connectToLiveShare();
+        },
+        invokeCtrlS: (Intent intent) async {
+          NotifyToast().show(
+            context: context,
+            child: const InfoNotifyToast(
+              title: 'Aplikacja automatycznie zapisuje zmiany',
+              body: 'Nie ma potrzeby ręcznego zapisywania zmian,',
             ),
-            if (note != null && !Responsive.isMobile(context))
-              Container(
-                width: 110,
-                height: double.infinity,
-                color: sidebarColor,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 32,
-                  horizontal: 10,
+          );
+        },
+        invokeCtrlShiftB: (Intent intent) {
+          if (selectedTab != EditorTabs.editor) return;
+          toggleEditorSidebar();
+        },
+        child: Stack(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: note == null
+                        ? const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                strokeWidth: 3.0,
+                              ),
+                              SizedBox(
+                                height: 16.0,
+                              ),
+                              Text(
+                                'Ładowanie...',
+                              ),
+                            ],
+                          )
+                            .animate()
+                            .fadeIn(
+                              duration: 150.ms,
+                            )
+                            .scale(
+                              begin: const Offset(.6, .6),
+                              end: const Offset(1.0, 1.0),
+                              duration: 150.ms,
+                            )
+                        : selectedTab == EditorTabs.editor
+                            ? EditorTabEditor(
+                                controller: controller,
+                                focusNode: fNode,
+                                sidebarWidth: sidebarWidth,
+                                sidebarColor: sidebarColor,
+                                gutterColor: gutterColor,
+                                editorStyle: a11yDarkTheme,
+                                noteTitle: noteTitle,
+                                note: note!,
+                                isEditorSidebarEnabled:
+                                    !Responsive.isMobile(context) &&
+                                        isEditorSidebarEnabled,
+                                isLiveShareEnabled: isLiveShareEnabled,
+                                deleteNote: deleteNote,
+                                loggedInUser: loggedInUser,
+                                assignCatalog: assignCatalog,
+                                assignNoteTags: assignNoteTags,
+                                connectToLiveShare: connectToLiveShare,
+                                closeLiveShare: closeLiveShare,
+                                connectedLiveShareUsers:
+                                    connectedLiveShareUsers,
+                                onNoteTitleChanged: (newTitle) async {
+                                  if (MDNValidator.validateNoteTitle(
+                                          newTitle) !=
+                                      null) return;
+
+                                  await patchNoteContentToServer(
+                                    forceUpdate: false,
+                                    newTitle: newTitle,
+                                  );
+                                  if (!mounted || note == null) return;
+
+                                  var n = note;
+                                  n!.title = newTitle;
+
+                                  setState(() {
+                                    noteTitle = newTitle;
+                                    note = n;
+                                  });
+                                },
+                                onNoteContentChanged: (newContent) async {
+                                  await patchNoteContentToServer(
+                                    forceUpdate: false,
+                                    newContent: newContent,
+                                  );
+                                  if (!mounted || note == null) return;
+
+                                  var n = note;
+                                  n!.content = newContent;
+
+                                  setState(() {
+                                    note = n;
+                                  });
+                                },
+                              )
+                            : EditorTabVisualPreview(
+                                textToRender: controller.fullText,
+                                isLiveShareEnabled: isLiveShareEnabled,
+                                connectToLiveShare: connectToLiveShare,
+                                closeLiveShare: closeLiveShare,
+                                deleteNote: deleteNote,
+                                loggedInUser: loggedInUser,
+                                assignCatalog: assignCatalog,
+                                assignNoteTags: assignNoteTags,
+                                noteTitle: noteTitle,
+                                note: note!,
+                                connectedLiveShareUsers:
+                                    connectedLiveShareUsers,
+                              ),
+                  ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    EditorDesktopChangeTab(
-                      icon: Symbols.edit,
-                      text: 'Tryb MD',
-                      tab: EditorTabs.editor,
-                      currentTab: selectedTab,
-                      onTabChange: onTabChange,
+                if (note != null && !Responsive.isMobile(context))
+                  Container(
+                    width: 110,
+                    height: double.infinity,
+                    color: sidebarColor,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 32,
+                      horizontal: 10,
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    EditorDesktopChangeTab(
-                      icon: Symbols.visibility,
-                      text: 'Tryb Visual',
-                      tab: EditorTabs.visual,
-                      currentTab: selectedTab,
-                      onTabChange: onTabChange,
-                    ),
-                    Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(
-                            top: 8.0,
-                            bottom: 4.0,
-                          ),
-                          child: Opacity(
-                            opacity: .5,
-                            child: Divider(),
-                          ),
+                        EditorDesktopChangeTab(
+                          icon: Symbols.edit,
+                          text: 'Tryb MD',
+                          tab: EditorTabs.editor,
+                          currentTab: selectedTab,
+                          onTabChange: onTabChange,
                         ),
-                        EditorDesktopDisableSidebar(
-                          isEditorOpen: selectedTab == EditorTabs.editor,
-                          text:
-                              "W${isEditorSidebarEnabled ? 'y' : ''}łącz sidebar",
-                          onTap: toggleEditorSidebar,
+                        const SizedBox(
+                          height: 16,
                         ),
-                      ],
-                    )
-                        .animate(
-                          target: selectedTab == EditorTabs.editor ? 1.0 : 0.0,
+                        EditorDesktopChangeTab(
+                          icon: Symbols.visibility,
+                          text: 'Tryb Visual',
+                          tab: EditorTabs.visual,
+                          currentTab: selectedTab,
+                          onTabChange: onTabChange,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                top: 8.0,
+                                bottom: 4.0,
+                              ),
+                              child: Opacity(
+                                opacity: .5,
+                                child: Divider(),
+                              ),
+                            ),
+                            EditorDesktopDisableSidebar(
+                              isEditorOpen: selectedTab == EditorTabs.editor,
+                              text:
+                                  "W${isEditorSidebarEnabled ? 'y' : ''}łącz sidebar",
+                              onTap: toggleEditorSidebar,
+                            ),
+                          ],
                         )
-                        .fade(duration: 150.ms, begin: 0.0, end: 1.0),
-                  ],
-                ),
+                            .animate(
+                              target:
+                                  selectedTab == EditorTabs.editor ? 1.0 : 0.0,
+                            )
+                            .fade(duration: 150.ms, begin: 0.0, end: 1.0),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            if (note != null && Responsive.isMobile(context))
+              EditorMobileTopToolbar(
+                currentTab: selectedTab,
+                onTabChange: onTabChange,
               ),
           ],
         ),
-        if (note != null && Responsive.isMobile(context))
-          EditorMobileTopToolbar(
-            currentTab: selectedTab,
-            onTabChange: onTabChange,
-          ),
-      ],
+      ),
     );
   }
 }
