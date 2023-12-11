@@ -25,50 +25,80 @@ class DashboardLastViewedSection extends StatelessWidget {
             (a, b) => b.updatedAt.compareTo(a.updatedAt),
           );
 
+    final bool isEmptySection =
+        (loggedInUser.user.notes == null || loggedInUser.user.notes!.isEmpty) &&
+            (eventLogs == null || eventLogs!.isEmpty);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DashboardLastViewedCards(
-          items: [
-            ...notesSorted
-                .getRange(0, notesSorted.length >= 3 ? 3 : notesSorted.length)
-                .map(
-                  (note) => {
-                    "id": note.id,
-                    "title": note.title,
-                    "subtitle":
-                        note.content.replaceAll("\n", " ").trim().isEmpty
-                            ? ""
-                            : note.content.replaceAll("\n", " ").length > 50
-                                ? note.content
-                                    .replaceAll("\n", " ")
-                                    .trim()
-                                    .substring(0, 50)
-                                : note.content.replaceAll("\n", "").trim(),
-                    "editDate": note.updatedAt,
-                    "isLocalImage": false,
-                    "backgroundImage":
-                        "https://api.mganczarczyk.pl/tairiku/random/streetmoe?safety=true&seed=${note.id}",
-                  },
+        if (isEmptySection)
+          const SizedBox(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Brak ostatnio wyświetlanych notatek.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-            ...(notesSorted.length < 3
-                ? List.generate(
-                    3 - notesSorted.length,
-                    (index) => {
-                      "id": 0,
-                      "title": "",
-                      "subtitle": "",
-                      "editDate": DateTime.now(),
+                Text(
+                  "Nic nie szkodzi, możesz zacząć od dodania nowej notatki.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        if (!isEmptySection)
+          DashboardLastViewedCards(
+            items: [
+              ...notesSorted
+                  .getRange(0, notesSorted.length >= 3 ? 3 : notesSorted.length)
+                  .map(
+                    (note) => {
+                      "id": note.id,
+                      "title": note.title,
+                      "subtitle":
+                          note.content.replaceAll("\n", " ").trim().isEmpty
+                              ? ""
+                              : note.content.replaceAll("\n", " ").length > 50
+                                  ? note.content
+                                      .replaceAll("\n", " ")
+                                      .trim()
+                                      .substring(0, 50)
+                                  : note.content.replaceAll("\n", "").trim(),
+                      "editDate": note.updatedAt,
                       "isLocalImage": false,
-                      "opacity": .15,
-                      "disabled": true,
-                      "backgroundImage": "",
+                      "backgroundImage":
+                          "https://api.mganczarczyk.pl/tairiku/random/streetmoe?safety=true&seed=${note.id}",
                     },
-                  )
-                : []),
-          ],
-        ),
+                  ),
+              ...(notesSorted.length < 3
+                  ? List.generate(
+                      3 - notesSorted.length,
+                      (index) => {
+                        "id": 0,
+                        "title": "",
+                        "subtitle": "",
+                        "editDate": DateTime.now(),
+                        "isLocalImage": false,
+                        "opacity": .15,
+                        "disabled": true,
+                        "backgroundImage": "",
+                      },
+                    )
+                  : []),
+            ],
+          ),
         const SizedBox(height: 24.0),
         Stack(
           children: [
