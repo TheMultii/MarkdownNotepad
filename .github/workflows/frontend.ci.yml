@@ -34,7 +34,10 @@ jobs:
               run: flutter test --coverage
 
             - name: Convert coverage to HTML
-              run: genhtml coverage/lcov.info -o coverage/html
+              run: |
+                  sudo apt update
+                  sudo apt install lcov
+                  genhtml coverage/lcov.info -o coverage/html
 
             - name: Upload MDN Coverage
               uses: actions/upload-artifact@v1
