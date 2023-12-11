@@ -57,7 +57,6 @@ void main() async {
 
   group('end-to-end InitSetupPage', () {
     testWidgets('widget contains an image with a logo', (tester) async {
-      // Load app widget.
       await tester.pumpWidget(
         const MaterialApp(
           home: InitSetupPage(),
@@ -117,7 +116,6 @@ void main() async {
 
   group('end-to-end LoginPage', () {
     testWidgets('widget contains a two TextFormFields', (tester) async {
-      // Load app widget.
       await tester.pumpWidget(
         MultiProvider(
           providers: [
@@ -171,7 +169,6 @@ void main() async {
     });
 
     testWidgets('TextFormField has a validation', (tester) async {
-      // Load app widget.
       await tester.pumpWidget(
         MultiProvider(
           providers: [
