@@ -19,5 +19,35 @@ void main() {
 
       expect(find.text('test'), findsOneWidget);
     });
+
+    testWidgets('should have an underline if it\'s a selected card',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: DashboardHeaderMenuButton(
+            text: 'test',
+            tab: DashboardTabs.lastViewed,
+            selectedTab: DashboardTabs.lastViewed,
+            onTap: () {},
+          ),
+        ),
+      );
+
+      final BuildContext context = tester.element(find.byType(MaterialApp));
+
+      expect(
+        tester
+            .widget<AnimatedContainer>(find.byType(AnimatedContainer))
+            .decoration,
+        BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
+              width: 1.5,
+            ),
+          ),
+        ),
+      );
+    });
   });
 }
