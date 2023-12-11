@@ -125,7 +125,7 @@ class _MDNSearchBarWidgetState extends State<MDNSearchBarWidget> {
   }
 
   void _searchItems(List<dynamic> items, SearchResultType resultType) {
-    searchResults.notes = items
+    final List<SearchResult> results = items
         .where((element) =>
             element.title.toLowerCase().contains(textValue.toLowerCase()) ||
             (element.id.toLowerCase().contains(textValue.toLowerCase()) &&
@@ -138,6 +138,20 @@ class _MDNSearchBarWidgetState extends State<MDNSearchBarWidget> {
           ),
         )
         .toList();
+
+    switch (resultType) {
+      case SearchResultType.note:
+        searchResults.notes = results;
+        break;
+      case SearchResultType.catalog:
+        searchResults.catalogs = results;
+        break;
+      case SearchResultType.tag:
+        searchResults.tags = results;
+        break;
+      case SearchResultType.other:
+        break;
+    }
   }
 
   void onTapItem(SearchResult searchResult) {
