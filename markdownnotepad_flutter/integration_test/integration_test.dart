@@ -169,6 +169,73 @@ void main() async {
 
       expect(find.text('Hasło'), findsOneWidget);
     });
+
+    testWidgets('TextFormField has a validation', (tester) async {
+      // Load app widget.
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (_) => DataDrawerProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => DrawerCurrentTabProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => CurrentLoggedInUserProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => ApiServiceProvider(),
+            ),
+          ],
+          child: MaterialApp(
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color(0xFF8F00FF),
+                primary: const Color(0xFF8F00FF),
+                background: const Color.fromARGB(255, 21, 21, 21),
+                brightness: Brightness.dark,
+              ),
+              textSelectionTheme: const TextSelectionThemeData(
+                cursorColor: Colors.white,
+                selectionColor: Color.fromARGB(100, 100, 100, 100),
+                selectionHandleColor: Color(0xFF8F00FF),
+              ),
+              useMaterial3: true,
+            ).copyWith(
+              extensions: <ThemeExtension<dynamic>>[
+                const MarkdownNotepadTheme(
+                  text: Colors.white,
+                  drawerBackground: Color(0xFF181818),
+                  cardColor: Color(0xFF262626),
+                  gutterColor: Color(0xFF191919),
+                ),
+              ],
+            ),
+            home: const LoginPage(),
+          ),
+        ),
+      );
+
+      await tester.enterText(
+        find.widgetWithText(TextFormField, "Nazwa użytkownika"),
+        "a",
+      );
+
+      await tester.tap(
+        find.byType(Scaffold),
+      );
+
+      await tester.pump();
+
+      final TextFormField tF = tester.widget<TextFormField>(
+        find.widgetWithText(TextFormField, "Nazwa użytkownika"),
+      );
+
+      expect(
+        tF.validator?.call("a"),
+        "Nazwa użytkownika musi mieć od 4 do 20 znaków",
+      );
     });
   });
 }
