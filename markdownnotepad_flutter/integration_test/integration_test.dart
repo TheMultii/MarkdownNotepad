@@ -81,6 +81,22 @@ void main() async {
       await tester
           .tap(find.widgetWithText(ElevatedButton, "Tryb zaawansowany"));
     });
+
+    testWidgets(
+        'widget contains a non-tappable button with a "Przejdź dalej" text',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: InitSetupPage(),
+        ),
+      );
+      expect(
+          find.widgetWithText(ElevatedButton, "Przejdź dalej"), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(ElevatedButton, "Przejdź dalej"));
+
+      await tester.pump();
+    });
   });
   });
 }
