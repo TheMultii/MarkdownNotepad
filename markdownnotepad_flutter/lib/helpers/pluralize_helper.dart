@@ -1,8 +1,8 @@
 class Pluralize {
   static String pluralizeYears(int years) {
     if (years == 1) return "rok";
-    if (years < 5) return "lat";
-    return "lata";
+    if (years < 5) return "lata";
+    return "lat";
   }
 
   static String pluralizeDays(int days) {
