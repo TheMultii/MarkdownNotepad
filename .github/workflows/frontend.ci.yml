@@ -33,6 +33,9 @@ jobs:
             - name: Run tests
               run: flutter test --coverage
 
+            - name: Convert coverage to HTML
+              run: genhtml coverage/lcov.info -o coverage/html
+
             - name: Upload MDN Coverage
               uses: actions/upload-artifact@v1
               with:
