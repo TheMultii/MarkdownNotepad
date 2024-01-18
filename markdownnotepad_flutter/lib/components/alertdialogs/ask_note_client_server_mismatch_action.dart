@@ -28,7 +28,7 @@ class AskNoteClientServerMismatchAction extends StatelessWidget {
       ),
       title: const Text('Uwaga!'),
       content: Text(
-        'Istnieje różnica w dacie edycji notatki znajdującej się w pamięci podręcznej i na serwerze.\nData ostatniej edycji notatki, znajdującej się w pamięci podręcznej: ${DateHelper.getFormattedDateTime(cacheLastUpdate)}\nData ostatniej edycji notatki, znajdującej się na serwerze: ${DateHelper.getFormattedDateTime(serverLastUpdate)}\nCzy chcesz nadpisać notatkę w pamięci podręcznej?',
+        'Istnieje różnica w dacie edycji notatki znajdującej się w pamięci podręcznej i na serwerze.\n\nData ostatniej edycji notatki, znajdującej się w pamięci podręcznej: ${DateHelper.getFormattedDateTime(cacheLastUpdate)}\nData ostatniej edycji notatki, znajdującej się na serwerze: ${DateHelper.getFormattedDateTime(serverLastUpdate)}\n\nCzy chcesz nadpisać notatkę w pamięci podręcznej?',
       ),
       actions: [
         TextButton(
