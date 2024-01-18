@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class SearchBarItem extends StatelessWidget {
@@ -32,21 +34,11 @@ class SearchBarItem extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    "https://api.mganczarczyk.pl/tairiku/random/streetmoe?safety=true&seed=$elementID",
+                  child: Image.asset(
+                    "assets/images/img-${Random().nextInt(10) + 1}.jpeg",
                     width: 50,
                     height: 40,
                     fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 3.0,
-                        ),
-                      );
-                    },
                   ),
                 ),
                 const SizedBox(
