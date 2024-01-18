@@ -1,13 +1,11 @@
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/components/auth/auth_button.dart';
-import 'package:markdownnotepad/components/cached_network_image.dart';
 import 'package:markdownnotepad/components/input_input.dart';
 import 'package:markdownnotepad/components/notifications/error_notify_toast.dart';
 import 'package:markdownnotepad/components/notifications/success_notify_toast.dart';
@@ -41,10 +39,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   late MDNApiService apiService;
 
-  final String randomImage = [
-    "https://i.redd.it/n9wuwc3dxjvb1.png",
-    "https://i.redd.it/gpwwcd0xehub1.jpg"
-  ][Random().nextInt(2)];
+  final String randomImage = ["img-1.jpeg", "img-9.jpeg"][Random().nextInt(2)];
 
   @override
   void initState() {
@@ -139,10 +134,12 @@ class _LoginPageState extends State<LoginPage> {
                 ? const SizedBox()
                 : Expanded(
                     flex: 6,
-                    child: MDNCachedNetworkImage(
-                      imageURL: randomImage,
-                    ),
-                  ),
+                    child: Image.asset(
+                      "assets/images/$randomImage",
+                      height: double.infinity,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )),
             Expanded(
               flex: 8,
               child: NotificationListener<OverscrollIndicatorNotification>(
@@ -160,8 +157,8 @@ class _LoginPageState extends State<LoginPage> {
                         ? BoxDecoration(
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: CachedNetworkImageProvider(
-                                randomImage,
+                              image: AssetImage(
+                                "assets/images/$randomImage",
                               ),
                               opacity: .075,
                             ),

@@ -1,13 +1,11 @@
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart' show Modular;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:markdownnotepad/components/auth/auth_button.dart';
-import 'package:markdownnotepad/components/cached_network_image.dart';
 import 'package:markdownnotepad/components/input_input.dart';
 import 'package:markdownnotepad/components/notifications/error_notify_toast.dart';
 import 'package:markdownnotepad/components/notifications/success_notify_toast.dart';
@@ -44,11 +42,10 @@ class _RegisterPageState extends State<RegisterPage> {
       TextEditingController();
   late MDNApiService apiService;
 
-  String randomImage = [
-    "https://pbs.twimg.com/media/FrFRTDwaMAAF-aq?format=jpg",
-    "https://pbs.twimg.com/media/Fo1tbQ4aUAAn_Fy?format=jpg",
-    "https://pbs.twimg.com/media/FomXyNIaYAA_GZD?format=jpg"
-  ][Random().nextInt(3)];
+  final String randomImage = [
+    "img-1.jpeg",
+    "img-9.jpeg",
+  ][Random().nextInt(2)];
 
   @override
   void initState() {
@@ -170,8 +167,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 ? const SizedBox()
                 : Expanded(
                     flex: 6,
-                    child: MDNCachedNetworkImage(
-                      imageURL: randomImage,
+                    child: Image.asset(
+                      "assets/images/$randomImage",
+                      height: double.infinity,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
                     ),
                   ),
             Expanded(
@@ -191,8 +191,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         ? BoxDecoration(
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: CachedNetworkImageProvider(
-                                randomImage,
+                              image: AssetImage(
+                                "assets/images/$randomImage",
                               ),
                               opacity: .075,
                             ),
