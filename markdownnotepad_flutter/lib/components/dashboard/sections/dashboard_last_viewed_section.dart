@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_history_list_item.dart';
 import 'package:markdownnotepad/components/dashboard/dashboard_last_viewed_cards.dart';
@@ -77,9 +79,9 @@ class DashboardLastViewedSection extends StatelessWidget {
                                       .substring(0, 50)
                                   : note.content.replaceAll("\n", "").trim(),
                       "editDate": note.updatedAt,
-                      "isLocalImage": false,
+                      "isLocalImage": true,
                       "backgroundImage":
-                          "https://api.mganczarczyk.pl/tairiku/random/streetmoe?safety=true&seed=${note.id}",
+                          "assets/images/img-${Random().nextInt(10) + 1}.jpeg",
                     },
                   ),
               ...(notesSorted.length < 3
