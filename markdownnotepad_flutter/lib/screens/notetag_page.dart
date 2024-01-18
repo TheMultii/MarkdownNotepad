@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
@@ -494,9 +496,9 @@ class _NoteTagPageState extends State<NoteTagPage> {
                             return DashboardCard(
                               title: noteData.title,
                               editDate: noteData.updatedAt,
-                              isLocalImage: false,
+                              isLocalImage: true,
                               backgroundImage:
-                                  "https://api.mganczarczyk.pl/tairiku/random/streetmoe?safety=true&seed=${noteData.id}",
+                                  "assets/images/img-${Random().nextInt(10) + 1}.jpeg",
                               onLongPress: () {
                                 final double dx = cursorPosition.dx -
                                     context
