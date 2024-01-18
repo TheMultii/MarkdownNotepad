@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dart_eval/dart_eval.dart';
 import 'package:dart_eval/dart_eval_bridge.dart';
 import 'package:dart_eval/stdlib/core.dart';
@@ -47,11 +45,11 @@ class MDNExtensionBuilder extends MarkdownElementBuilder {
       );
     }
 
-    if (command == 'tairiku' && parsedText.isNotEmpty) {
+    if (command == 'unsplash' && parsedText.isNotEmpty) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Image.network(
-          "https://api.mganczarczyk.pl/tairiku/random/$parsedText?safety=true&seed=${Random().nextInt(999999)}",
+          "https://source.unsplash.com/collection/1/1280x720",
           fit: BoxFit.cover,
         ),
       );
